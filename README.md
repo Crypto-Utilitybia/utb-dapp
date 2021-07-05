@@ -1,115 +1,38 @@
-## Getting started
+# Next + Netlify Starter
 
-### Local Development
+[![Netlify Status](https://api.netlify.com/api/v1/badges/ed50f56e-4fc2-4c98-8b66-1e5074c6f3d3/deploy-status)](https://app.netlify.com/sites/next-starter/deploys)
 
-#### Install tools and start Ganache
+This is a [Next.js](https://nextjs.org/) v11 project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app) and set up to be instantly deployed to [Netlify](https://url.netlify.com/SyTBPVamO)!
 
-Install dependencies:
+This project is a very minimal starter that includes 2 sample components, a global stylesheet, a `netlify.toml` for deployment, and a `jsconfig.json` for setting up absolute imports and aliases. It also includes the [Essential Next.js Build Plugin](https://github.com/netlify/netlify-plugin-nextjs), which will allow for you to implement features like Preview Mode, server-side rendering/incremental static regeneration via Netlify Functions, and internationalized routing.
 
-```sh
-npm install -g ganache-cli truffle @graphprotocol/graph-cli
+[![Deploy to Netlify](https://www.netlify.com/img/deploy/button.svg)](https://app.netlify.com/start/deploy?repository=https://github.com/cassidoo/next-netlify-starter&utm_source=github&utm_medium=nextstarter-cs&utm_campaign=devex-cs)
+
+(If you click this button, it will create a new repo for you that looks exactly like this one, and sets that repo up immediately for deployment on Netlify)
+
+## Getting Started
+
+First, run the development server:
+
+```bash
+npm run dev
+# or
+yarn dev
 ```
 
-Start Ganache:
+Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-```sh
-ganache-cli
-```
+You can start editing the page by modifying `pages/index.js`. The page auto-updates as you edit the file.
 
-#### Start a local Graph Node
+### Installation options
 
-This assumes you already have Ganache running and have performed
-the above migration steps.
+**Option one:** One-click deploy
 
-1. Clone `https://github.com/graphprotocol/graph-node/`
-2. Enter the Graph Node's Docker directory:
-   ```sh
-   cd graph-node/docker
-   ```
-3. Start a local Graph Node that will connect to Ganache on your host:
-   ```sh
-   docker-compose up
-   ```
+[![Deploy to Netlify](https://www.netlify.com/img/deploy/button.svg)](https://app.netlify.com/start/deploy?repository=https://github.com/cassidoo/next-netlify-starter&utm_source=github&utm_medium=nextstarter-cs&utm_campaign=devex-cs)
 
-#### Deploy the subgraph to the local Graph Node
+**Option two:** Manual clone
 
-1. Ceate a new example subgraph with:
-   ```sh
-   graph init --from-example <GITHUB_USERNAME>/example-subgraph
-   ```
-2. Follow the instructions for installing dependencies and running
-   the code generation (typically: `yarn && yarn codegen`).
-3. Deploy the example contract to Ganache (in another terminal):
-
-   ```sh
-   truffle compile
-   truffle migrate
-   ```
-
-   This willl also create a couple of example transactions.
-
-   **Important: Remember the address of the `GravityRegistry` contract
-   printed by the migrations. You will need this later.**
-
-4. Replace the contract address with the one from Ganache (this is
-   the one that you remembered or copied earlier):
-   ```sh
-   sed -i -e \
-     's/0x2E645469f354BB4F5c8a05B3b30A929361cf77eC/<GANACHE_CONTRACT_ADDRESS>/g' \
-     subgraph.yaml
-   ```
-    Check out the [docs](https://www.gnu.org/software/sed/manual/sed.html) if you don't know what sed does. Basically, it replaces the hardcoded contract address `0x2E645469f354BB4F5c8a05B3b30A929361cf77eC` with the address of your locally-deployed `GravityRegistry` contract.
-
-5. Deploy the subgraph to your local Graph Node:
-   ```sh
-   graph create --node http://localhost:8020/ <GITHUB_USERNAME>/example-subgraph
-   graph deploy --node http://localhost:8020/ --ipfs http://localhost:5001/ <GITHUB_USERNAME>/example-subgraph
-   ```
-6. You can now go to `http://localhost:8000/subgraphs/name/<GITHUB_USERNAME>/example-subgraph`
-   to query our subgraph. Try the following query, for example:
-   ```graphql
-   {
-     gravatars {
-       id
-       owner
-       displayName
-       imageUrl
-     }
-   }
-   ```
-
-#### Connect this dApp to the subgraph
-
-1. Write the the GraphQL endpoint of our subgraph to `.env` in this directory:
-   ```sh
-   echo "REACT_APP_GRAPHQL_ENDPOINT=http://localhost:8000/subgraphs/name/<GITHUB_USERNAME>/example-subgraph" > .env
-   ```
-2. Then, start this app:
-   ```sh
-   yarn install
-   yarn start
-   ```
-
-### Hosted Service
-
-#### Create and deploy the subgraph
-
-1. Sign up on https://thegraph.com/explorer/
-2. Create a new subgraph on https://thegraph.com/dashboard/
-3. Install Graph CLI with `npm install -g @graphprotocol/graph-cli`
-4. Run `graph init <GITHUB_USERNAME>/<SUBGRAPH_NAME>` to create a subgraph template locally.
-5. Follow the instructions `graph init` prints for you to deploy the subgraph to the Hosted Service.
-
-#### Connect this dApp to the subgraph
-
-1. Go to `https://thegraph.com/explorer/subgraph/<GITHUB_USERNAME>/<SUBGRAPH_NAME>/`
-2. Copy the GraphQL HTTP endpoint (e.g. `https://api.thegraph.com/subgraphs/name/github-username/subgraph-name`)
-3. Write it to `.env` in this directory:
-   ```sh
-   echo "REACT_APP_GRAPHQL_ENDPOINT=https://api.thegraph.com/subgraphs/name/github-username/subgraph-name" > .env
-   ```
-4. Start this app:
-   ```sh
-   yarn install
-   yarn start
-   ```
+1. Clone this repo: `git clone https://github.com/cassidoo/next-netlify-starter.git`
+2. Navigate to the directory and run `npm run dev`
+3. Make your changes
+4. Connect to [Netlify](https://url.netlify.com/Bk4UicocL) manually (the `netlify.toml` file is the one you'll need to make sure stays intact to make sure the export is done and pointed to the right stuff)
