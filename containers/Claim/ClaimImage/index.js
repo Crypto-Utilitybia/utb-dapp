@@ -9,6 +9,7 @@ import { defaultNetwork, LIBRARY_FETCH_TIME } from 'library/constants'
 import Loading from 'components/Loading'
 import { NO_IMAGE_PATH } from 'utils/constants/image-paths'
 import { useTimestamp } from 'utils/hocs/useTicker'
+import { PROXY_URL } from 'config'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -75,7 +76,7 @@ const ClaimImage = () => {
       <Link href={`/coin/${totalSupply}`}>
         <img
           alt="nft-item"
-          src={`${data.image}?timestamp=${timestamp}`}
+          src={`${PROXY_URL}${data.image}?timestamp=${timestamp}`}
           className={classes.nftItem}
           onError={(e) => {
             e.target.onerror = null

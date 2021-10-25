@@ -15,6 +15,7 @@ import { NO_IMAGE_PATH } from 'utils/constants/image-paths'
 import Loading from 'components/Loading'
 import TokenIcon from 'components/TokenIcon'
 import { useTimestamp } from 'utils/hocs/useTicker'
+import { PROXY_URL } from 'config'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -236,7 +237,7 @@ const Marketplace = () => {
               <Link href={`/coin/${item.tokenId}`}>
                 <img
                   alt="nft-item"
-                  src={`${item.metadata?.image || NO_IMAGE_PATH}?timestamp=${timestamp}`}
+                  src={`${PROXY_URL}${item.metadata?.image || NO_IMAGE_PATH}?timestamp=${timestamp}`}
                   className={classes.nftItem}
                   onError={(e) => {
                     e.target.onerror = null

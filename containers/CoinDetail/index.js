@@ -20,6 +20,7 @@ import RefreshIcon from '@material-ui/icons/Refresh'
 import ActivitiesTable from 'containers/Activities/ActivitiesTable'
 import ArrowBackIcon from '@material-ui/icons/ArrowBack'
 import { useTimestamp } from 'utils/hocs/useTicker'
+import { PROXY_URL } from 'config'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -277,7 +278,7 @@ export default function CoinDetail({ coinMeta }) {
           <Grid item xs={12} md={4}>
             <img
               alt="nft-item"
-              src={`${data?.image || NO_IMAGE_PATH}?timestamp=${timestamp}&full=true`}
+              src={`${PROXY_URL}${data?.image || NO_IMAGE_PATH}?timestamp=${timestamp}&full=true`}
               className={classes.nftImage}
               onError={(e) => {
                 e.target.onerror = null

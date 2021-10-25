@@ -1,30 +1,6 @@
 import { memo } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
-// import ReactLottie from 'react-lottie'
-// import loadingData from './trail-loading.json'
 import { CircularProgress } from '@material-ui/core'
-
-// const defaultOptions = {
-//   loop: true,
-//   autoplay: true,
-//   animationData: loadingData,
-//   rendererSettings: {
-//     preserveAspectRatio: 'xMidYMid slice',
-//   },
-// }
-
-// const LoadingSpinner = ({ loading, size = 100 || size, ...rest }) => {
-//   if (!loading) return null
-//   return (
-//     <ReactLottie
-//       isPaused={false}
-//       isStopped={false}
-//       options={defaultOptions}
-//       style={{ width: size, height: size }}
-//       {...rest}
-//     />
-//   )
-// }
 
 const useStyles = makeStyles((theme) => ({
   root: (props) => ({
@@ -49,8 +25,14 @@ const Loading = ({ loading, height, size = 60 }) => {
 
   return (
     <div className={classes.root}>
-      {/* <LoadingSpinner loading={loading} size={size} /> */}
-      {loading && <CircularProgress size={size} thickness={size / 15} className={classes.progress} />}
+      {
+        loading &&
+        <CircularProgress
+          size={size}
+          thickness={size / 15}
+          className={classes.progress}
+        />
+      }
     </div>
   )
 }

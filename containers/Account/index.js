@@ -19,6 +19,7 @@ import { useRouter } from 'next/router'
 import { getEllipsis } from 'utils/helpers'
 import ActivitiesTable from 'containers/Activities/ActivitiesTable'
 import { getGraph } from 'library/utils'
+import { PROXY_URL } from 'config'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -230,7 +231,7 @@ export default function Account() {
                   <Link href={(LINKS.COIN_DETAIL.HREF, LINKS.COIN_DETAIL.HREF.replace('[tokenId]', tokenId))}>
                     <img
                       alt={`AvaxCoin #${tokenId}`}
-                      src={`${metadata.image}?timestamp=${timestamp}`}
+                      src={`${PROXY_URL}${metadata.image}?timestamp=${timestamp}`}
                       className={classes.nftItem}
                       onError={(e) => {
                         e.target.onerror = null

@@ -17,6 +17,7 @@ import TablePagination from 'parts/Table/TablePagination'
 import { ALL_TIERS, SORT_COINS, TIERS } from 'utils/constants/filters'
 import SelectBox from 'components/UI/SelectBox'
 import ActivitiesTable from 'containers/Activities/ActivitiesTable'
+import { PROXY_URL } from 'config'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -253,7 +254,7 @@ export default function Wallet() {
                   <Link href={(LINKS.COIN_DETAIL.HREF, LINKS.COIN_DETAIL.HREF.replace('[tokenId]', tokenId))}>
                     <img
                       alt={`AvaxCoin #${tokenId}`}
-                      src={`${metadata.image}?timestamp=${timestamp}`}
+                      src={`${PROXY_URL}${metadata.image}?timestamp=${timestamp}`}
                       className={classes.nftItem}
                       onError={(e) => {
                         e.target.onerror = null
