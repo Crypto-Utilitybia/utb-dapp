@@ -67,7 +67,7 @@ export default function WalletProvider({ children }) {
             description: 'Scan with WalletLink to connect',
           },
           options: {
-            appName: 'AvaxCoins', // Your app name
+            appName: 'Crypto Utilitybia', // Your app name
             networkUrl: `https://api.avax.network/ext/bc/C/rpc`,
             chainId: defaultNetwork,
           },

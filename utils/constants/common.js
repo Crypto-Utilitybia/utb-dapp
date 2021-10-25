@@ -1,5 +1,5 @@
-const TITLE = 'AvaxCoins.com'
-const SITE_URL = 'https://avaxcoins.com/'
-const DESCRIPTION = '2800 Handcrafted AVAX Coin NFTs'
+const TITLE = 'Crypto Utilitybia'
+const SITE_URL = 'https://CryptoUtilitybia.com/'
+const DESCRIPTION = '2800 Handcrafted Crypto Utilitybia NFTs'
 
 export { TITLE, SITE_URL, DESCRIPTION }
