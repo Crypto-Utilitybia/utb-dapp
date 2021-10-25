@@ -1,5 +1,5 @@
 import { createContext, useCallback, useEffect, useReducer, useState } from 'react'
-import axios from 'axios'
+import axios from 'services/axios'
 import Web3Modal from 'web3modal'
 import WalletConnectProvider from '@walletconnect/web3-provider'
 import { WalletLink } from 'walletlink'

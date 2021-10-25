@@ -1,6 +1,6 @@
 import { memo, useCallback, useContext, useEffect, useState } from 'react'
 import Link from 'next/link'
-import axios from 'axios'
+import axios from 'services/axios'
 import { makeStyles } from '@material-ui/core/styles'
 import { Typography } from '@material-ui/core'
 

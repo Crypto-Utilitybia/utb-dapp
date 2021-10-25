@@ -1,7 +1,7 @@
 import { useCallback, useContext, useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
 import { makeStyles } from '@material-ui/core/styles'
-import axios from 'axios'
+import axios from 'services/axios'
 import Grid from '@material-ui/core/Grid'
 import { useCommonStyles } from 'styles/use-styles'
 
