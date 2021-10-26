@@ -1,5 +1,8 @@
+
+import { memo } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import { Select, MenuItem } from '@material-ui/core'
+
 import TextField from 'components/UI/TextFields/TextField'
 
 const useStyles = makeStyles((theme) => ({
@@ -18,7 +21,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }))
 
-export default function SelectBox({ items, placeholder, label, ...rest }) {
+const SelectBox = ({ items, placeholder, label, ...rest }) => {
   const classes = useStyles()
 
   return (
@@ -50,3 +53,5 @@ export default function SelectBox({ items, placeholder, label, ...rest }) {
     </Select>
   )
 }
+
+export default memo(SelectBox)

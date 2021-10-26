@@ -1,4 +1,5 @@
 
+import { memo } from 'react'
 import Head from 'next/head'
 
 import * as COMMON_CONSTANTS from 'utils/constants/common'
@@ -22,4 +23,4 @@ const HeaderMeta = () => {
   )
 }
 
-export default HeaderMeta
+export default memo(HeaderMeta)

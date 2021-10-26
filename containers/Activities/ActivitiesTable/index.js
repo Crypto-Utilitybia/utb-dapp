@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, memo } from 'react'
 import Link from 'next/link'
 import { makeStyles } from '@material-ui/core/styles'
 import { Card, Box, TableCell, TableRow } from '@material-ui/core'
@@ -39,7 +39,7 @@ const columns = [
 
 const ROWS_PER_PAGE = 12
 
-export default function ActivitiesTable({ data, isEnd, onLoad }) {
+const ActivitiesTable = ({ data, isEnd, onLoad }) => {
   const classes = useStyles()
 
   const [total, setTotal] = useState(0)
@@ -80,15 +80,9 @@ export default function ActivitiesTable({ data, isEnd, onLoad }) {
                   </div>
                 </TableCell>
                 <TableCell align="center">
-                  {/* <a href={`${links[defaultNetwork].address}/${activity.from}`} target="_blank" rel="noreferrer">
-                    {getEllipsis(activity.from)}
-                  </a> */}
                   <Link href={`/account/${activity.from}`}>{getEllipsis(activity.from)}</Link>
                 </TableCell>
                 <TableCell align="center">
-                  {/* <a href={`${links[defaultNetwork].address}/${activity.to}`} target="_blank" rel="noreferrer">
-                    {getEllipsis(activity.to)}
-                  </a> */}
                   <Link href={`/account/${activity.to}`}>{getEllipsis(activity.to)}</Link>
                 </TableCell>
                 <TableCell align="center">{activity.reason}</TableCell>
@@ -106,3 +100,5 @@ export default function ActivitiesTable({ data, isEnd, onLoad }) {
     </Card>
   )
 }
+
+export default memo(ActivitiesTable)

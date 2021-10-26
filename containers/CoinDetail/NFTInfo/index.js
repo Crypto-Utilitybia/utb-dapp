@@ -2,7 +2,7 @@ import Link from 'next/link'
 import { makeStyles } from '@material-ui/core/styles'
 import { Typography } from '@material-ui/core'
 import { getEllipsis } from 'utils/helpers'
-// import { links } from 'library/constants'
+import { memo } from 'react'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -28,7 +28,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }))
 
-export default function NFTInfo({ account, owner, data, listing, paused }) {
+const NFTInfo = ({ account, owner, data, listing, paused }) => {
   const classes = useStyles()
   const current = listing?.user || owner
 
@@ -45,9 +45,6 @@ export default function NFTInfo({ account, owner, data, listing, paused }) {
       {current && (
         <Typography className={classes.label}>
           Owner:&nbsp;
-          {/* <a href={`${links[library.currentNetwork].address}/${current}`} rel="noreferrer" target="_blank">
-            {account?.address === current ? 'You' : getEllipsis(current)}
-          </a> */}
           <Link href={account?.address === current ? '/wallet' : `/account/${current}`}>
             {account?.address === current ? 'You' : getEllipsis(current)}
           </Link>
@@ -57,9 +54,11 @@ export default function NFTInfo({ account, owner, data, listing, paused }) {
         {listing?.amount > 0
           ? `Listed for sale (${listing.avax} AVAX)`
           : paused
-          ? 'Trade disabled'
-          : 'Not listed for sale'}
+            ? 'Trade disabled'
+            : 'Not listed for sale'}
       </Typography>
     </div>
   )
 }
+
+export default memo(NFTInfo)

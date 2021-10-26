@@ -24,10 +24,6 @@ const SOCIAL_MEDIA_MENU = [
     HREF: 'https://t.me/AvaxCoinsNFTs',
     TITLE: 'Telegram',
   },
-  // {
-  //   HREF: 'https://discord.gg/EW6xpEg92v',
-  //   TITLE: 'Discord',
-  // },
 ]
 
 const PARTNERS_MENU = [

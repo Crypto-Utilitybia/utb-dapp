@@ -1,4 +1,4 @@
-import { useContext } from 'react'
+import { memo, useContext } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import { Grid, Typography } from '@material-ui/core'
 import clsx from 'clsx'
@@ -40,7 +40,7 @@ function secondsToHMS(secs) {
   return sign + z((secs / 3600) | 0) + 'h ' + z(((secs % 3600) / 60) | 0) + 'm ' + z(secs % 60) + 's'
 }
 
-export default function Claim() {
+const Claim = () => {
   const classes = useStyles()
   const commonClasses = useCommonStyles()
   const {
@@ -79,3 +79,5 @@ export default function Claim() {
     </main>
   )
 }
+
+export default memo(Claim)

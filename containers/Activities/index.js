@@ -1,4 +1,4 @@
-import { useCallback, useContext, useState } from 'react'
+import { memo, useCallback, useContext, useState } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import { useCommonStyles } from 'styles/use-styles'
 
@@ -33,7 +33,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }))
 
-export default function Activities() {
+const Activities = () => {
   const classes = useStyles()
   const commonClasses = useCommonStyles()
 
@@ -51,15 +51,14 @@ export default function Activities() {
           `query {
             activities(
               first: ${first}, skip: ${skip} orderBy: timestamp, orderDirection: desc
-              ${
-                filter === 'All'
-                  ? ''
-                  : `
+              ${filter === 'All'
+            ? ''
+            : `
                 where: {
                   reason: "${filter}"
                 }
               `
-              }
+          }
             ) {
               id
               tokenContract
@@ -110,3 +109,5 @@ export default function Activities() {
     </main>
   )
 }
+
+export default memo(Activities)

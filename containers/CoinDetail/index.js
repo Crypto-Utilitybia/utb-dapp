@@ -1,4 +1,4 @@
-import { useCallback, useContext, useEffect, useState } from 'react'
+import { memo, useCallback, useContext, useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
 import { makeStyles } from '@material-ui/core/styles'
 import axios from 'services/axios'
@@ -49,7 +49,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }))
 
-export default function CoinDetail({ coinMeta }) {
+const CoinDetail = ({ coinMeta }) => {
   const classes = useStyles()
   const commonClasses = useCommonStyles()
   const {
@@ -89,8 +89,7 @@ export default function CoinDetail({ coinMeta }) {
         .then(([owner, tokenURI, approved, tokenIndex]) => {
           Promise.all([
             axios.get(
-              `${tokenURI.replace('http://localhost:3000/', '/').replace('https://avaxcoins.com/', '/')}?network=${
-                account?.network || defaultNetwork
+              `${tokenURI.replace('http://localhost:3000/', '/').replace('https://avaxcoins.com/', '/')}?network=${account?.network || defaultNetwork
               }`
             ),
             owner === contracts.marketplace.netAddresses.Marketplace
@@ -319,3 +318,5 @@ export default function CoinDetail({ coinMeta }) {
     </main>
   )
 }
+
+export default memo(CoinDetail)

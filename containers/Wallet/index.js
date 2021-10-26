@@ -1,4 +1,4 @@
-import { useCallback, useContext, useEffect, useState } from 'react'
+import { memo, useCallback, useContext, useEffect, useState } from 'react'
 import Link from 'next/link'
 import axios from 'services/axios'
 import { makeStyles } from '@material-ui/core/styles'
@@ -54,7 +54,7 @@ const useStyles = makeStyles((theme) => ({
 
 const ROWS_PER_PAGE = 12
 
-export default function Wallet() {
+const Wallet = () => {
   const classes = useStyles()
   const commonClasses = useCommonStyles()
   const { account, contracts, metadata } = useContext(WalletContext)
@@ -277,3 +277,5 @@ export default function Wallet() {
     </main>
   )
 }
+
+export default memo(Wallet)
