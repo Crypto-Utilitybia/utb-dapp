@@ -10,7 +10,11 @@ const ConfirmDialog = ({
 }) => {
   return (
     <Modal {...rest}>
-      <Typography color='textPrimary' variant='h5' align='center'>
+      <Typography
+        variant='h5'
+        align='center'
+        color='textPrimary'
+      >
         {text}
       </Typography>
     </Modal>

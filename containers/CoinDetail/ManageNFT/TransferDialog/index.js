@@ -1,9 +1,9 @@
 import { memo, useCallback } from 'react'
 import { Grid } from '@material-ui/core'
+import { makeStyles } from '@material-ui/core/styles'
 import { useForm, Controller } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 import * as yup from 'yup'
-import { makeStyles } from '@material-ui/core/styles'
 
 import Modal from 'components/Modal'
 import ContainedButton from 'components/UI/Buttons/ContainedButton'

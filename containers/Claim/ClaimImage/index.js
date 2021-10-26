@@ -1,15 +1,15 @@
 import { memo, useCallback, useContext, useEffect, useState } from 'react'
 import Link from 'next/link'
-import axios from 'services/axios'
 import { makeStyles } from '@material-ui/core/styles'
 import { Typography } from '@material-ui/core'
 
-import { WalletContext } from 'contexts/WalletProvider'
-import { defaultNetwork, LIBRARY_FETCH_TIME } from 'library/constants'
-import Loading from 'components/Loading'
-import { NO_IMAGE_PATH } from 'utils/constants/image-paths'
-import { useTimestamp } from 'utils/hocs/useTicker'
 import { PROXY_URL } from 'config'
+import axios from 'services/axios'
+import { WalletContext } from 'contexts/WalletProvider'
+import Loading from 'components/Loading'
+import { defaultNetwork, LIBRARY_FETCH_TIME } from 'library/constants'
+import { NO_IMAGE_PATH } from 'utils/constants/image-paths'
+import useTimestamp from 'utils/hooks/useTimestamp'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -68,34 +68,36 @@ const ClaimImage = () => {
     return () => clearInterval(timer)
   }, [fetchData])
 
-  return data ? (
-    <div className={classes.root}>
-      <Typography className={classes.title} align="center">
-        {data.name}
-      </Typography>
-      <Link href={`/coin/${totalSupply}`}>
-        <img
-          alt="nft-item"
-          src={`${PROXY_URL}${data.image}?timestamp=${timestamp}`}
-          className={classes.nftItem}
-          onError={(e) => {
-            e.target.onerror = null
-            e.target.src = NO_IMAGE_PATH
-          }}
-        />
-      </Link>
-      {/* <Typography variant="body2" align="center">
-        {data.description}
-      </Typography> */}
-    </div>
-  ) : (
-    <div className={classes.root}>
-      <Typography className={classes.title} align="center">
-        {totalSupply === 0 ? 'No Claims Yet.' : '...'}
-      </Typography>
-      {totalSupply === -1 && <Loading loading />}
-    </div>
-  )
+  return data
+    ? (
+      <div className={classes.root}>
+        <Typography
+          align='center'
+          className={classes.title}
+        >
+          {data.name}
+        </Typography>
+
+        <Link href={`/coin/${totalSupply}`}>
+          <img
+            alt='nft-item'
+            src={`${PROXY_URL}${data.image}?timestamp=${timestamp}`}
+            className={classes.nftItem}
+            onError={(e) => {
+              e.target.onerror = null
+              e.target.src = NO_IMAGE_PATH
+            }}
+          />
+        </Link>
+      </div>
+    ) : (
+      <div className={classes.root}>
+        <Typography className={classes.title} align='center'>
+          {totalSupply === 0 ? 'No Claims Yet.' : '...'}
+        </Typography>
+        {totalSupply === -1 && <Loading loading />}
+      </div>
+    )
 }
 
 export default memo(ClaimImage)

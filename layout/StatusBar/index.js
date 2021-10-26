@@ -117,7 +117,6 @@ const StatusBar = () => {
 
         <Typography className={classes.label}>
           <span>Total Listing:</span>&nbsp;{listings}&nbsp;
-          {/* <TokenIcon size={20} token="AVAX" /> */}
         </Typography>
       </div>
     </div>

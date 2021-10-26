@@ -1,9 +1,9 @@
 import * as EvmChains from 'evm-chains'
 
 import Web3 from 'web3'
-import { addresses, ACCOUNT_FETCH_TIME } from './constants'
-import AvaxCoin from './AvaxCoin'
-import Marketplace from './Marketplace'
+import { addresses, ACCOUNT_FETCH_TIME } from 'library/constants'
+import AvaxCoin from 'library/AvaxCoin'
+import Marketplace from 'library/Marketplace'
 
 export default class AvaxCoinLib {
   constructor(options) {
@@ -94,9 +94,6 @@ export default class AvaxCoinLib {
   }
 
   setProvider(prov) {
-    // if (this.web3.givenProvider.disconnect) {
-    //   this.web3.givenProvider.disconnect()
-    // }
     if (this.web3.givenProvider.removeAllListeners) {
       this.web3.givenProvider.removeAllListeners('accountsChanged')
       this.web3.givenProvider.removeAllListeners('chainChanged')
@@ -118,8 +115,8 @@ export default class AvaxCoinLib {
       : this.account.address === newAccount.address &&
         this.account.network === newAccount.network &&
         this.account.balance === newAccount.balance
-      ? false
-      : true
+        ? false
+        : true
   }
 
   async fetchAccount(refresh = false) {
@@ -131,7 +128,7 @@ export default class AvaxCoinLib {
         const chains = await EvmChains.getChain(chainId)
         network = chains.networkId
       } catch (e) {
-        // console.log(e)
+        console.log(e)
       }
       const networkChanged = network !== this.currentNetwork
       const [address] = await this.web3.eth.getAccounts()

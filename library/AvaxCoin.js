@@ -1,5 +1,5 @@
-import AvaxCoinABI from './abi/AvaxCoin.json'
-import { call, send } from './utils'
+import AvaxCoinABI from 'library/abi/AvaxCoin.json'
+import { call, send } from 'library/utils'
 
 export default class AvaxCoin {
   constructor(network, web3, addresses) {

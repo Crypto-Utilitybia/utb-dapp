@@ -1,5 +1,5 @@
 import axios from 'services/axios'
-import { links } from './constants'
+import { links } from 'library/constants'
 
 export const call =
   (method) =>

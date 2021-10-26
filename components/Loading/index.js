@@ -20,7 +20,11 @@ const useStyles = makeStyles((theme) => ({
   },
 }))
 
-const Loading = ({ loading, height, size = 60 }) => {
+const Loading = ({
+  loading,
+  height,
+  size = 60
+}) => {
   const classes = useStyles({ height })
 
   return (

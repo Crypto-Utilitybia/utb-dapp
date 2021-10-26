@@ -47,6 +47,7 @@ const Logo = ({
             alt='logo'
           />
         </picture>
+
         {isLabel &&
           <Typography className={classes.label}>
             AVAX Coins

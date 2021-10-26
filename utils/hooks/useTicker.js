@@ -10,9 +10,3 @@ export default function useTicker(interval = 1000) {
 
   return [now]
 }
-
-export function useTimestamp() {
-  const [now, setNow] = useState(Date.now())
-  const handleRefresh = () => setNow(Date.now())
-  return [now, handleRefresh]
-}

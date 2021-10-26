@@ -6,7 +6,6 @@ import clsx from 'clsx'
 
 import FooterLinks from './FooterLinks'
 import FooterSocial from './FooterSocial'
-// import FooterPartners from './FooterPartners'
 import { useCommonStyles } from 'styles/use-styles'
 
 const useStyles = makeStyles(theme => ({
@@ -46,8 +45,6 @@ const Footer = () => {
         <FooterLinks />
         <Divider orientation='vertical' className={classes.divider} />
         <FooterSocial />
-        {/* <Divider orientation='vertical' className={classes.divider} />
-        <FooterPartners /> */}
       </div>
     </footer>
   );

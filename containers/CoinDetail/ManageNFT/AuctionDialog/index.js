@@ -1,9 +1,9 @@
 import { memo, useCallback } from 'react'
 import { Grid } from '@material-ui/core'
+import { makeStyles } from '@material-ui/core/styles'
 import { useForm, Controller } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 import * as yup from 'yup'
-import { makeStyles } from '@material-ui/core/styles'
 
 import Modal from 'components/Modal'
 import ContainedButton from 'components/UI/Buttons/ContainedButton'
@@ -36,23 +36,23 @@ const AuctionDialog = ({ open, setOpen, isUpdate, onSubmit }) => {
   }, [setOpen])
 
   return (
-    <Modal open={open} title="Auction NFT" onClose={handleClose}>
+    <Modal open={open} title='Auction NFT' onClose={handleClose}>
       <form onSubmit={handleSubmit(onSubmit)} noValidate className={classes.container}>
         <Grid container spacing={2}>
           <Grid item xs={12}>
             <Controller
               as={<TextField />}
-              name="balance"
-              type="number"
-              label="Price"
-              placeholder="Auction price"
+              name='balance'
+              type='number'
+              label='Price'
+              placeholder='Auction price'
               error={errors.balance?.message}
               control={control}
               defaultValue={''}
             />
           </Grid>
           <Grid item xs={12}>
-            <ContainedButton fullWidth type="submit" color="secondary" className={classes.button}>
+            <ContainedButton fullWidth type='submit' color='secondary' className={classes.button}>
               {isUpdate ? 'Update Price' : 'Submit Listing'}
             </ContainedButton>
           </Grid>

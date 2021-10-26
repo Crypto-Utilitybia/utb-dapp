@@ -3,11 +3,11 @@ import Link from 'next/link'
 import { makeStyles } from '@material-ui/core/styles'
 import { Card, Box, TableCell, TableRow } from '@material-ui/core'
 
+import TokenIcon from 'components/TokenIcon'
 import TableContainer from 'parts/Table/TableContainer'
 import TablePagination from 'parts/Table/TablePagination'
 import { getEllipsis } from 'utils/helpers'
 import { defaultNetwork, links } from 'library/constants'
-import TokenIcon from 'components/TokenIcon'
 
 const useStyles = makeStyles((theme) => ({
   tableContainer: {
@@ -39,7 +39,11 @@ const columns = [
 
 const ROWS_PER_PAGE = 12
 
-const ActivitiesTable = ({ data, isEnd, onLoad }) => {
+const ActivitiesTable = ({
+  data,
+  isEnd,
+  onLoad
+}) => {
   const classes = useStyles()
 
   const [total, setTotal] = useState(0)
@@ -68,26 +72,34 @@ const ActivitiesTable = ({ data, isEnd, onLoad }) => {
             return (
               <TableRow key={activity.id}>
                 <Link href={`/coin/${activity.tokenId}`}>
-                  <TableCell className={classes.tokenId} component="th" scope="row">
+                  <TableCell className={classes.tokenId} component='th' scope='row'>
                     {activity.tokenId}
                   </TableCell>
                 </Link>
-                <TableCell align="center">{activity.tier}</TableCell>
-                <TableCell align="center">
+                <TableCell align='center'>
+                  {activity.tier}
+                </TableCell>
+                <TableCell align='center'>
                   <div className={classes.cell}>
                     {Number(activity.price).toFixed(2)}
-                    <TokenIcon size={18} token="AVAX" className={classes.coin} />
+                    <TokenIcon size={18} token='AVAX' className={classes.coin} />
                   </div>
                 </TableCell>
-                <TableCell align="center">
-                  <Link href={`/account/${activity.from}`}>{getEllipsis(activity.from)}</Link>
+                <TableCell align='center'>
+                  <Link href={`/account/${activity.from}`}>
+                    {getEllipsis(activity.from)}
+                  </Link>
                 </TableCell>
-                <TableCell align="center">
-                  <Link href={`/account/${activity.to}`}>{getEllipsis(activity.to)}</Link>
+                <TableCell align='center'>
+                  <Link href={`/account/${activity.to}`}>
+                    {getEllipsis(activity.to)}
+                  </Link>
                 </TableCell>
-                <TableCell align="center">{activity.reason}</TableCell>
-                <TableCell align="center">
-                  <a href={`${links[defaultNetwork].tx}/${activity.txHash}`} target="_blank" rel="noreferrer">
+                <TableCell align='center'>
+                  {activity.reason}
+                </TableCell>
+                <TableCell align='center'>
+                  <a href={`${links[defaultNetwork].tx}/${activity.txHash}`} target='_blank' rel='noreferrer'>
                     {new Date(activity.timestamp * 1000).toDateString()}
                   </a>
                 </TableCell>
@@ -95,7 +107,13 @@ const ActivitiesTable = ({ data, isEnd, onLoad }) => {
             )
           })}
         </TableContainer>
-        <TablePagination page={page} setPage={setPage} total={total} rowsPerPage={ROWS_PER_PAGE} />
+
+        <TablePagination
+          page={page}
+          setPage={setPage}
+          total={total}
+          rowsPerPage={ROWS_PER_PAGE}
+        />
       </Box>
     </Card>
   )

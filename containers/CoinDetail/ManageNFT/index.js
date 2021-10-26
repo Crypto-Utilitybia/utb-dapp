@@ -34,7 +34,15 @@ const useStyles = makeStyles((theme) => ({
   },
 }))
 
-const ManageNFT = ({ account, owner, listing, approved, rewards, onAction, paused }) => {
+const ManageNFT = ({
+  account,
+  owner,
+  listing,
+  approved,
+  rewards,
+  onAction,
+  paused
+}) => {
   const classes = useStyles()
   const [action, setAction] = useState('')
   const isOwner = account === owner
@@ -48,52 +56,70 @@ const ManageNFT = ({ account, owner, listing, approved, rewards, onAction, pause
       <Typography color="textSecondary" className={classes.header}>
         Manage NFT
       </Typography>
-      {isOwner ? (
-        <>
-          <Typography className={classes.label} onClick={() => setAction('transfer')}>
-            Transfer
-          </Typography>
-          {!paused && (
+      {
+        isOwner ? (
+          <>
             <Typography
               className={classes.label}
-              onClick={() => (approved ? setAction('auction') : onAction('approve'))}
+              onClick={() => setAction('transfer')}
             >
-              {approved ? 'Auction' : 'Approve'}
+              Transfer
             </Typography>
-          )}
-          <Typography className={classes.label} onClick={() => onAction('claim')}>
-            Claim ({rewards.toFixed(8)})
-          </Typography>
-        </>
-      ) : listing ? (
-        listing.user === account ? (
-          <>
-            <Typography className={classes.label} onClick={() => setAction('update')}>
-              Update Price
-            </Typography>
-            <Typography className={classes.label} onClick={() => onAction('cancel')}>
-              Cancel Listing
+            {!paused && (
+              <Typography
+                className={classes.label}
+                onClick={() => (approved ? setAction('auction') : onAction('approve'))}
+              >
+                {approved ? 'Auction' : 'Approve'}
+              </Typography>
+            )}
+            <Typography
+              className={classes.label}
+              onClick={() => onAction('claim')}
+            >
+              Claim ({rewards.toFixed(8)})
             </Typography>
           </>
-        ) : (
-          <Typography className={classes.label} onClick={() => onAction('fulfill')}>
-            Buy at {Number(listing.avax).toFixed(2)} (AVAX)
-          </Typography>
-        )
-      ) : (
-        <Typography className={classes.none}>No Actions</Typography>
-      )}
-      <TransferDialog
-        open={action === 'transfer'}
-        setOpen={() => setAction('')}
-        onSubmit={(data) => handleAction(action, data)}
-      />
-      <AuctionDialog
-        open={action === 'auction' || action === 'update'}
-        isUpdate={action === 'update'}
-        setOpen={() => setAction('')}
-        onSubmit={(data) => handleAction(action, data)}
-      />
+        ) : listing
+          ? (
+            listing.user === account
+              ? (
+                <>
+                  <Typography className={classes.label} onClick={() => setAction('update')}>
+                    Update Price
+                  </Typography>
+                  <Typography className={classes.label} onClick={() => onAction('cancel')}>
+                    Cancel Listing
+                  </Typography>
+                </>
+              ) : (
+                <Typography className={classes.label} onClick={() => onAction('fulfill')}>
+                  Buy at {Number(listing.avax).toFixed(2)} (AVAX)
+                </Typography>
+              )
+          ) : (
+            <Typography className={classes.none}>
+              No Actions
+            </Typography>
+          )
+      }
+
+      {action === 'transfer' &&
+        <TransferDialog
+          open={action === 'transfer'}
+          setOpen={() => setAction('')}
+          onSubmit={(data) => handleAction(action, data)}
+        />
+      }
+
+      {(action === 'auction' || action === 'update') &&
+        <AuctionDialog
+          open={action === 'auction' || action === 'update'}
+          isUpdate={action === 'update'}
+          setOpen={() => setAction('')}
+          onSubmit={(data) => handleAction(action, data)}
+        />
+      }
     </div>
   )
 }

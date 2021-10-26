@@ -2,10 +2,10 @@ import { memo, useState } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import { Grid, Typography } from '@material-ui/core'
 import PlusIcon from '@material-ui/icons/AddCircleOutline'
+import clsx from 'clsx'
 
 import TokenIcon from 'components/TokenIcon'
 import { TIERS } from 'utils/constants/coins'
-import clsx from 'clsx'
 
 const useStyles = makeStyles((theme) => ({
   title: {

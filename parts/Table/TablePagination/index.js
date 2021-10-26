@@ -10,15 +10,20 @@ const useStyles = makeStyles((theme) => ({
   },
 }))
 
-const TablePagination = ({ page, setPage, total, rowsPerPage }) => {
+const TablePagination = ({
+  page,
+  setPage,
+  total,
+  rowsPerPage
+}) => {
   const classes = useStyles()
 
   return (
     <Pagination
-      variant="outlined"
-      shape="rounded"
-      color="secondary"
-      size="large"
+      variant='outlined'
+      shape='rounded'
+      color='secondary'
+      size='large'
       page={page + 1}
       count={Math.ceil(total / rowsPerPage)}
       onChange={(event, page) => setPage(page - 1)}

@@ -1,5 +1,5 @@
-import MarketplaceABI from './abi/Marketplace.json'
-import { call, send } from './utils'
+import MarketplaceABI from 'library/abi/Marketplace.json'
+import { call, send } from 'library/utils'
 
 export default class Marketplace {
   constructor(network, web3, addresses) {

@@ -21,7 +21,12 @@ const useStyles = makeStyles((theme) => ({
   },
 }))
 
-const SelectBox = ({ items, placeholder, label, ...rest }) => {
+const SelectBox = ({
+  items,
+  placeholder,
+  label,
+  ...rest
+}) => {
   const classes = useStyles()
 
   return (
@@ -41,7 +46,7 @@ const SelectBox = ({ items, placeholder, label, ...rest }) => {
       {...rest}
     >
       {placeholder && (
-        <MenuItem key="placeholder" value={{}} className={classes.placeholder}>
+        <MenuItem key='placeholder' value={{}} className={classes.placeholder}>
           {placeholder}
         </MenuItem>
       )}

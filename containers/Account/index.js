@@ -1,25 +1,25 @@
 import { memo, useCallback, useContext, useEffect, useState } from 'react'
 import Link from 'next/link'
-import axios from 'services/axios'
+import { useRouter } from 'next/router'
 import { makeStyles } from '@material-ui/core/styles'
 import { Grid, Typography } from '@material-ui/core'
 
-import PageTitle from 'parts/PageTitle'
-import LINKS from 'utils/constants/links'
-import { useCommonStyles } from 'styles/use-styles'
-import { WalletContext } from 'contexts/WalletProvider'
-import { NO_IMAGE_PATH } from 'utils/constants/image-paths'
-import Loading from 'components/Loading'
-import { LIBRARY_FETCH_TIME } from 'library/constants'
-import { useTimestamp } from 'utils/hocs/useTicker'
-import TablePagination from 'parts/Table/TablePagination'
-import { ALL_TIERS, SORT_COINS, TIERS } from 'utils/constants/filters'
-import SelectBox from 'components/UI/SelectBox'
-import { useRouter } from 'next/router'
-import { getEllipsis } from 'utils/helpers'
-import ActivitiesTable from 'containers/Activities/ActivitiesTable'
-import { getGraph } from 'library/utils'
 import { PROXY_URL } from 'config'
+import axios from 'services/axios'
+import { WalletContext } from 'contexts/WalletProvider'
+import Loading from 'components/Loading'
+import SelectBox from 'components/UI/SelectBox'
+import PageTitle from 'parts/PageTitle'
+import TablePagination from 'parts/Table/TablePagination'
+import ActivitiesTable from 'parts/ActivitiesTable'
+import { getGraph } from 'library/utils'
+import { LIBRARY_FETCH_TIME } from 'library/constants'
+import LINKS from 'utils/constants/links'
+import { NO_IMAGE_PATH } from 'utils/constants/image-paths'
+import { ALL_TIERS, SORT_COINS, TIERS } from 'utils/constants/filters'
+import useTimestamp from 'utils/hooks/useTimestamp'
+import { getEllipsis } from 'utils/helpers'
+import { useCommonStyles } from 'styles/use-styles'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -223,6 +223,7 @@ const Account = () => {
             />
           </div>
         </PageTitle>
+
         <Grid container spacing={3}>
           {nfts.map(
             ([tokenId, metadata]) =>
@@ -244,10 +245,21 @@ const Account = () => {
           )}
           {filtered.length === 0 && !loading && <Typography className={classes.label}>No Coins</Typography>}
         </Grid>
-        <TablePagination page={page} setPage={setPage} total={tokens.length} rowsPerPage={ROWS_PER_PAGE} />
+
+        <TablePagination
+          page={page}
+          setPage={setPage}
+          total={tokens.length}
+          rowsPerPage={ROWS_PER_PAGE}
+        />
+
         <Grid item xs={12}>
-          <PageTitle title="Activities" />
-          <ActivitiesTable data={activities} isEnd={isEnd} onLoad={fetchActivities} />
+          <PageTitle title='Activities' />
+          <ActivitiesTable
+            data={activities}
+            isEnd={isEnd}
+            onLoad={fetchActivities}
+          />
         </Grid>
         {loading && <Loading loading />}
       </div>

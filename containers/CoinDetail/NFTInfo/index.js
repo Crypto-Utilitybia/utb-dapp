@@ -1,8 +1,9 @@
+import { memo } from 'react'
 import Link from 'next/link'
 import { makeStyles } from '@material-ui/core/styles'
 import { Typography } from '@material-ui/core'
+
 import { getEllipsis } from 'utils/helpers'
-import { memo } from 'react'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -28,20 +29,31 @@ const useStyles = makeStyles((theme) => ({
   },
 }))
 
-const NFTInfo = ({ account, owner, data, listing, paused }) => {
+const NFTInfo = ({
+  account,
+  owner,
+  data,
+  listing,
+  paused
+}) => {
   const classes = useStyles()
   const current = listing?.user || owner
 
   return (
     <div className={classes.root}>
-      <Typography color="textSecondary" className={classes.header}>
+      <Typography color='textSecondary' className={classes.header}>
         Info
       </Typography>
+
       {data?.attributes.map(({ trait_type, value }) => (
-        <Typography key={trait_type} className={classes.label}>
+        <Typography
+          key={trait_type}
+          className={classes.label}
+        >
           {trait_type}: {value}
         </Typography>
       ))}
+
       {current && (
         <Typography className={classes.label}>
           Owner:&nbsp;
@@ -50,12 +62,14 @@ const NFTInfo = ({ account, owner, data, listing, paused }) => {
           </Link>
         </Typography>
       )}
+
       <Typography className={classes.label}>
         {listing?.amount > 0
           ? `Listed for sale (${listing.avax} AVAX)`
           : paused
             ? 'Trade disabled'
-            : 'Not listed for sale'}
+            : 'Not listed for sale'
+        }
       </Typography>
     </div>
   )

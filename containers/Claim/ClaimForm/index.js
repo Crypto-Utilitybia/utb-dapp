@@ -2,9 +2,10 @@ import { memo, useCallback, useContext, useEffect, useState } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import { Grid, Typography, Button } from '@material-ui/core'
 import clsx from 'clsx'
+
 import { WalletContext } from 'contexts/WalletProvider'
-import RowDivider from 'parts/RowDivider'
 import Loading from 'components/Loading'
+import RowDivider from 'parts/RowDivider'
 import { handleTransaction } from 'library/utils'
 import { LIBRARY_FETCH_TIME } from 'library/constants'
 

@@ -30,7 +30,7 @@ const FooterLinks = () => {
         variant='h6'
         className={classes.title}
       >
-        CryptoUtilitybia.com
+        Crypto Utilitybia
       </Typography>
       <Grid container>
         {APP_LINKS.map((menuItem) => (

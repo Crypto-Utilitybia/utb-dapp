@@ -36,7 +36,10 @@ const PageTitle = ({
     <div className={className}>
       <Grid container spacing={3}>
         <Grid item xs={12} sm={4}>
-          <Typography variant='h5' className={classes.title}>
+          <Typography
+            variant='h5'
+            className={classes.title}
+          >
             {title}
           </Typography>
         </Grid>
@@ -45,7 +48,9 @@ const PageTitle = ({
         </Grid>
       </Grid>
 
-      {!noBorder && <RowDivider className={classes.divider} />}
+      {!noBorder &&
+        <RowDivider className={classes.divider} />
+      }
     </div>
   )
 }
