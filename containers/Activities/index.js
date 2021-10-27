@@ -51,14 +51,7 @@ const Activities = () => {
           `query {
             activities(
               first: ${first}, skip: ${skip} orderBy: timestamp, orderDirection: desc
-              ${filter === 'All'
-            ? ''
-            : `
-                where: {
-                  reason: "${filter}"
-                }
-              `
-          }
+              ${filter === 'All' ? '' : `where: {reason: "${filter}"}`}
             ) {
               id
               tokenContract
