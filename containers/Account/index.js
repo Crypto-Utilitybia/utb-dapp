@@ -136,13 +136,7 @@ const Account = () => {
                   Promise.resolve(filtered[skip + index]),
                   contracts.avaxcoin.methods
                     .tokenURI(filtered[skip + index])
-                    .then((tokenURI) =>
-                      axios.get(
-                        `${tokenURI
-                          .replace('http://localhost:3000/', '/')
-                          .replace('https://avaxcoins.com/', '/')}?network=${library.currentNetwork}`
-                      )
-                    ),
+                    .then((tokenURI) => axios.get(`${tokenURI}?network=${library.currentNetwork}`)),
                 ]).then(([tokenId, { data }]) => Promise.resolve([tokenId, data]))
               )
           )
@@ -243,7 +237,11 @@ const Account = () => {
                 </Grid>
               )
           )}
-          {filtered.length === 0 && !loading && <Typography className={classes.label}>No Coins</Typography>}
+          {filtered.length === 0 && !loading &&
+            <Typography className={classes.label}>
+              No Coins
+            </Typography>
+          }
         </Grid>
 
         <TablePagination

@@ -86,10 +86,7 @@ const CoinDetail = ({ coinMeta }) => {
       ])
         .then(([owner, tokenURI, approved, tokenIndex]) => {
           Promise.all([
-            axios.get(
-              `${tokenURI.replace('http://localhost:3000/', '/').replace('https://avaxcoins.com/', '/')}?network=${account?.network || defaultNetwork
-              }`
-            ),
+            axios.get(`${tokenURI}?network=${account?.network || defaultNetwork}`),
             owner === contracts.marketplace.netAddresses.Marketplace
               ? contracts.marketplace.methods.getTokenListing(contracts.marketplace.netAddresses.AvaxCoin, tokenId)
               : Promise.resolve(null),

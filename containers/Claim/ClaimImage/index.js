@@ -47,11 +47,7 @@ const ClaimImage = () => {
               .tokenURI(supply)
               .then((tokenURI) => {
                 axios
-                  .get(
-                    `${tokenURI
-                      .replace('http://localhost:3000/', '/')
-                      .replace('https://avaxcoins.com/', '/')}?network=${account?.network || defaultNetwork}`
-                  )
+                  .get(`${tokenURI}?network=${account?.network || defaultNetwork}`)
                   .then(({ data }) => setData([supply, data]))
                   .catch(console.log)
               })

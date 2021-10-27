@@ -142,13 +142,7 @@ const Marketplace = () => {
               listings.map(({ tokenId }) =>
                 contracts.avaxcoin.methods
                   .tokenURI(tokenId)
-                  .then((tokenURI) =>
-                    axios.get(
-                      `${tokenURI
-                        .replace('http://localhost:3000/', '/')
-                        .replace('https://avaxcoins.com/', '/')}?network=${library.currentNetwork}`
-                    )
-                  )
+                  .then((tokenURI) => axios.get(`${tokenURI}?network=${library.currentNetwork}`))
                   .then(({ data }) => data)
               )
             )

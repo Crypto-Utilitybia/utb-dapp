@@ -18,6 +18,7 @@ import { NO_IMAGE_PATH } from 'utils/constants/image-paths'
 import { ALL_TIERS, SORT_COINS, TIERS } from 'utils/constants/filters'
 import useTimestamp from 'utils/hooks/useTimestamp'
 import { useCommonStyles } from 'styles/use-styles'
+import { isEmpty } from 'utils/helpers'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -70,23 +71,24 @@ const Wallet = () => {
   const [rewards, setRewards] = useState(0)
 
   const fetchRewards = useCallback(() => {
-    if (tokens.length === 0) {
+    if (isEmpty(tokens)) {
       setRewards(0)
-    } else {
-      contracts.avaxcoin.methods
-        .getRewards(tokens)
-        .then(contracts.avaxcoin.web3.utils.fromWei)
-        .then(Number)
-        .then((rewards) => {
-          setRewards(rewards)
-        })
-        .catch(console.log)
+      return;
     }
+
+    contracts.avaxcoin.methods
+      .getRewards(tokens)
+      .then(contracts.avaxcoin.web3.utils.fromWei)
+      .then(Number)
+      .then((rewards) => {
+        setRewards(rewards)
+      })
+      .catch(console.log)
   }, [contracts, tokens])
 
   useEffect(() => {
     fetchRewards()
-  }, [tokens, fetchRewards])
+  }, [fetchRewards])
 
   const fetchTokens = useCallback(() => {
     if (account?.address && contracts.avaxcoin) {
@@ -146,13 +148,7 @@ const Wallet = () => {
                   Promise.resolve(filtered[skip + index]),
                   contracts.avaxcoin.methods
                     .tokenURI(filtered[skip + index])
-                    .then((tokenURI) =>
-                      axios.get(
-                        `${tokenURI
-                          .replace('http://localhost:3000/', '/')
-                          .replace('https://avaxcoins.com/', '/')}?network=${account.network || defaultNetwork}`
-                      )
-                    ),
+                    .then((tokenURI) => axios.get(`${tokenURI}?network=${account.network || defaultNetwork}`)),
                 ]).then(([tokenId, { data }]) => Promise.resolve([tokenId, data]))
               )
           )
