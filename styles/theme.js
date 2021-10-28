@@ -67,7 +67,7 @@ const theme = responsiveFontSizes(
       text: {
         default: '#FFFFFF',
         primary: '#473937',
-        secondary: '#ababab',
+        secondary: '#e13e3f',
       },
     },
     custom: {

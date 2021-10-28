@@ -1,11 +1,13 @@
 import Head from 'next/head'
+
+import Layout from 'layout'
 import axios from 'services/axios'
 import CoinDetail from 'containers/CoinDetail'
 import { defaultNetwork } from 'library/constants'
 
 export default function CoinPage({ coinMeta }) {
   return (
-    <>
+    <Layout>
       <Head>
         <meta property="og:url" content={coinMeta.external_url} />
         <meta property="og:title" content={coinMeta.name} />
@@ -24,7 +26,7 @@ export default function CoinPage({ coinMeta }) {
         />
       </Head>
       <CoinDetail coinMeta={coinMeta} />
-    </>
+    </Layout>
   )
 }
 

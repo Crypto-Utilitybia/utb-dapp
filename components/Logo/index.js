@@ -50,7 +50,7 @@ const Logo = ({
 
         {isLabel &&
           <Typography className={classes.label}>
-            AVAX Coins
+            Crypto Utilitybia
           </Typography>
         }
       </a>

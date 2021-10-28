@@ -2,7 +2,6 @@ import Head from 'next/head'
 import CssBaseline from '@material-ui/core/CssBaseline'
 import { ThemeProvider } from '@material-ui/core/styles'
 
-import Layout from 'layout'
 import PopupProvider from 'contexts/PopupProvider'
 import * as COMMON_CONSTANTS from 'utils/constants/common'
 import theme from 'styles/theme'
@@ -35,9 +34,7 @@ function MyApp({ Component, pageProps }) {
         <WalletProvider>
           <PopupProvider>
             <CssBaseline />
-            <Layout>
-              <Component {...pageProps} />
-            </Layout>
+            <Component {...pageProps} />
           </PopupProvider>
         </WalletProvider>
       </ThemeProvider>

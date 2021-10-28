@@ -19,6 +19,14 @@ const LINKS = Object.freeze({
     TITLE: 'Coin Detail',
     HREF: '/coin/[tokenId]'
   },
+  STORE: {
+    TITLE: 'Store',
+    HREF: '/store'
+  },
+  GIFT_BOX: {
+    TITLE: 'Gift Box',
+    HREF: '/store/gift-box'
+  },
 });
 
 export default LINKS;
