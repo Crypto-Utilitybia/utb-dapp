@@ -27,6 +27,14 @@ const LINKS = Object.freeze({
     TITLE: 'Gift Box',
     HREF: '/store/gift-box'
   },
+  GIFT_BOX_DETAIL: {
+    TITLE: 'Gift Box Detail',
+    HREF: '/store/gift-box/[giftId]'
+  },
+  MY_UTILITIES: {
+    TITLE: 'My Utilities',
+    HREF: '/my-utilities'
+  },
 });
 
 export default LINKS;

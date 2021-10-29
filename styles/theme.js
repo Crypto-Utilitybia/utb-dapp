@@ -48,9 +48,9 @@ const theme = responsiveFontSizes(
     },
     palette: {
       primary: {
-        main: '#edebed',
-        contrastText: '#e13e3f',
-        background: '#e13e3fb3',
+        main: '#008CEE',
+        contrastText: '#FFFFFF',
+        background: '#008CEEb3',
       },
       secondary: {
         main: '#000000',
@@ -62,11 +62,11 @@ const theme = responsiveFontSizes(
       background: {
         default: '#FFFFFF',
         primary: '#3c3c3c',
-        secondary: '#e13e3f',
+        secondary: '#008CEE',
       },
       text: {
-        default: '#FFFFFF',
-        primary: '#473937',
+        default: '#473937',
+        primary: '#FFFFFF',
         secondary: '#e13e3f',
       },
     },

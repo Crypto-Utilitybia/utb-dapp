@@ -1,8 +1,7 @@
 import { memo } from 'react'
 import { Typography } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
-
-import TokenIcon from 'components/TokenIcon'
+import { alpha } from '@material-ui/core/styles/colorManipulator';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -26,37 +25,46 @@ const useStyles = makeStyles((theme) => ({
     boxShadow: '0px 0px 13px rgba(0, 0, 0, 0.25)',
     border: `3px solid ${theme.custom.palette.border}`
   },
-  price: {
+  infoContainer: {
     position: 'absolute',
-    display: 'flex',
-    alignItems: 'center',
-    bottom: 10,
-    right: 10
+    top: 0,
+    height: '100%',
+    padding: theme.spacing(4, 3),
+    backgroundColor: alpha(theme.palette.primary.main, 0.3)
+  },
+  description: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginBottom: theme.spacing(3)
   }
 }))
 
-const GiftBoxCard = ({
-  gift
+const GiftCard = ({
+  item
 }) => {
   const classes = useStyles()
 
   return (
     <main className={classes.root}>
       <Typography color='textPrimary' variant='h5' className={classes.name}>
-        {gift.name}
+        {item.name}
       </Typography>
       <div className={classes.content}>
         <img
           alt='gift-box'
-          src={gift.image}
+          src={item.image}
           className={classes.box}
         />
-        <Typography color='textSecondary' variant='h5' className={classes.price}>
-          {gift.price} <TokenIcon size={30} token='AVAX' />
-        </Typography>
+        <div className={classes.infoContainer}>
+          {item.description.map((item, index) => (
+            <Typography key={index} color='textPrimary' className={classes.description}>
+              {item}
+            </Typography>
+          ))}
+        </div>
       </div>
     </main>
   )
 }
 
-export default memo(GiftBoxCard)
+export default memo(GiftCard)

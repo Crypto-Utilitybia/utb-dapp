@@ -4,7 +4,7 @@ import { Grid, Typography } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 import { useCommonStyles } from 'styles/use-styles'
 
-import { useStore } from 'contexts/store-context'
+import { useMyUtilities } from 'contexts/my-utilities-context'
 import Loading from 'components/Loading'
 import GiftBoxCard from './GiftBoxCard'
 import LINKS from 'utils/constants/links'
@@ -22,12 +22,12 @@ const useStyles = makeStyles((theme) => ({
   }
 }))
 
-const GiftBox = () => {
+const MyUtilities = () => {
   const classes = useStyles()
   const commonClasses = useCommonStyles()
 
   const router = useRouter()
-  const { loading, gifts } = useStore()
+  const { loading, utilities } = useMyUtilities()
 
   const giftHandler = (gift) => () => {
     router.push(
@@ -48,10 +48,10 @@ const GiftBox = () => {
               color='textPrimary'
               className={classes.title}
             >
-              Gift Box
+              My Utilities
             </Typography>
           </Grid>
-          {gifts.map((gift, index) => (
+          {utilities.map((gift, index) => (
             <Grid key={index} item xs={12} sm={6} md={4} onClick={giftHandler(gift)}>
               <GiftBoxCard gift={gift} />
             </Grid>
@@ -62,4 +62,4 @@ const GiftBox = () => {
   )
 }
 
-export default memo(GiftBox)
+export default memo(MyUtilities)

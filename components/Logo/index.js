@@ -2,13 +2,12 @@
 import { memo } from 'react'
 import Link from 'next/link'
 import { makeStyles } from '@material-ui/core/styles'
-import { Typography } from '@material-ui/core'
 import clsx from 'clsx'
 
 import LINKS from 'utils/constants/links'
-import { LOGO_IMAGE_PATH } from 'utils/constants/image-paths'
+import { LOGO_IMAGE_PATH, LOGO_LABEL_IMAGE_PATH } from 'utils/constants/image-paths'
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(() => ({
   picture: {
     display: 'flex',
   },
@@ -20,12 +19,6 @@ const useStyles = makeStyles((theme) => ({
   img: {
     height: 57,
     objectFit: 'contain',
-  },
-  label: {
-    fontSize: 26,
-    fontWeight: 'bold',
-    color: theme.palette.text.default,
-    marginLeft: theme.spacing(1),
   }
 }));
 
@@ -35,24 +28,19 @@ const Logo = ({
   ...rest
 }) => {
   const classes = useStyles();
+  const imagePath = isLabel ? LOGO_LABEL_IMAGE_PATH : LOGO_IMAGE_PATH
 
   return (
     <Link href={LINKS.CLAIM.HREF}>
       <a className={clsx(classes.container, className)}>
         <picture className={classes.picture} {...rest}>
-          <source srcSet={LOGO_IMAGE_PATH} />
+          <source srcSet={imagePath} />
           <img
             className={classes.img}
-            src={LOGO_IMAGE_PATH}
+            src={imagePath}
             alt='logo'
           />
         </picture>
-
-        {isLabel &&
-          <Typography className={classes.label}>
-            Crypto Utilitybia
-          </Typography>
-        }
       </a>
     </Link>
   )

@@ -7,17 +7,14 @@ import {
   SQUARE_WRAPPED_PRODUCT_IMAGE_PATH,
   SQUARE_OPEN_PRODUCT_IMAGE_PATH,
   SQUARE_CONFETTI_PRODUCT_IMAGE_PATH,
-  HEXAGON_WRAPPED_PRODUCT_IMAGE_PATH,
-  HEXAGON_OPEN_PRODUCT_IMAGE_PATH,
-  HEXAGON_CONFETTI_PRODUCT_IMAGE_PATH,
 } from 'utils/constants/image-paths'
 
 const ContractContext = createContext(null)
 
-const gifts = [
+const utilities = [
   {
-    name: 'Raider',
-    image: CYLINDER_WRAPPED_PRODUCT_IMAGE_PATH,
+    name: 'Raider #1',
+    image: CYLINDER_OPEN_PRODUCT_IMAGE_PATH,
     price: 0.5,
     items: [
       {
@@ -47,8 +44,8 @@ const gifts = [
     ]
   },
   {
-    name: 'Popular',
-    image: SQUARE_WRAPPED_PRODUCT_IMAGE_PATH,
+    name: 'Popular #1',
+    image: SQUARE_OPEN_PRODUCT_IMAGE_PATH,
     price: 0.5,
     items: [
       {
@@ -77,40 +74,9 @@ const gifts = [
       }
     ]
   },
-  {
-    name: 'Song',
-    image: HEXAGON_WRAPPED_PRODUCT_IMAGE_PATH,
-    price: 0.5,
-    items: [
-      {
-        name: 'Emtpy',
-        image: HEXAGON_OPEN_PRODUCT_IMAGE_PATH,
-        description: [
-          'Gift Box with this state, user can put any meme assets and NFTs inside.',
-          'Once user wrap the Gift then state will be updated to “Wrapped”'
-        ]
-      },
-      {
-        name: 'Wrapped',
-        image: HEXAGON_WRAPPED_PRODUCT_IMAGE_PATH,
-        description: [
-          'Gift Box with this state, user can gift this box to others.',
-          'And “Gifty” can openand grab the assets inside.'
-        ]
-      },
-      {
-        name: 'Surprise',
-        image: HEXAGON_CONFETTI_PRODUCT_IMAGE_PATH,
-        description: [
-          'Gift Box with this state, use can grab assets.',
-          'Once user grab assets, state turns into “Empty” and it can be used for another gift.'
-        ]
-      }
-    ]
-  }
 ]
 
-export function StoreProvider({ children }) {
+export function MyUtilitiesProvider({ children }) {
   const [loading, setLoading] = useState(false);
 
   const getStore = useCallback(async () => {
@@ -129,7 +95,7 @@ export function StoreProvider({ children }) {
     <ContractContext.Provider
       value={{
         loading,
-        gifts,
+        utilities,
       }}
     >
       {children}
@@ -137,7 +103,7 @@ export function StoreProvider({ children }) {
   )
 }
 
-export function useStore() {
+export function useMyUtilities() {
   const context = useContext(ContractContext)
   if (!context) {
     throw new Error('Missing stats context')

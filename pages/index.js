@@ -1,12 +1,15 @@
 import Layout from 'layout'
-import Claim from 'containers/Claim'
+import { StoreProvider } from 'contexts/store-context'
+import Store from 'containers/Store'
 import HeaderMeta from 'parts/HeaderMeta'
 
-export default function ClaimPage() {
+export default function StorePage() {
   return (
     <Layout>
       <HeaderMeta />
-      <Claim />
+      <StoreProvider>
+        <Store />
+      </StoreProvider>
     </Layout>
   )
 }

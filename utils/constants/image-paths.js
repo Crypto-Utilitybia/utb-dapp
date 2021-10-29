@@ -1,5 +1,6 @@
 
 const LOGO_IMAGE_PATH = '/images/logo.png'
+const LOGO_LABEL_IMAGE_PATH = '/images/logo-label.png'
 const BANNER_IMAGE_PATH = '/images/banner.jpg'
 const NO_IMAGE_PATH = '/images/no-image.png'
 const HOME_BACKGROUND_IMAGE_PATH = '/images/background/home.jpg'
@@ -23,6 +24,7 @@ const HEXAGON_CONFETTI_PRODUCT_IMAGE_PATH = '/images/products/Hexagon-Confetti.p
 
 export {
   LOGO_IMAGE_PATH,
+  LOGO_LABEL_IMAGE_PATH,
   BANNER_IMAGE_PATH,
   NO_IMAGE_PATH,
   HOME_BACKGROUND_IMAGE_PATH,
