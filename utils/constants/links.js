@@ -35,6 +35,10 @@ const LINKS = Object.freeze({
     TITLE: 'My Utilities',
     HREF: '/my-utilities'
   },
+  MY_UTILITY_DETAIL: {
+    TITLE: 'My Utility Detail',
+    HREF: '/my-utilities/[giftId]'
+  },
 });
 
 export default LINKS;

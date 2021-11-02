@@ -13,6 +13,7 @@ const ContractContext = createContext(null)
 
 const utilities = [
   {
+    id: '0',
     name: 'Raider #1',
     image: CYLINDER_OPEN_PRODUCT_IMAGE_PATH,
     price: 0.5,
@@ -44,6 +45,7 @@ const utilities = [
     ]
   },
   {
+    id: '1',
     name: 'Popular #1',
     image: SQUARE_OPEN_PRODUCT_IMAGE_PATH,
     price: 0.5,

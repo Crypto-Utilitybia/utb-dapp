@@ -1,4 +1,4 @@
-import { memo } from 'react'
+import { memo, useMemo } from 'react'
 import { useRouter } from 'next/router'
 import { Grid, Typography } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
@@ -6,8 +6,9 @@ import { useCommonStyles } from 'styles/use-styles'
 
 import { useMyUtilities } from 'contexts/my-utilities-context'
 import Loading from 'components/Loading'
-import GiftBoxCard from './GiftBoxCard'
-import LINKS from 'utils/constants/links'
+import GiftImage from './GiftImage'
+import GiftWrapPanel from './GiftWrapPanel'
+import GiftOpenPanel from './GiftOpenPanel'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -22,19 +23,15 @@ const useStyles = makeStyles((theme) => ({
   }
 }))
 
-const MyUtilities = () => {
+const MyUtilityDetail = () => {
   const classes = useStyles()
   const commonClasses = useCommonStyles()
 
   const router = useRouter()
   const { loading, utilities } = useMyUtilities()
 
-  const giftHandler = (gift) => () => {
-    router.push(
-      LINKS.MY_UTILITY_DETAIL.HREF,
-      LINKS.MY_UTILITY_DETAIL.HREF.replace('[giftId]', gift.id)
-    )
-  }
+  const utility = useMemo(() => utilities.find((item) => item.id === router.query.giftId)
+    , [router.query.giftId, utilities])
 
   return (
     <main className={classes.root}>
@@ -48,18 +45,22 @@ const MyUtilities = () => {
               color='textPrimary'
               className={classes.title}
             >
-              My Utilities
+              {utility?.name || ''}
             </Typography>
           </Grid>
-          {utilities.map((gift, index) => (
-            <Grid key={index} item xs={12} sm={6} md={4} onClick={giftHandler(gift)}>
-              <GiftBoxCard gift={gift} />
-            </Grid>
-          ))}
+          <Grid item xs={12} sm={6}>
+            <GiftImage item={utility} />
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <GiftWrapPanel item={utility} />
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <GiftOpenPanel item={utility} />
+          </Grid>
         </Grid>
       </div>
     </main>
   )
 }
 
-export default memo(MyUtilities)
+export default memo(MyUtilityDetail)

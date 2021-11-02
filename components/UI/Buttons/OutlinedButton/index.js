@@ -11,7 +11,7 @@ const useStyles = makeStyles(theme => ({
     fontSize: 18,
     fontWeight: 'bold',
     textTransform: 'unset',
-    borderRadius: 6,
+    borderRadius: 2,
     '&:hover': {
       color: theme.palette.primary.main
     }
