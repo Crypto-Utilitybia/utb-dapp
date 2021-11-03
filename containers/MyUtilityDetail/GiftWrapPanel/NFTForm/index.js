@@ -1,10 +1,10 @@
 import { memo } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
-import { Grid, Typography, Checkbox, FormControlLabel } from '@material-ui/core'
+import { Grid } from '@material-ui/core'
 
 import ContainedButton from 'components/UI/Buttons/ContainedButton'
-import OutlinedButton from 'components/UI/Buttons/OutlinedButton'
-import TokenIcon from 'components/TokenIcon'
+import TextField from 'components/UI/TextFields/TextField'
+import UtilityCheckbox from 'components/UI/UtilityCheckbox'
 
 const useStyles = makeStyles(() => ({
   label: {
@@ -21,25 +21,23 @@ const NFTForm = ({
   const classes = useStyles()
 
   return (
-    <Grid container spacing={3}>
+    <Grid container spacing={2}>
       <Grid item xs={6}>
         <ContainedButton fullWidth>
           Select NFT
         </ContainedButton>
       </Grid>
       <Grid item xs={6}>
-        <OutlinedButton fullWidth>
-          Token Id
-        </OutlinedButton>
+        <TextField
+          placeholder='Token Id'
+        />
       </Grid>
       <Grid item xs={12}>
         Stars
       </Grid>
       <Grid item xs={12}>
-        <FormControlLabel
-          color='primary'
+        <UtilityCheckbox
           label='Wrap Gift Box'
-          control={<Checkbox />}
         />
       </Grid>
       <Grid item xs={12}>

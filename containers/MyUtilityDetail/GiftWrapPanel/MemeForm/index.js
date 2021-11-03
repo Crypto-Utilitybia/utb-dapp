@@ -1,10 +1,11 @@
 import { memo } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
-import { Grid, Typography, Checkbox, FormControlLabel } from '@material-ui/core'
+import { Grid } from '@material-ui/core'
 
 import ContainedButton from 'components/UI/Buttons/ContainedButton'
-import OutlinedButton from 'components/UI/Buttons/OutlinedButton'
-import TokenIcon from 'components/TokenIcon'
+import TextField from 'components/UI/TextFields/TextField'
+import UtilityCheckbox from 'components/UI/UtilityCheckbox'
+import PriceList from 'containers/MyUtilityDetail/Shared/PriceList'
 
 const useStyles = makeStyles(() => ({
   label: {
@@ -21,46 +22,23 @@ const MemeForm = ({
   const classes = useStyles()
 
   return (
-    <Grid container spacing={3}>
+    <Grid container spacing={2}>
       <Grid item xs={6}>
         <ContainedButton fullWidth>
           Select Asset
         </ContainedButton>
       </Grid>
       <Grid item xs={6}>
-        <OutlinedButton fullWidth>
-          Amount
-        </OutlinedButton>
-      </Grid>
-      <Grid item xs={6}>
-        <Typography color='primary' className={classes.label}>
-          <TokenIcon size={25} token='AVAX' />	&nbsp;
-          {item?.price || 0} Avax
-        </Typography>
-      </Grid>
-      <Grid item xs={6}>
-        <Typography color='primary' className={classes.label}>
-          <TokenIcon size={25} token='AVAX' />	&nbsp;
-          {item?.price || 0} Avax
-        </Typography>
-      </Grid>
-      <Grid item xs={6}>
-        <Typography color='primary' className={classes.label}>
-          <TokenIcon size={25} token='AVAX' />	&nbsp;
-          {item?.price || 0} Avax
-        </Typography>
-      </Grid>
-      <Grid item xs={6}>
-        <Typography color='primary' className={classes.label}>
-          <TokenIcon size={25} token='AVAX' />	&nbsp;
-          {item?.price || 0} Avax
-        </Typography>
+        <TextField
+          placeholder='Amount'
+        />
       </Grid>
       <Grid item xs={12}>
-        <FormControlLabel
-          color='primary'
+        <PriceList prices={[0.01, 0.02, 0.45, 0.5]} />
+      </Grid>
+      <Grid item xs={12}>
+        <UtilityCheckbox
           label='Wrap Gift Box'
-          control={<Checkbox />}
         />
       </Grid>
       <Grid item xs={6}>

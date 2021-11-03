@@ -15,26 +15,28 @@ const useStyles = makeStyles(theme => ({
   },
   textField: {
     width: '100%',
-    border: `2px solid ${theme.palette.text.primary}`,
-    borderRadius: 6,
+    border: `2px solid ${theme.palette.primary.main}`,
+    borderRadius: 2,
   },
   input: {
     fontSize: 16,
+    fontWeight: 'bold',
     fontFamily: 'roboto, sans-serif',
     lineHeight: 'normal',
     borderRadius: 6,
-    color: theme.palette.text.primary,
+    color: theme.palette.primary.main,
+    padding: theme.spacing(1.25, 1),
     '&::placeholder': {
       lineHeight: 'normal',
-      color: theme.palette.text.primary
+      color: theme.palette.primary.main,
     },
     '&:-ms-input-placeholder': {
       lineHeight: 'normal',
-      color: theme.palette.text.primary
+      color: theme.palette.primary.main,
     },
     '&::-ms-input-placeholder': {
       lineHeight: 'normal',
-      color: theme.palette.text.primary
+      color: theme.palette.primary.main,
     },
     '&[type=number]': {
       '&::-webkit-outer-spin-button': {

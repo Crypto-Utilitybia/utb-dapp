@@ -48,13 +48,13 @@ const MyUtilityDetail = () => {
               {utility?.name || ''}
             </Typography>
           </Grid>
-          <Grid item xs={12} sm={6}>
+          <Grid item xs={12} sm={5}>
             <GiftImage item={utility} />
           </Grid>
-          <Grid item xs={12} sm={6}>
+          <Grid item xs={12} sm={7}>
             <GiftWrapPanel item={utility} />
           </Grid>
-          <Grid item xs={12} sm={6}>
+          <Grid item xs={12} sm={7}>
             <GiftOpenPanel item={utility} />
           </Grid>
         </Grid>

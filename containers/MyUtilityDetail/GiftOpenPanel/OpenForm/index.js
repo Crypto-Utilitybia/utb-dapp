@@ -1,10 +1,9 @@
 import { memo } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
-import { Grid, Typography, Checkbox, FormControlLabel } from '@material-ui/core'
+import { Grid } from '@material-ui/core'
 
 import ContainedButton from 'components/UI/Buttons/ContainedButton'
-import OutlinedButton from 'components/UI/Buttons/OutlinedButton'
-import TokenIcon from 'components/TokenIcon'
+import TextField from 'components/UI/TextFields/TextField'
 
 const useStyles = makeStyles(() => ({
   label: {
@@ -21,11 +20,11 @@ const OpenForm = ({
   const classes = useStyles()
 
   return (
-    <Grid container spacing={3}>
+    <Grid container spacing={2}>
       <Grid item xs={12}>
-        <OutlinedButton fullWidth>
-          Gifty Address
-        </OutlinedButton>
+        <TextField
+          placeholder='Gifty Address'
+        />
       </Grid>
       <Grid item xs={12}>
         Stars
