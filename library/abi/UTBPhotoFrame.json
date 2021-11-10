@@ -3,12 +3,17 @@
     "inputs": [
       {
         "internalType": "address",
-        "name": "_treasury",
+        "name": "factory",
         "type": "address"
       },
       {
         "internalType": "string",
-        "name": "_base",
+        "name": "baseURI",
+        "type": "string"
+      },
+      {
+        "internalType": "string",
+        "name": "promo",
         "type": "string"
       }
     ],
@@ -70,12 +75,69 @@
     "inputs": [
       {
         "indexed": false,
-        "internalType": "string",
-        "name": "baseURI",
-        "type": "string"
+        "internalType": "uint256",
+        "name": "assetId",
+        "type": "uint256"
+      },
+      {
+        "components": [
+          {
+            "internalType": "string",
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "internalType": "string",
+            "name": "promo",
+            "type": "string"
+          },
+          {
+            "internalType": "string[]",
+            "name": "asset",
+            "type": "string[]"
+          },
+          {
+            "internalType": "address",
+            "name": "author",
+            "type": "address"
+          },
+          {
+            "internalType": "uint256",
+            "name": "price",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "limit",
+            "type": "uint256"
+          }
+        ],
+        "indexed": false,
+        "internalType": "struct AssetStore.Asset",
+        "name": "asset",
+        "type": "tuple"
       }
     ],
-    "name": "BaseURIUpdated",
+    "name": "AssetAdded",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "assetId",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "discount",
+        "type": "uint256"
+      }
+    ],
+    "name": "AssetDiscounted",
     "type": "event"
   },
   {
@@ -102,12 +164,37 @@
     "inputs": [
       {
         "indexed": false,
+        "internalType": "address",
+        "name": "artist",
+        "type": "address"
+      },
+      {
+        "indexed": false,
         "internalType": "uint256",
-        "name": "amount",
+        "name": "rewards",
         "type": "uint256"
       }
     ],
-    "name": "Reflection",
+    "name": "RewardsClaimed",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "tokenId",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint8",
+        "name": "state",
+        "type": "uint8"
+      }
+    ],
+    "name": "StateUpdated",
     "type": "event"
   },
   {
@@ -136,6 +223,58 @@
     "type": "event"
   },
   {
+    "inputs": [],
+    "name": "DISCOUNT_PERCENT",
+    "outputs": [
+      {
+        "internalType": "uint16",
+        "name": "",
+        "type": "uint16"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "PORTING_PERCENT",
+    "outputs": [
+      {
+        "internalType": "uint16",
+        "name": "",
+        "type": "uint16"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "REGISTER_PERCENT",
+    "outputs": [
+      {
+        "internalType": "uint16",
+        "name": "",
+        "type": "uint16"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "REWARD_PERCENT",
+    "outputs": [
+      {
+        "internalType": "uint16",
+        "name": "",
+        "type": "uint16"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
     "inputs": [
       {
         "internalType": "address",
@@ -151,6 +290,45 @@
     "name": "approve",
     "outputs": [],
     "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "name": "assets",
+    "outputs": [
+      {
+        "internalType": "string",
+        "name": "name",
+        "type": "string"
+      },
+      {
+        "internalType": "string",
+        "name": "promo",
+        "type": "string"
+      },
+      {
+        "internalType": "address",
+        "name": "author",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "price",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "limit",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
     "type": "function"
   },
   {
@@ -188,8 +366,50 @@
   {
     "inputs": [
       {
+        "internalType": "address",
+        "name": "to",
+        "type": "address"
+      },
+      {
         "internalType": "uint256[]",
         "name": "tokenIds",
+        "type": "uint256[]"
+      }
+    ],
+    "name": "batchTransfer",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "assetId",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "amount",
+        "type": "uint256"
+      }
+    ],
+    "name": "buyItem",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "payable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256[]",
+        "name": "assetIds",
         "type": "uint256[]"
       }
     ],
@@ -199,8 +419,14 @@
     "type": "function"
   },
   {
-    "inputs": [],
-    "name": "currentReflection",
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "name": "discounts",
     "outputs": [
       {
         "internalType": "uint256",
@@ -213,9 +439,15 @@
   },
   {
     "inputs": [],
-    "name": "flipPause",
-    "outputs": [],
-    "stateMutability": "nonpayable",
+    "name": "factory",
+    "outputs": [
+      {
+        "internalType": "contract IUtilitybia",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
     "type": "function"
   },
   {
@@ -240,16 +472,16 @@
   {
     "inputs": [
       {
-        "internalType": "uint256[]",
-        "name": "tokenIds",
-        "type": "uint256[]"
+        "internalType": "uint256",
+        "name": "tokenId",
+        "type": "uint256"
       }
     ],
-    "name": "getRewards",
+    "name": "getAsset",
     "outputs": [
       {
         "internalType": "uint256",
-        "name": "rewards",
+        "name": "asset",
         "type": "uint256"
       }
     ],
@@ -284,11 +516,24 @@
     "inputs": [
       {
         "internalType": "uint256",
-        "name": "",
+        "name": "assetId",
         "type": "uint256"
       }
     ],
-    "name": "lastReflections",
+    "name": "isDiscount",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "discounted",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "locked",
     "outputs": [
       {
         "internalType": "uint256",
@@ -303,29 +548,30 @@
     "inputs": [
       {
         "internalType": "uint256",
-        "name": "amount",
+        "name": "",
         "type": "uint256"
       }
     ],
-    "name": "mint",
+    "name": "mintWithDiscounts",
     "outputs": [
       {
         "internalType": "uint256",
         "name": "",
         "type": "uint256"
-      },
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
       {
         "internalType": "uint256",
         "name": "",
         "type": "uint256"
       }
     ],
-    "stateMutability": "payable",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "mintFee",
+    "name": "mints",
     "outputs": [
       {
         "internalType": "uint256",
@@ -382,13 +628,56 @@
     "type": "function"
   },
   {
-    "inputs": [],
-    "name": "paused",
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "tokenId",
+        "type": "uint256"
+      },
+      {
+        "internalType": "string",
+        "name": "porting",
+        "type": "string"
+      }
+    ],
+    "name": "port",
+    "outputs": [],
+    "stateMutability": "payable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "assetId",
+        "type": "uint256"
+      }
+    ],
+    "name": "price",
     "outputs": [
       {
-        "internalType": "bool",
+        "internalType": "uint256",
         "name": "",
-        "type": "bool"
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "assetId",
+        "type": "uint256"
+      }
+    ],
+    "name": "priceOrigin",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
       }
     ],
     "stateMutability": "view",
@@ -396,16 +685,104 @@
   },
   {
     "inputs": [],
-    "name": "raiseReflection",
+    "name": "promo",
+    "outputs": [
+      {
+        "internalType": "string",
+        "name": "",
+        "type": "string"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "string",
+        "name": "name",
+        "type": "string"
+      },
+      {
+        "internalType": "string",
+        "name": "promo",
+        "type": "string"
+      },
+      {
+        "internalType": "string[]",
+        "name": "asset",
+        "type": "string[]"
+      },
+      {
+        "internalType": "uint256",
+        "name": "price_",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "limit_",
+        "type": "uint256"
+      }
+    ],
+    "name": "registerAsset",
     "outputs": [],
     "stateMutability": "payable",
     "type": "function"
   },
   {
-    "inputs": [],
-    "name": "renounceOwnership",
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "assetId",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "discount_",
+        "type": "uint256"
+      }
+    ],
+    "name": "registerDiscount",
     "outputs": [],
     "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "assetId",
+        "type": "uint256"
+      }
+    ],
+    "name": "reward",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256[]",
+        "name": "assetIds",
+        "type": "uint256[]"
+      }
+    ],
+    "name": "rewards",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "total",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
     "type": "function"
   },
   {
@@ -478,29 +855,16 @@
     "type": "function"
   },
   {
-    "inputs": [
+    "inputs": [],
+    "name": "states",
+    "outputs": [
       {
-        "internalType": "string",
-        "name": "_baseURI",
-        "type": "string"
+        "internalType": "uint8",
+        "name": "",
+        "type": "uint8"
       }
     ],
-    "name": "setBaseURI",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "_mintFee",
-        "type": "uint256"
-      }
-    ],
-    "name": "setMintFee",
-    "outputs": [],
-    "stateMutability": "nonpayable",
+    "stateMutability": "view",
     "type": "function"
   },
   {
@@ -539,35 +903,11 @@
     "inputs": [
       {
         "internalType": "uint256",
-        "name": "index",
-        "type": "uint256"
-      }
-    ],
-    "name": "tokenByIndex",
-    "outputs": [
-      {
-        "internalType": "uint256",
         "name": "",
         "type": "uint256"
       }
     ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "owner",
-        "type": "address"
-      },
-      {
-        "internalType": "uint256",
-        "name": "index",
-        "type": "uint256"
-      }
-    ],
-    "name": "tokenOfOwnerByIndex",
+    "name": "tokenAssets",
     "outputs": [
       {
         "internalType": "uint256",
@@ -599,24 +939,11 @@
   },
   {
     "inputs": [],
-    "name": "totalReflection",
+    "name": "totalAssets",
     "outputs": [
       {
         "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "totalSupply",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
+        "name": "total",
         "type": "uint256"
       }
     ],
@@ -660,16 +987,27 @@
     "type": "function"
   },
   {
-    "inputs": [],
-    "name": "treasury",
-    "outputs": [
+    "inputs": [
       {
-        "internalType": "address",
-        "name": "",
-        "type": "address"
+        "internalType": "string",
+        "name": "_promo",
+        "type": "string"
       }
     ],
-    "stateMutability": "view",
+    "name": "updatePromo",
+    "outputs": [],
+    "stateMutability": "nonpayable",
     "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "withdraw",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "stateMutability": "payable",
+    "type": "receive"
   }
 ]
