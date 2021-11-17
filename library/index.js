@@ -1,33 +1,15 @@
+import Web3 from 'web3'
 import * as EvmChains from 'evm-chains'
 
-import Web3 from 'web3'
-import { addresses, ACCOUNT_FETCH_TIME } from 'library/constants'
-import AvaxCoin from 'library/AvaxCoin'
-import Marketplace from 'library/Marketplace'
-
-export default class AvaxCoinLib {
-  constructor(options) {
+export default class Library {
+  constructor(provider, options) {
     this.connected = false
-    this.network = options.network
-    this.instance = new Web3(options.provider)
+    this.instance = new Web3(provider)
     this.handleEvent = options.onEvent
-    this.registers = []
-    this.libraries = {}
-    this.timer = Number(
-      setInterval(() => {
-        this.fetchAccount()
-      }, ACCOUNT_FETCH_TIME)
-    )
-    if (options.connected) {
-      this.connect(options.provider)
-    }
-    if (options.initial) {
-      options.initial.map((reg) => this.register(reg))
-    }
   }
 
   get currentNetwork() {
-    return this.account ? this.account.network : this.network
+    return this.account?.network
   }
 
   get web3() {
@@ -53,47 +35,17 @@ export default class AvaxCoinLib {
     this.fetchAccount()
   }
 
-  updateProvider(prov) {
-    if (!prov) return
-    clearInterval(this.timer)
-    this.setProvider(prov)
-    this.fetchAccount()
-  }
-
   disconnect() {
     if (this.web3.givenProvider.disconnect) {
       this.web3.givenProvider.disconnect()
     }
     this.connected = false
     this.account = null
-    this.handleEvent('ACCOUNT', this.account)
-  }
-
-  register(key) {
-    let lib = null
-    if (this.libraries[key]) return
-    switch (key) {
-      case 'avaxcoin':
-        lib = new AvaxCoin(this.currentNetwork, this.web3, addresses)
-        break
-      case 'marketplace':
-        lib = new Marketplace(this.currentNetwork, this.web3, addresses)
-        break
-      default:
-        break
-    }
-    if (!lib) return
-    this.libraries[key] = lib
-    this.registers.push(key)
-    this.handleEvent('LIBRARY', [key, lib])
-  }
-
-  deRegister(key) {
-    this.registers = this.registers.filter((k) => k !== key)
-    delete this.libraries[key]
+    this.handleEvent({ type: 'ACCOUNT', payload: this.account })
   }
 
   setProvider(prov) {
+    if (!prov) return
     if (this.web3.givenProvider.removeAllListeners) {
       this.web3.givenProvider.removeAllListeners('accountsChanged')
       this.web3.givenProvider.removeAllListeners('chainChanged')
@@ -105,8 +57,7 @@ export default class AvaxCoinLib {
       prov.on('chainChanged', () => this.fetchAccount())
       prov.on('disconnect', () => this.disconnect())
     }
-
-    this.registers.map((key) => this.libraries[key].reset())
+    this.fetchAccount()
   }
 
   checkAccount(newAccount) {
@@ -115,8 +66,8 @@ export default class AvaxCoinLib {
       : this.account.address === newAccount.address &&
         this.account.network === newAccount.network &&
         this.account.balance === newAccount.balance
-        ? false
-        : true
+      ? false
+      : true
   }
 
   async fetchAccount(refresh = false) {
@@ -130,7 +81,6 @@ export default class AvaxCoinLib {
       } catch (e) {
         console.log(e)
       }
-      const networkChanged = network !== this.currentNetwork
       const [address] = await this.web3.eth.getAccounts()
       const balance = address ? this.web3.utils.fromWei(await this.web3.eth.getBalance(address)) : '0'
       const account = {
@@ -142,9 +92,6 @@ export default class AvaxCoinLib {
       if (isNew || refresh) {
         this.account = account
         this.handleEvent('ACCOUNT', this.account)
-        if (networkChanged) {
-          this.registers.map((key) => this.libraries[key].reset(this.currentNetwork))
-        }
       }
       return isNew
     } catch (e) {

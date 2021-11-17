@@ -1,5 +1,7 @@
 import Head from 'next/head'
 
+import 'styles/global.css'
+
 function UtiltiybiaApp({ Component, pageProps }) {
   return (
     <>
@@ -37,6 +39,13 @@ function UtiltiybiaApp({ Component, pageProps }) {
         <meta name="msapplication-TileColor" content="#ffffff" />
         <meta name="msapplication-TileImage" content="/metadata/ms-icon-144x144.png" />
         <meta name="theme-color" content="#ffffff" />
+
+        <link
+          rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css"
+          crossorigin="anonymous"
+          referrerpolicy="no-referrer"
+        />
       </Head>
       <Component {...pageProps} />
     </>

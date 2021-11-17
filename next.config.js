@@ -1,7 +1,5 @@
 module.exports = {
-  env: {
-    NETWORKS: [Number(process.env.NETWORK)],
-  },
+  env: {},
   webpack: (config, { dev }) => {
     if (dev) {
       config.module.rules.push({

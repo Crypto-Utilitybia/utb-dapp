@@ -1,5 +1,10 @@
+import HomeContainer from 'containers/Home/Home'
 import Layout from 'layout'
 
 export default function HomePage() {
-  return <Layout>Home</Layout>
+  return (
+    <Layout>
+      <HomeContainer />
+    </Layout>
+  )
 }
