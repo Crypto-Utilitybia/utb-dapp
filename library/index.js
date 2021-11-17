@@ -4,8 +4,8 @@ import * as EvmChains from 'evm-chains'
 export default class Library {
   constructor(provider, options) {
     this.connected = false
-    this.instance = new Web3(provider)
     this.handleEvent = options.onEvent
+    this.setProvider(provider)
   }
 
   get currentNetwork() {
@@ -28,13 +28,6 @@ export default class Library {
       : new BigNumber(value).div(10 ** decimals).toString(10)
   }
 
-  connect(prov) {
-    if (!prov) return
-    this.connected = true
-    this.setProvider(prov)
-    this.fetchAccount()
-  }
-
   disconnect() {
     if (this.web3.givenProvider.disconnect) {
       this.web3.givenProvider.disconnect()
@@ -46,17 +39,22 @@ export default class Library {
 
   setProvider(prov) {
     if (!prov) return
-    if (this.web3.givenProvider.removeAllListeners) {
-      this.web3.givenProvider.removeAllListeners('accountsChanged')
-      this.web3.givenProvider.removeAllListeners('chainChanged')
-      this.web3.givenProvider.removeAllListeners('disconnect')
+    if (this.web3) {
+      if (this.web3.givenProvider.removeAllListeners) {
+        this.web3.givenProvider.removeAllListeners('accountsChanged')
+        this.web3.givenProvider.removeAllListeners('chainChanged')
+        this.web3.givenProvider.removeAllListeners('disconnect')
+      }
+      this.web3.setProvider(prov)
+      if (prov.on) {
+        prov.on('accountsChanged', () => this.fetchAccount())
+        prov.on('chainChanged', () => this.fetchAccount())
+        prov.on('disconnect', () => this.disconnect())
+      }
+    } else {
+      this.instance = new Web3(prov)
     }
-    this.web3.setProvider(prov)
-    if (prov.on) {
-      prov.on('accountsChanged', () => this.fetchAccount())
-      prov.on('chainChanged', () => this.fetchAccount())
-      prov.on('disconnect', () => this.disconnect())
-    }
+    this.connected = true
     this.fetchAccount()
   }
 
@@ -91,7 +89,7 @@ export default class Library {
       const isNew = this.checkAccount(account)
       if (isNew || refresh) {
         this.account = account
-        this.handleEvent('ACCOUNT', this.account)
+        this.handleEvent({ type: 'ACCOUNT', payload: this.account })
       }
       return isNew
     } catch (e) {

@@ -45,6 +45,7 @@ const providerOptions = {
 }
 
 export default function useWallet(dispatch) {
+  const [loading, setLoading] = useState(true)
   const [library, setLibrary] = useState(null)
 
   useEffect(() => {
@@ -52,6 +53,12 @@ export default function useWallet(dispatch) {
       cacheProvider: true,
       providerOptions,
     })
+
+    if (web3Modal.cachedProvider) {
+      connectWallet()
+    } else {
+      setLoading(false)
+    }
   }, [])
 
   const initLibrary = (provider) => {
@@ -62,8 +69,8 @@ export default function useWallet(dispatch) {
     }
   }
 
-  async function getProvider(refresh) {
-    if (refresh && web3Modal) {
+  async function getProvider() {
+    if (web3Modal) {
       web3Modal.clearCachedProvider()
     }
     try {
@@ -74,11 +81,21 @@ export default function useWallet(dispatch) {
     }
   }
 
-  function connectWallet(refresh = false) {
-    getProvider(refresh).then((provider) => {
-      if (provider) initLibrary(provider)
-    })
+  function connectWallet(logout) {
+    if (logout) {
+      library.disconnect()
+      web3Modal.clearCachedProvider()
+      loading && setLoading(false)
+      console.log(web3Modal)
+    } else {
+      getProvider()
+        .then((provider) => {
+          if (provider) initLibrary(provider)
+          else setLoading(false)
+        })
+        .catch(() => setLoading(false))
+    }
   }
 
-  return [connectWallet, library]
+  return [loading, connectWallet, library]
 }
