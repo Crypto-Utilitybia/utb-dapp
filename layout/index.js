@@ -5,14 +5,25 @@ import reducer, { initState } from './store'
 import Welcome from 'components/Welcome/Welcome'
 import Header from 'containers/Header/Header'
 import Footer from 'containers/Footer/Footer'
+import { isSupported, networks, supported } from 'library/constants'
 
 export default function Layout({ children }) {
   const [state, dispatch] = useReducer(reducer, initState)
   const [loading, connectWallet, library] = useWallet(dispatch)
 
+  function switchNetwork() {
+    library.web3.currentProvider
+      .request({
+        method: 'wallet_addEthereumChain',
+        params: [networks[supported[0]]],
+      })
+      .then(console.log)
+      .catch(console.log)
+  }
+
   return (
     <main>
-      {state.account ? (
+      {state.account && isSupported(state.account.network) ? (
         <>
           <Header account={state.account} onLogout={() => connectWallet(true)} />
           {React.cloneElement(children, {
@@ -22,10 +33,10 @@ export default function Layout({ children }) {
           })}
           <Footer />
         </>
-      ) : loading ? (
+      ) : !state.account && loading ? (
         <div className="loading" />
       ) : (
-        <Welcome onConnect={() => connectWallet()} />
+        <Welcome onConnect={() => connectWallet()} account={state?.account} onSwitch={switchNetwork} />
       )}
     </main>
   )

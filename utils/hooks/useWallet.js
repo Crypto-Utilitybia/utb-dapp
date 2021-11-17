@@ -70,9 +70,6 @@ export default function useWallet(dispatch) {
   }
 
   async function getProvider() {
-    if (web3Modal) {
-      web3Modal.clearCachedProvider()
-    }
     try {
       const provider = await web3Modal.connect()
       return provider
@@ -86,7 +83,6 @@ export default function useWallet(dispatch) {
       library.disconnect()
       web3Modal.clearCachedProvider()
       loading && setLoading(false)
-      console.log(web3Modal)
     } else {
       getProvider()
         .then((provider) => {

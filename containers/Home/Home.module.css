@@ -6,3 +6,45 @@
   background: rgb(238, 174, 202);
   background: radial-gradient(circle, rgba(238, 174, 202, 1) 0%, rgba(148, 187, 233, 1) 100%);
 }
+
+.container h1 {
+  text-align: center;
+}
+
+.utilities {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  overflow: auto;
+}
+
+.utility {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 0 10px var(--color-highlight);
+  background-color: var(--color-highlight);
+  cursor: pointer;
+  border-radius: 5px;
+  overflow: hidden;
+
+  width: 100%;
+  max-width: 320px;
+  margin: 10px 15px;
+
+  transition: all 0.2s;
+}
+
+.utility:hover {
+  box-shadow: 0 0 10px var(--color-secondary);
+}
+
+.utility img {
+  width: 100%;
+}
+
+.comingSoon {
+  color: var(--color-white);
+  opacity: 0.7;
+  min-height: 80px;
+}

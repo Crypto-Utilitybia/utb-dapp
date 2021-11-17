@@ -1,0 +1,91 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  background: rgb(63, 94, 251);
+  background: radial-gradient(circle, rgba(63, 94, 251, 1) 0%, rgba(252, 70, 107, 1) 100%);
+}
+
+.container h1 {
+  text-align: center;
+  color: var(--color-secondary);
+}
+
+.asset {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.image {
+  width: 360px;
+  margin: 0 auto 25px;
+  border: 8px solid var(--color-white);
+}
+
+.status {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 0 10px var(--color-highlight);
+  cursor: pointer;
+  border-radius: 5px;
+
+  width: calc(33% - 30px);
+  max-width: 80px;
+  margin: 10px 15px;
+
+  transition: all 0.2s;
+  position: relative;
+  text-align: center;
+}
+
+.status.active,
+.status:hover {
+  box-shadow: 0 0 10px var(--color-secondary);
+}
+
+.status img {
+  width: 100%;
+  border-radius: 5px;
+  overflow: hidden;
+}
+
+.status p {
+  position: absolute;
+  color: var(--color-secondary);
+  top: -1.5rem;
+}
+
+.buttons {
+  display: flex;
+  justify-content: center;
+}
+
+.buy {
+  display: flex;
+  align-items: center;
+}
+
+.buy img {
+  height: 20px;
+  margin-left: 5px;
+}
+
+.ticker {
+  padding: 10px;
+  display: flex;
+  align-items: center;
+  background-color: var(--color-secondary);
+}
+
+.txHash {
+  margin-top: 10px;
+  text-align: center;
+}
+
+.txHash a {
+  text-decoration: underline;
+  font-size: 90%;
+}

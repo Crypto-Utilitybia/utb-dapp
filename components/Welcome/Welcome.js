@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import styles from './Welcome.module.css'
 
-export default function Welcome({ onConnect }) {
+export default function Welcome({ onConnect, account, onSwitch }) {
   const [open, setOpen] = useState(false)
 
   useEffect(() => {
@@ -26,8 +26,8 @@ export default function Welcome({ onConnect }) {
           <div className={`${styles.door} ${styles.right}`}>
             <img src="/images/logo.png" alt="Logo" />
           </div>
-          <button className={styles.connect} onClick={onConnect}>
-            Connect Wallet
+          <button className={styles.connect} onClick={account ? onSwitch : onConnect}>
+            {account ? 'Switch Network' : 'Connect Wallet'}
           </button>
         </div>
         <div className={styles.window} />

@@ -37,24 +37,25 @@ export const links = {
     block: 'https://snowtrace.io/blocks',
     address: 'https://snowtrace.io/address',
     tx: 'https://snowtrace.io/tx',
-    graph: 'https://api.thegraph.com/subgraphs/name/levan-k/avax-coins',
+    graph: 'https://api.thegraph.com/subgraphs/name/crypto-utilitybia/utilitybia-fuji',
   },
   43113: {
     rpc: 'https://api.avax-test.network/ext/bc/C/rpc',
     block: 'https://testnet.snowtrace.io/blocks',
     address: 'https://testnet.snowtrace.io/address',
     tx: 'https://testnet.snowtrace.io/tx',
-    graph: 'https://api.thegraph.com/subgraphs/name/levan-k/avaxcoin-fuji',
+    graph: 'https://api.thegraph.com/subgraphs/name/crypto-utilitybia/utilitybia-fuji',
   },
 }
 
 export const addresses = {
-  43114: {
-    AvaxCoin: '0xdb350245d143a8B575d909B1fa93df99844264B0',
-    Marketplace: '0xbBe27fB7c661c0CCC5779B3dCF1Ab6405e9Ec1D5',
-  },
+  43114: {},
+  43113: {},
+}
+
+export const utilityABIs = {
+  43114: {},
   43113: {
-    AvaxCoin: '0x97094290fb6290234E1adA1775Ad38D3Ab1694A1',
-    Marketplace: '0x53eEc9d7570E198bf1c472d6E4766f7F7C119B1D',
+    '0x38f258977f0db643a25630de947a5d20911e76fa': 'UTBGiftBox',
   },
 }

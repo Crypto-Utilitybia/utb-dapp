@@ -1,10 +1,23 @@
 import Web3 from 'web3'
 import * as EvmChains from 'evm-chains'
+import BigNumber from 'bignumber.js'
+
+import Utilitybia from './abi/Utilitybia.json'
+import Utility from './abi/Utility.json'
+import UTBGiftBox from './abi/UTBGiftBox.json'
+import { call, send } from './utils'
+
+const abis = {
+  Utilitybia,
+  Utility,
+  UTBGiftBox,
+}
 
 export default class Library {
   constructor(provider, options) {
     this.connected = false
     this.handleEvent = options.onEvent
+    this.contracts = {}
     this.setProvider(provider)
   }
 
@@ -16,13 +29,13 @@ export default class Library {
     return this.instance
   }
 
-  toWei(value, decimals) {
+  toWei(value, decimals = 18) {
     return decimals === 18
       ? this.web3.utils.toWei(value.toString())
       : new BigNumber(value).times(10 ** decimals).toString(10)
   }
 
-  fromWei(value, decimals) {
+  fromWei(value, decimals = 18) {
     return decimals === 18
       ? this.web3.utils.fromWei(value.toString())
       : new BigNumber(value).div(10 ** decimals).toString(10)
@@ -96,5 +109,25 @@ export default class Library {
       console.log(e)
       return false
     }
+  }
+
+  getContract(address, abi, save) {
+    if (this.contracts[address]) {
+      return this.contracts[address]
+    }
+    if (save) {
+      this.contracts[address] = new this.web3.eth.Contract(abis[abi], this.web3.utils.toChecksumAddress(address))
+      return this.contracts[address]
+    } else {
+      return new this.web3.eth.Contract(abis[abi], this.web3.utils.toChecksumAddress(address))
+    }
+  }
+
+  contractCall(contract, method, params = []) {
+    return call(contract.methods[method])(...params)
+  }
+
+  contractSend(contract, method, params = []) {
+    return send(contract.methods[method])(...params)
   }
 }

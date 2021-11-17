@@ -1,22 +1,22 @@
-import axios from 'services/axios'
+import axios from 'axios'
 import { links } from 'library/constants'
 
 export const call =
   (method) =>
-    (...args) =>
-      method(...args).call()
+  (...args) =>
+    method(...args).call()
 
 export const send =
   (method) =>
-    (...args) => {
-      const option = args.pop()
-      const transaction = method(...args)
-      return {
-        estimate: () => transaction.estimateGas(option),
-        send: () => transaction.send(option),
-        transaction,
-      }
+  (...args) => {
+    const option = args.pop()
+    const transaction = method(...args)
+    return {
+      estimate: () => transaction.estimateGas(option),
+      send: () => transaction.send(option),
+      transaction,
     }
+  }
 
 export const resolvePromise = (promise, defaults) =>
   new Promise((resolve) =>
