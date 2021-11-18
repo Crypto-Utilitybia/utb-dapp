@@ -8,6 +8,8 @@ function UtiltiybiaApp({ Component, pageProps }) {
     <>
       <Head>
         <title>{process.env.NEXT_PUBLIC_APP_NAME}</title>
+        <meta name="version" content={process.env.NEXT_PUBLIC_APP_VERSION} />
+
         <meta charSet="utf-8" />
         <meta name="keywords" content="Keywords" />
         <meta name="description" content="Description" />
