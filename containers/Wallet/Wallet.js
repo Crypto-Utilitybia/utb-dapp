@@ -5,7 +5,7 @@ import { getTokens } from 'library/queries'
 import { getGraph } from 'library/utils'
 import styles from './Wallet.module.css'
 
-export default function WalletContainer({ state, library }) {
+export default function WalletContainer({ state }) {
   const [utilities, setUtilities] = useState([])
   const [, setEnd] = useState(false)
 
@@ -29,7 +29,7 @@ export default function WalletContainer({ state, library }) {
           .catch(console.log)
       })
       .catch(console.log)
-  }, [library, state.account])
+  }, [state.account])
 
   useEffect(() => {
     fetchData()

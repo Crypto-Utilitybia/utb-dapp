@@ -5,12 +5,16 @@ import BigNumber from 'bignumber.js'
 import Utilitybia from './abi/Utilitybia.json'
 import Utility from './abi/Utility.json'
 import UTBGiftBox from './abi/UTBGiftBox.json'
+import ERC20 from './abi/IERC20.json'
+import ERC721 from './abi/ERC721.json'
 import { call, send } from './utils'
 
 const abis = {
   Utilitybia,
   Utility,
   UTBGiftBox,
+  ERC20,
+  ERC721,
 }
 
 export default class Library {

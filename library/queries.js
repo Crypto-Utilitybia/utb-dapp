@@ -59,6 +59,7 @@ export const getToken = (id) => `query {
     utility
     tokenURI
     owner
+    lastActor
     createdAt
     updatedAt
   }

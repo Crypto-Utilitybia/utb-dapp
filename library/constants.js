@@ -38,6 +38,7 @@ export const links = {
     address: 'https://snowtrace.io/address',
     tx: 'https://snowtrace.io/tx',
     graph: 'https://api.thegraph.com/subgraphs/name/crypto-utilitybia/utilitybia-fuji',
+    tokens: 'https://raw.githubusercontent.com/pangolindex/tokenlists/main/defi.tokenlist.json',
   },
   43113: {
     rpc: 'https://api.avax-test.network/ext/bc/C/rpc',
@@ -45,6 +46,7 @@ export const links = {
     address: 'https://testnet.snowtrace.io/address',
     tx: 'https://testnet.snowtrace.io/tx',
     graph: 'https://api.thegraph.com/subgraphs/name/crypto-utilitybia/utilitybia-fuji',
+    tokens: 'https://raw.githubusercontent.com/pangolindex/tokenlists/main/fuji.tokenlist.json',
   },
 }
 

@@ -7,6 +7,11 @@ export default function reducer(state, action) {
         ...state,
         account: action.payload,
       }
+    case 'TOKENS':
+      return {
+        ...state,
+        tokens: action.payload,
+      }
     default:
       return state
   }

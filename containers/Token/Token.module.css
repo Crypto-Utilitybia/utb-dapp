@@ -25,6 +25,7 @@
 .image {
   display: flex;
   align-items: center;
+  max-width: 410px;
 }
 
 .image img {
@@ -68,6 +69,106 @@
 
   border-top: 1px solid var(--color-highlight);
   padding: 1rem 0.6rem;
+}
+
+.table {
+  text-align: center;
+  font-size: 16px;
+  margin-top: 0.6rem;
+  table-layout: fixed;
+}
+
+.table input {
+  width: 100%;
+}
+
+.table td {
+  width: 100%;
+}
+
+.balance {
+  display: flex;
+  align-items: center;
+}
+
+.balance img {
+  height: 1.2rem;
+}
+
+.actions {
+  display: flex;
+  justify-content: center;
+}
+
+.actions button {
+  padding: 0.2rem 1rem;
+}
+
+.formCoins {
+  flex: 1;
+  display: inline-block;
+  margin-top: 1rem;
+  overflow: auto;
+}
+
+.formCoin {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.4rem 1rem;
+  margin: 0.2rem;
+  background-color: var(--color-dark);
+  color: var(--color-white);
+}
+
+.formCoin img {
+  height: 20px;
+  border-radius: 50%;
+  margin-left: 0.5rem;
+}
+
+.nftInput {
+  display: flex;
+  margin: 0.2rem 0;
+  justify-content: space-between;
+}
+
+.nftInput > label {
+  width: 100px;
+}
+
+.nftInput input {
+  width: calc(100% - 100px - 0.6rem);
+}
+
+.nftPreview {
+  text-align: center;
+  padding-top: 0.6rem;
+}
+
+.nftPreview img {
+  height: 120px;
+}
+
+.confirm {
+  margin-top: 1rem;
+  display: flex;
+  align-items: center;
+}
+
+.confirm input {
+  width: 18px;
+  height: 18px;
+  margin-right: 0.4rem;
+}
+
+.buttons {
+  display: flex;
+  margin: 0 -0.6rem;
+}
+
+.buttons button {
+  width: 100%;
+  margin: 0.6rem;
 }
 
 .txHash {
