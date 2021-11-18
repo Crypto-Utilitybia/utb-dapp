@@ -3,13 +3,9 @@
   flex-direction: column;
   width: 100%;
   height: 100%;
-  background: rgb(63, 94, 251);
-  background: radial-gradient(circle, rgba(63, 94, 251, 1) 0%, rgba(252, 70, 107, 1) 100%);
-}
-
-.container h1 {
-  text-align: center;
-  color: var(--color-secondary);
+  background-image: url('/images/background/room_2.jpg');
+  background-size: cover;
+  background-position: center;
 }
 
 .assets {
@@ -23,23 +19,32 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 0 10px var(--color-highlight);
+  box-shadow: 0 0 10px var(--color-secondary);
   background-color: var(--color-secondary);
+  border: 8px solid var(--color-white);
   cursor: pointer;
   border-radius: 5px;
   overflow: hidden;
 
   width: 100%;
   max-width: 240px;
-  margin: 10px 15px;
+  margin: 0.6rem 1rem;
 
   transition: all 0.2s;
   position: relative;
   text-align: center;
 }
 
+@media all and (max-width: 767px) {
+  .asset {
+    width: 42%;
+    margin: 0.6rem;
+    border-width: 4px;
+  }
+}
+
 .asset:hover {
-  box-shadow: 0 0 10px var(--color-secondary);
+  box-shadow: 0 0 10px var(--color-highlight);
 }
 
 .asset img {
@@ -48,23 +53,30 @@
 
 .status {
   position: absolute;
-  top: 15px;
-  left: 10px;
-  right: 10px;
+  top: 1rem;
+  left: 0.4rem;
+  right: 0.4rem;
 
   color: var(--color-highlight);
   text-shadow: 1px 1px 3px var(--color-white);
-  font-size: 110%;
+  font-size: 120%;
+  font-weight: bold;
+}
+
+@media all and (max-width: 767px) {
+  .status {
+    font-size: 100%;
+  }
 }
 
 .status span {
-  font-size: 90%;
+  font-size: 80%;
 }
 
 .price {
   position: absolute;
-  bottom: 10px;
-  right: 10px;
+  bottom: 0.4rem;
+  right: 0.4rem;
 
   display: flex;
   align-items: center;
@@ -73,6 +85,6 @@
 }
 
 .price img {
-  width: 20px;
-  margin-left: 5px;
+  width: 1.2rem;
+  margin-left: 0.3rem;
 }

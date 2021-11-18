@@ -9,7 +9,9 @@ export default function Header({ account, onLogout }) {
         <img className={styles.logo} src="/images/logo_black.png" alt="Logo" />
       </Link>
       <div className={styles.account}>
-        <Link href="/wallet">{getEllipsis(account.address)}</Link>
+        <Link href="/wallet">
+          <span>{getEllipsis(account.address)}</span>
+        </Link>
         <i className="fa fa-sign-out cursor" onClick={onLogout}></i>
       </div>
     </header>

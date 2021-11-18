@@ -6,7 +6,7 @@ import styles from './Home.module.css'
 
 export default function HomeContainer({ state, library }) {
   const [utilities, setUtilities] = useState([])
-  const [isEnd, setEnd] = useState(false)
+  const [, setEnd] = useState(false)
 
   const fetchData = useCallback(() => {
     getGraph(state.account.network, getUtilities())
@@ -30,7 +30,7 @@ export default function HomeContainer({ state, library }) {
 
   useEffect(() => {
     fetchData()
-  }, [])
+  }, [fetchData])
 
   return (
     <section className={styles.container}>
@@ -43,13 +43,6 @@ export default function HomeContainer({ state, library }) {
             </div>
           </Link>
         ))}
-        {isEnd && utilities.length < 3 && (
-          <div className={`${styles.utility} ${styles.comingSoon}`}>
-            More products
-            <br />
-            Coming soon...
-          </div>
-        )}
       </div>
     </section>
   )

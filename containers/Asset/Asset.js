@@ -1,10 +1,10 @@
 import { useCallback, useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
+import axios from 'axios'
 import { getAsset } from 'library/queries'
 import { getGraph, handleTransaction } from 'library/utils'
 import styles from './Asset.module.css'
 import { links, utilityABIs } from 'library/constants'
-import axios from 'axios'
 import BigNumber from 'bignumber.js'
 
 export default function AssetContainer({ state, library }) {
@@ -78,37 +78,43 @@ export default function AssetContainer({ state, library }) {
               ({asset.mints}/{asset.limit})
             </span>
           </h1>
-          <img src={asset.metadatas[status].image} className={styles.image} />
-          <div className={styles.asset}>
-            {asset.metadatas.map((metadata, index) => (
-              <div
-                key={metadata.image}
-                className={`${styles.status} ${index === status ? styles.active : ''}`}
-                onClick={() => setStatus(index)}
-              >
-                <p>{metadata.name}</p>
-                <img src={metadata.image} />
-              </div>
-            ))}
-          </div>
-          <div className={styles.buttons}>
-            <button className={styles.ticker} onClick={() => setAmount(Math.max(amount - 1, 1))} disabled={amount <= 0}>
-              <i className="fa fa-minus" />
-            </button>
-            <button className={styles.buy} onClick={handleSubmit}>
-              Buy {amount} ({(asset.priceShow * amount).toFixed(2)} <img src="/coins/avax.png" />)
-            </button>
-            <button className={styles.ticker} onClick={() => setAmount(amount + 1)}>
-              <i className="fa fa-plus" />
-            </button>
-          </div>
-          {txHash && (
-            <div className={styles.txHash}>
-              <a href={`${links[state.account.network].tx}/${txHash}`} target="_blank" rel="noreferrer">
-                View on Explorer
-              </a>
+          <div className={styles.form}>
+            <img src={asset.metadatas[status].image} className={styles.image} />
+            <div className={styles.asset}>
+              {asset.metadatas.map((metadata, index) => (
+                <div
+                  key={metadata.image}
+                  className={`${styles.status} ${index === status ? styles.active : ''}`}
+                  onClick={() => setStatus(index)}
+                >
+                  <p>{metadata.name}</p>
+                  <img src={metadata.image} />
+                </div>
+              ))}
             </div>
-          )}
+            <div className={styles.buttons}>
+              <button
+                className={`${styles.ticker} ${styles.left}`}
+                onClick={() => setAmount(Math.max(amount - 1, 1))}
+                disabled={amount <= 0}
+              >
+                <i className="fa fa-minus" />
+              </button>
+              <button className={styles.buy} onClick={handleSubmit}>
+                Buy {amount} ({(asset.priceShow * amount).toFixed(2)} <img src="/coins/avax.png" />)
+              </button>
+              <button className={`${styles.ticker} ${styles.right}`} onClick={() => setAmount(amount + 1)}>
+                <i className="fa fa-plus" />
+              </button>
+            </div>
+            {txHash && (
+              <div className={styles.txHash}>
+                <a href={`${links[state.account.network].tx}/${txHash}`} target="_blank" rel="noreferrer">
+                  View on Explorer
+                </a>
+              </div>
+            )}
+          </div>
         </>
       )}
     </section>
