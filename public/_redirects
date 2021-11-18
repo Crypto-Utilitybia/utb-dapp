@@ -1,2 +1,2 @@
-/asset/*              /asset/[id].html
-/product/*            /product/[address].html
+/asset/*              /asset/[id].html               200
+/product/*            /product/[address].html        200
