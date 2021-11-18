@@ -17,11 +17,11 @@
     "dotenv": "^10.0.0",
     "evm-chains": "^0.2.0",
     "moment": "^2.29.1",
-    "next": "10.0.4",
+    "next": "^11.0.0",
     "react": "17.0.1",
     "react-dom": "17.0.1",
     "react-identicons": "^1.2.5",
-    "walletlink": "^2.1.11",
+    "walletlink": "^2.2.8",
     "web3": "^1.5.3",
     "web3modal": "^1.9.4"
   },
