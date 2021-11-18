@@ -4,9 +4,10 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build --profile",
     "start": "next start -p 8080",
-    "deploy:vercel": "vercel --prod"
+    "deploy:vercel": "vercel --prod",
+    "build": "next build --profile && next export",
+    "export": "next export"
   },
   "dependencies": {
     "@walletconnect/web3-provider": "^1.6.5",
