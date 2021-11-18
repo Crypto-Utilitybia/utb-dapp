@@ -11,8 +11,8 @@ function UtiltiybiaApp({ Component, pageProps }) {
         <meta name="version" content={process.env.NEXT_PUBLIC_APP_VERSION} />
 
         <meta charSet="utf-8" />
-        <meta name="keywords" content="utilityDriven,NFT,utilitybia" />
-        <meta name="description" content="World's fist utility service using NFTs!" />
+        <meta name="keywords" content="utilityDriven,NFT,utilitybia,avanlanche" />
+        <meta name="description" content="The world's first utility service using NFTs!" />
         <meta httpEquiv="X-UA-Compatible" content="IE=edge" />
         <meta name="viewport" content="minimum-scale=1, initial-scale=1, width=device-width, shrink-to-fit=no" />
 
