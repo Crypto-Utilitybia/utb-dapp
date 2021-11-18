@@ -6,7 +6,7 @@
     "dev": "next dev",
     "start": "next start -p 8080",
     "deploy:vercel": "vercel --prod",
-    "build": "next build --profile && next export",
+    "build": "next build && next export",
     "export": "next export"
   },
   "dependencies": {
