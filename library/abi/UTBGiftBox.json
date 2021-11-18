@@ -463,47 +463,21 @@
         "internalType": "uint256",
         "name": "tokenId",
         "type": "uint256"
-      }
-    ],
-    "name": "deposit",
-    "outputs": [],
-    "stateMutability": "payable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "tokenId",
-        "type": "uint256"
-      }
-    ],
-    "name": "depositAndWrap",
-    "outputs": [],
-    "stateMutability": "payable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "tokenId",
-        "type": "uint256"
       },
       {
-        "internalType": "address",
+        "internalType": "address[]",
         "name": "erc1155Token",
-        "type": "address"
+        "type": "address[]"
       },
       {
-        "internalType": "uint256",
+        "internalType": "uint256[]",
         "name": "erc1155TokenId",
-        "type": "uint256"
+        "type": "uint256[]"
       },
       {
-        "internalType": "uint256",
+        "internalType": "uint256[]",
         "name": "erc1155TokenAmount",
-        "type": "uint256"
+        "type": "uint256[]"
       }
     ],
     "name": "depositERC1155",
@@ -519,19 +493,19 @@
         "type": "uint256"
       },
       {
-        "internalType": "address",
+        "internalType": "address[]",
         "name": "erc1155Token",
-        "type": "address"
+        "type": "address[]"
       },
       {
-        "internalType": "uint256",
+        "internalType": "uint256[]",
         "name": "erc1155TokenId",
-        "type": "uint256"
+        "type": "uint256[]"
       },
       {
-        "internalType": "uint256",
+        "internalType": "uint256[]",
         "name": "erc1155TokenAmount",
-        "type": "uint256"
+        "type": "uint256[]"
       }
     ],
     "name": "depositERC1155AndWrap",
@@ -547,19 +521,19 @@
         "type": "uint256"
       },
       {
-        "internalType": "address",
+        "internalType": "address[]",
         "name": "token",
-        "type": "address"
+        "type": "address[]"
       },
       {
-        "internalType": "uint256",
+        "internalType": "uint256[]",
         "name": "amount",
-        "type": "uint256"
+        "type": "uint256[]"
       }
     ],
     "name": "depositERC20",
     "outputs": [],
-    "stateMutability": "nonpayable",
+    "stateMutability": "payable",
     "type": "function"
   },
   {
@@ -570,19 +544,19 @@
         "type": "uint256"
       },
       {
-        "internalType": "address",
+        "internalType": "address[]",
         "name": "token",
-        "type": "address"
+        "type": "address[]"
       },
       {
-        "internalType": "uint256",
+        "internalType": "uint256[]",
         "name": "amount",
-        "type": "uint256"
+        "type": "uint256[]"
       }
     ],
     "name": "depositERC20AndWrap",
     "outputs": [],
-    "stateMutability": "nonpayable",
+    "stateMutability": "payable",
     "type": "function"
   },
   {
@@ -593,14 +567,14 @@
         "type": "uint256"
       },
       {
-        "internalType": "address",
+        "internalType": "address[]",
         "name": "erc721Token",
-        "type": "address"
+        "type": "address[]"
       },
       {
-        "internalType": "uint256",
+        "internalType": "uint256[]",
         "name": "erc721TokenId",
-        "type": "uint256"
+        "type": "uint256[]"
       }
     ],
     "name": "depositERC721",
@@ -616,14 +590,14 @@
         "type": "uint256"
       },
       {
-        "internalType": "address",
+        "internalType": "address[]",
         "name": "erc721Token",
-        "type": "address"
+        "type": "address[]"
       },
       {
-        "internalType": "uint256",
+        "internalType": "uint256[]",
         "name": "erc721TokenId",
-        "type": "uint256"
+        "type": "uint256[]"
       }
     ],
     "name": "depositERC721AndWrap",

@@ -476,34 +476,21 @@
         "internalType": "uint256",
         "name": "tokenId",
         "type": "uint256"
-      }
-    ],
-    "name": "deposit",
-    "outputs": [],
-    "stateMutability": "payable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "tokenId",
-        "type": "uint256"
       },
       {
-        "internalType": "address",
+        "internalType": "address[]",
         "name": "token",
-        "type": "address"
+        "type": "address[]"
       },
       {
-        "internalType": "uint256",
+        "internalType": "uint256[]",
         "name": "amount",
-        "type": "uint256"
+        "type": "uint256[]"
       }
     ],
     "name": "depositERC20",
     "outputs": [],
-    "stateMutability": "nonpayable",
+    "stateMutability": "payable",
     "type": "function"
   },
   {

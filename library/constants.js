@@ -56,6 +56,6 @@ export const addresses = {
 export const utilityABIs = {
   43114: {},
   43113: {
-    '0x38f258977f0db643a25630de947a5d20911e76fa': 'UTBGiftBox',
+    '0x378159c1dd4eae06d114305a17b7a629f78a5d11': 'UTBGiftBox',
   },
 }
