@@ -26,7 +26,7 @@ export default function HomeContainer({ state, library }) {
           .catch(console.log)
       })
       .catch(console.log)
-  }, [library, state.account.network])
+  }, [library, state.account])
 
   useEffect(() => {
     fetchData()

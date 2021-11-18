@@ -42,7 +42,7 @@ export default function AssetContainer({ state, library }) {
         )
         .catch(console.log)
     },
-    [library, state.account.network]
+    [library, state.account]
   )
 
   useEffect(() => {

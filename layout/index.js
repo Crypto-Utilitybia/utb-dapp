@@ -17,7 +17,7 @@ export default function Layout({ children }) {
         method: 'wallet_addEthereumChain',
         params: [networks[supported[0]]],
       })
-      .then(console.log)
+      .then(() => connectWallet())
       .catch(console.log)
   }
 

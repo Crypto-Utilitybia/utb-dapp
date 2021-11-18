@@ -1,2 +1,3 @@
 /asset/*              /asset/[id].html               200
 /product/*            /product/[address].html        200
+/token/*              /token/[id].html               200

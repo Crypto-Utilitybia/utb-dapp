@@ -17,7 +17,7 @@
 
 .account span {
   display: inline-block;
-  background: linear-gradient(106.16deg, var(--color-highlight) 23.99%, var(--color-dark) 135.44%);
+  background: var(--gradient1);
   color: var(--color-white);
   border-radius: 30px;
   padding: 0.5rem 1rem;
@@ -27,7 +27,7 @@
 .account i {
   margin-left: 1rem;
   color: var(--color-white);
-  background: linear-gradient(106.16deg, var(--color-highlight) 23.99%, var(--color-dark) 135.44%);
+  background: var(--gradient1);
   border-radius: 30px;
   padding: 0.5rem;
 }

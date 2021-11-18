@@ -10,6 +10,8 @@
   --color-secondary: #5f5f5f;
   --color-white: white;
   --color-border: #b8a076;
+
+  --gradient1: linear-gradient(106.16deg, var(--color-highlight) 23.99%, var(--color-dark) 135.44%);
 }
 
 body {
