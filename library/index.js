@@ -59,13 +59,13 @@ export default class Library {
         this.web3.givenProvider.removeAllListeners('disconnect')
       }
       this.web3.setProvider(prov)
-      if (prov.on) {
-        prov.on('accountsChanged', () => this.fetchAccount())
-        prov.on('chainChanged', () => this.fetchAccount())
-        prov.on('disconnect', () => this.disconnect())
-      }
     } else {
       this.instance = new Web3(prov)
+    }
+    if (prov.on) {
+      prov.on('accountsChanged', () => this.fetchAccount())
+      prov.on('chainChanged', () => this.fetchAccount())
+      prov.on('disconnect', () => this.disconnect())
     }
     this.connected = true
     this.fetchAccount()

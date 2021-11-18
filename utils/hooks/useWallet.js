@@ -65,7 +65,14 @@ export default function useWallet(dispatch) {
     if (library) {
       library.setProvider(provider)
     } else {
-      setLibrary(new Library(provider, { onEvent: dispatch }))
+      setLibrary(
+        new Library(provider, {
+          onEvent: (...params) => {
+            if (loading) setLoading(false)
+            dispatch(...params)
+          },
+        })
+      )
     }
   }
 
