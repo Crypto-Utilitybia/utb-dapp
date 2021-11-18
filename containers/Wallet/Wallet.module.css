@@ -19,6 +19,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  color: var(--color-highlight);
   box-shadow: 0 0 10px var(--color-secondary);
   background-color: var(--color-highlight);
   cursor: pointer;
