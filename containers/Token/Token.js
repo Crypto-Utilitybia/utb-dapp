@@ -37,24 +37,28 @@ export default function TokenContainer({ state, library, dispatch }) {
   const fetchData = useCallback(
     (id) => {
       const [address, tokenId] = id.split('-')
-      const abi = utilityABIs[state.account.network][address]
-      const contract = library.getContract(address, abi, true)
 
-      Promise.all([
-        getGraph(state.account.network, getToken(id)),
-        library.contractCall(contract, 'tokenState', [tokenId]),
-      ])
-        .then(([{ token }, status]) => {
-          axios
-            .get(token.tokenURI)
-            .then(({ data: metadata }) => {
-              setToken({
-                ...token,
-                tokenId,
-                status: Number(status),
-                metadata,
-                utility: library.web3.utils.toChecksumAddress(token.utility),
-              })
+      library
+        .getContractABI(address)
+        .then((abi) => {
+          const contract = library.getContract(address, abi, true)
+          Promise.all([
+            getGraph(state.account.network, getToken(id)),
+            library.contractCall(contract, 'tokenState', [tokenId]),
+          ])
+            .then(([{ token }, status]) => {
+              axios
+                .get(token.tokenURI)
+                .then(({ data: metadata }) => {
+                  setToken({
+                    ...token,
+                    tokenId,
+                    status: Number(status),
+                    metadata,
+                    utility: library.web3.utils.toChecksumAddress(token.utility),
+                  })
+                })
+                .catch(console.log)
             })
             .catch(console.log)
         })
@@ -135,28 +139,32 @@ export default function TokenContainer({ state, library, dispatch }) {
 
   const handlePut = () => {
     const [address, tokenId] = id.split('-')
-    const abi = utilityABIs[state.account.network][address]
-    const contract = library.getContract(address, abi, true)
-    const nativeCoin = formCoins.find((coin) => coin.value === 0)
-    const coins = formCoins.filter((coin) => coin.value !== 0)
-    const transaction = library.contractSend(contract, withWrap ? 'depositERC20AndWrap' : 'depositERC20', [
-      tokenId,
-      ...coins.reduce(
-        ([addresses, amounts], coin) => [
-          [...addresses, coin.value],
-          [...amounts, library.toWei(coin.amount, coin.decimals)],
-        ],
-        [[], []]
-      ),
-      {
-        from: state.account.address,
-        value: nativeCoin ? library.toWei(nativeCoin.amount) : undefined,
-      },
-    ])
-    handleTransaction(transaction, setTxHash, () => {
-      fetchData(id)
-      setFormCoins([])
-    })
+    library
+      .getContractABI(address)
+      .then((abi) => {
+        const contract = library.getContract(address, abi, true)
+        const nativeCoin = formCoins.find((coin) => coin.value === 0)
+        const coins = formCoins.filter((coin) => coin.value !== 0)
+        const transaction = library.contractSend(contract, withWrap ? 'depositERC20AndWrap' : 'depositERC20', [
+          tokenId,
+          ...coins.reduce(
+            ([addresses, amounts], coin) => [
+              [...addresses, coin.value],
+              [...amounts, library.toWei(coin.amount, coin.decimals)],
+            ],
+            [[], []]
+          ),
+          {
+            from: state.account.address,
+            value: nativeCoin ? library.toWei(nativeCoin.amount) : undefined,
+          },
+        ])
+        handleTransaction(transaction, setTxHash, () => {
+          fetchData(id)
+          setFormCoins([])
+        })
+      })
+      .catch(console.log)
   }
 
   const handleNFT = (nft) => {
@@ -213,55 +221,71 @@ export default function TokenContainer({ state, library, dispatch }) {
 
   const handlePutNFT = () => {
     const [address, tokenId] = id.split('-')
-    const abi = utilityABIs[state.account.network][address]
-    const contract = library.getContract(address, abi, true)
-    const transaction = library.contractSend(contract, withWrap ? 'depositERC721AndWrap' : 'depositERC721', [
-      tokenId,
-      [nft.address],
-      [nft.tokenId],
-      {
-        from: state.account.address,
-      },
-    ])
-    handleTransaction(transaction, setTxHash, () => {
-      fetchData(id)
-      setNFT({})
-    })
+    library
+      .getContractABI(address)
+      .then((abi) => {
+        const contract = library.getContract(address, abi, true)
+        const transaction = library.contractSend(contract, withWrap ? 'depositERC721AndWrap' : 'depositERC721', [
+          tokenId,
+          [nft.address],
+          [nft.tokenId],
+          {
+            from: state.account.address,
+          },
+        ])
+        handleTransaction(transaction, setTxHash, () => {
+          fetchData(id)
+          setNFT({})
+        })
+      })
+      .catch(console.log)
   }
 
   const handleWrap = () => {
     const [address, tokenId] = id.split('-')
-    const abi = utilityABIs[state.account.network][address]
-    const contract = library.getContract(address, abi, true)
-    const transaction = library.contractSend(contract, 'wrap', [tokenId, { from: state.account.address }])
-    handleTransaction(transaction, setTxHash, () => {
-      fetchData(id)
-    })
+    library
+      .getContractABI(address)
+      .then((abi) => {
+        const contract = library.getContract(address, abi, true)
+        const transaction = library.contractSend(contract, 'wrap', [tokenId, { from: state.account.address }])
+        handleTransaction(transaction, setTxHash, () => {
+          fetchData(id)
+        })
+      })
+      .catch(console.log)
   }
 
   const handleSend = () => {
     const [address, tokenId] = id.split('-')
-    const abi = utilityABIs[state.account.network][address]
-    const contract = library.getContract(address, abi, true)
-    const transaction = library.contractSend(contract, 'transferFrom', [
-      state.account.address,
-      library.web3.utils.toChecksumAddress(formGift.gifty),
-      tokenId,
-      { from: state.account.address },
-    ])
-    handleTransaction(transaction, setTxHash, () => {
-      fetchData(id)
-    })
+    library
+      .getContractABI(address)
+      .then((abi) => {
+        const contract = library.getContract(address, abi, true)
+        const transaction = library.contractSend(contract, 'transferFrom', [
+          state.account.address,
+          library.web3.utils.toChecksumAddress(formGift.gifty),
+          tokenId,
+          { from: state.account.address },
+        ])
+        handleTransaction(transaction, setTxHash, () => {
+          fetchData(id)
+        })
+      })
+      .catch(console.log)
   }
 
   const handleOpen = () => {
     const [address, tokenId] = id.split('-')
-    const abi = utilityABIs[state.account.network][address]
-    const contract = library.getContract(address, abi, true)
-    const transaction = library.contractSend(contract, 'open', [tokenId, { from: state.account.address }])
-    handleTransaction(transaction, setTxHash, () => {
-      fetchData(id)
-    })
+    library
+      .getContractABI(address)
+      .then((abi) => {
+        const contract = library.getContract(address, abi, true)
+        const transaction = library.contractSend(contract, 'open', [tokenId, { from: state.account.address }])
+        handleTransaction(transaction, setTxHash, () => {
+          fetchData(id)
+        })
+      })
+      .catch(console.log)
   }
 
   const [gifts, setGifts] = useState(null)
@@ -269,42 +293,52 @@ export default function TokenContainer({ state, library, dispatch }) {
     if (!token) return
     if (token.status === 2 && token.owner === state.account.address.toLowerCase()) {
       const [address, tokenId] = id.split('-')
-      const abi = utilityABIs[state.account.network][address]
-      const contract = library.getContract(address, abi, true)
-      Promise.all([
-        library.contractCall(contract, 'viewETH', [tokenId]),
-        library.contractCall(contract, 'viewERC20s', [tokenId]),
-        library.contractCall(contract, 'viewERC721s', [tokenId]),
-      ])
-        .then(([avax, coins, nfts]) => {
+      library
+        .getContractABI(address)
+        .then((abi) => {
+          const contract = library.getContract(address, abi, true)
           Promise.all([
-            Promise.all(
-              coins.map((token) =>
-                Promise.all([
-                  Promise.resolve(token),
-                  library.contractCall(contract, 'viewERC20Amount', [tokenId, token]),
-                ])
-              )
-            ),
-            Promise.all(
-              nfts.map((token) =>
-                Promise.all([Promise.resolve(token), library.contractCall(contract, 'viewERC721Ids', [tokenId, token])])
-              )
-            ),
-          ]).then(([coins, nfts]) => {
-            console.log(coins, nfts, tokens)
-            setGifts({
-              avax: Number(library.fromWei(avax)),
-              coins: coins.map(([address, amount]) => {
-                const token = tokens.find((item) => item.value === address)
-                return {
-                  ...token,
-                  amount: Number(library.fromWei(amount, token?.decimals)),
-                }
-              }),
-              nfts: nfts.reduce((total, [, tokenIds]) => total + tokenIds.length, 0),
+            library.contractCall(contract, 'viewETH', [tokenId]),
+            library.contractCall(contract, 'viewERC20s', [tokenId]),
+            library.contractCall(contract, 'viewERC721s', [tokenId]),
+          ])
+            .then(([avax, coins, nfts]) => {
+              Promise.all([
+                Promise.all(
+                  coins.map((token) =>
+                    Promise.all([
+                      Promise.resolve(token),
+                      library.contractCall(contract, 'viewERC20Amount', [tokenId, token]),
+                    ])
+                  )
+                ),
+                Promise.all(
+                  nfts.map((token) =>
+                    Promise.all([
+                      Promise.resolve(token),
+                      library.contractCall(contract, 'viewERC721Ids', [tokenId, token]),
+                    ])
+                  )
+                ),
+              ]).then(([coins, nfts]) => {
+                console.log(coins, nfts, tokens)
+                setGifts({
+                  avax: Number(library.fromWei(avax)),
+                  coins: coins.map(([address, amount]) => {
+                    const token = tokens.find((item) => item.value === address)
+                    return {
+                      ...token,
+                      amount: Number(library.fromWei(amount, token?.decimals)),
+                    }
+                  }),
+                  nfts: nfts.reduce((total, [, tokenIds]) => total + tokenIds.length, 0),
+                })
+              })
             })
-          })
+            .catch((err) => {
+              console.log(err)
+              setGifts(null)
+            })
         })
         .catch((err) => {
           console.log(err)
@@ -317,12 +351,16 @@ export default function TokenContainer({ state, library, dispatch }) {
 
   const handleCollect = () => {
     const [address, tokenId] = id.split('-')
-    const abi = utilityABIs[state.account.network][address]
-    const contract = library.getContract(address, abi, true)
-    const transaction = library.contractSend(contract, 'claimDeposits', [tokenId, { from: state.account.address }])
-    handleTransaction(transaction, setTxHash, () => {
-      fetchData(id)
-    })
+    library
+      .getContractABI(address)
+      .then((abi) => {
+        const contract = library.getContract(address, abi, true)
+        const transaction = library.contractSend(contract, 'claimDeposits', [tokenId, { from: state.account.address }])
+        handleTransaction(transaction, setTxHash, () => {
+          fetchData(id)
+        })
+      })
+      .catch(console.log)
   }
 
   return (

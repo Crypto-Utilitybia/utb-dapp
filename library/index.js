@@ -115,6 +115,26 @@ export default class Library {
     }
   }
 
+  getContractABI(address) {
+    const abi = [
+      {
+        inputs: [],
+        name: 'symbol',
+        outputs: [
+          {
+            internalType: 'string',
+            name: '',
+            type: 'string',
+          },
+        ],
+        stateMutability: 'view',
+        type: 'function',
+      },
+    ]
+    const contract = new this.web3.eth.Contract(abi, this.web3.utils.toChecksumAddress(address))
+    return this.contractCall(contract, 'symbol')
+  }
+
   getContract(address, abi, save) {
     if (this.contracts[address]) {
       return this.contracts[address]

@@ -4,7 +4,7 @@ import axios from 'axios'
 import { getAsset } from 'library/queries'
 import { getGraph, handleTransaction } from 'library/utils'
 import styles from './Asset.module.css'
-import { links, utilityABIs } from 'library/constants'
+import { links } from 'library/constants'
 import BigNumber from 'bignumber.js'
 
 export default function AssetContainer({ state, library }) {
@@ -17,29 +17,34 @@ export default function AssetContainer({ state, library }) {
   const fetchData = useCallback(
     (id) => {
       const [address, index] = id.split('-')
-      const abi = utilityABIs[state.account.network][address]
-      const contract = library.getContract(address, abi, true)
-
-      Promise.all([getGraph(state.account.network, getAsset(id)), library.contractCall(contract, 'mints', [index])])
-        .then(([{ asset }, mints]) =>
-          Promise.all(
-            asset.asset.map((uri) => axios.get(`${process.env.NEXT_PUBLIC_IPFS_BASE}${uri}`).then(({ data }) => data))
-          )
-            .then((uris) =>
-              setAsset({
-                ...asset,
-                metadatas: uris.map((item) => ({
-                  ...item,
-                  name: item.attributes.find((item) => item.trait_type === 'State').value,
-                })),
-                promo: `${process.env.NEXT_PUBLIC_IPFS_BASE}${asset.promo}`,
-                priceShow: library.fromWei(asset.price),
-                limit: Number(asset.limit),
-                mints: Number(mints),
-              })
+      library
+        .getContractABI(address)
+        .then((abi) => {
+          const contract = library.getContract(address, abi, true)
+          Promise.all([getGraph(state.account.network, getAsset(id)), library.contractCall(contract, 'mints', [index])])
+            .then(([{ asset }, mints]) =>
+              Promise.all(
+                asset.asset.map((uri) =>
+                  axios.get(`${process.env.NEXT_PUBLIC_IPFS_BASE}${uri}`).then(({ data }) => data)
+                )
+              )
+                .then((uris) =>
+                  setAsset({
+                    ...asset,
+                    metadatas: uris.map((item) => ({
+                      ...item,
+                      name: item.attributes.find((item) => item.trait_type === 'State').value,
+                    })),
+                    promo: `${process.env.NEXT_PUBLIC_IPFS_BASE}${asset.promo}`,
+                    priceShow: library.fromWei(asset.price),
+                    limit: Number(asset.limit),
+                    mints: Number(mints),
+                  })
+                )
+                .catch(console.log)
             )
             .catch(console.log)
-        )
+        })
         .catch(console.log)
     },
     [library, state.account]
@@ -52,19 +57,24 @@ export default function AssetContainer({ state, library }) {
   const [txHash, setTxHash] = useState('')
   const handleSubmit = () => {
     const [address, index] = id.split('-')
-    const abi = utilityABIs[state.account.network][address]
-    const contract = library.getContract(address, abi, true)
-    const transaction = library.contractSend(contract, 'buyItem', [
-      index,
-      amount,
-      {
-        from: state.account.address,
-        value: new BigNumber(asset.price).times(amount).toString(),
-      },
-    ])
-    handleTransaction(transaction, setTxHash, () => {
-      fetchData(id)
-    })
+
+    library
+      .getContractABI(address)
+      .then((abi) => {
+        const contract = library.getContract(address, abi, true)
+        const transaction = library.contractSend(contract, 'buyItem', [
+          index,
+          amount,
+          {
+            from: state.account.address,
+            value: new BigNumber(asset.price).times(amount).toString(),
+          },
+        ])
+        handleTransaction(transaction, setTxHash, () => {
+          fetchData(id)
+        })
+      })
+      .catch(console.log)
   }
 
   return (

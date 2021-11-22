@@ -4,7 +4,6 @@ import { useRouter } from 'next/router'
 import { getAssets } from 'library/queries'
 import { getGraph } from 'library/utils'
 import styles from './Product.module.css'
-import { utilityABIs } from 'library/constants'
 
 export default function ProductContainer({ state, library }) {
   const [name, setName] = useState('')
@@ -15,32 +14,35 @@ export default function ProductContainer({ state, library }) {
 
   const fetchData = useCallback(
     (address) => {
-      const abi = utilityABIs[state.account.network][address]
-      const contract = library.getContract(address, abi, true)
-
-      Promise.all([
-        library.contractCall(contract, 'name'),
-        getGraph(state.account.network, getAssets(`utility: "${address}"`)),
-      ])
-        .then(([name, { assets }]) => {
-          setName(name)
-          setEnd(assets.length < 10)
-          Promise.all(
-            assets.map((item) =>
-              Promise.all([Promise.resolve(item), library.contractCall(contract, 'mints', [item.index])])
-            )
-          )
-            .then((data) =>
-              setAssets(
-                data.map(([item, mints]) => ({
-                  ...item,
-                  promo: `${process.env.NEXT_PUBLIC_IPFS_BASE}${item.promo}`,
-                  price: library.fromWei(item.price),
-                  limit: Number(item.limit),
-                  mints: Number(mints),
-                }))
+      library
+        .getContractABI(address)
+        .then((abi) => {
+          const contract = library.getContract(address, abi, true)
+          Promise.all([
+            library.contractCall(contract, 'name'),
+            getGraph(state.account.network, getAssets(`utility: "${address}"`)),
+          ])
+            .then(([name, { assets }]) => {
+              setName(name)
+              setEnd(assets.length < 10)
+              Promise.all(
+                assets.map((item) =>
+                  Promise.all([Promise.resolve(item), library.contractCall(contract, 'mints', [item.index])])
+                )
               )
-            )
+                .then((data) =>
+                  setAssets(
+                    data.map(([item, mints]) => ({
+                      ...item,
+                      promo: `${process.env.NEXT_PUBLIC_IPFS_BASE}${item.promo}`,
+                      price: library.fromWei(item.price),
+                      limit: Number(item.limit),
+                      mints: Number(mints),
+                    }))
+                  )
+                )
+                .catch(console.log)
+            })
             .catch(console.log)
         })
         .catch(console.log)
