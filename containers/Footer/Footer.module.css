@@ -1,0 +1,39 @@
+.container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.links {
+  display: flex;
+}
+
+.link {
+  margin: 0 0.6rem;
+  width: 1.6rem;
+  height: 1.6rem;
+  border-radius: 50%;
+  overflow: hidden;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.container span {
+  text-shadow: 1px 1px 3px var(--color-white);
+}
+
+.link img {
+  width: 100%;
+}
+
+@media all and (max-width: 767px) {
+  .container {
+    flex-direction: column;
+  }
+
+  .link {
+    margin-top: 0.6rem;
+  }
+}

@@ -1,28 +1,38 @@
 {
-  "name": "utb-dapp",
+  "name": "crypto-utilitybia",
   "version": "0.1.0",
+  "private": true,
   "scripts": {
     "dev": "next dev",
-    "lint": "next lint",
+    "start": "next start -p 8080",
+    "deploy:vercel": "vercel --prod",
     "build": "next build && next export",
     "export": "next export"
   },
   "dependencies": {
-    "apollo-boost": "^0.1.28",
-    "graphql": "^14.1.1",
+    "@walletconnect/web3-provider": "^1.6.5",
+    "axios": "^0.21.3",
+    "bignumber.js": "^9.0.1",
+    "coingecko-api": "^1.0.10",
+    "dotenv": "^10.0.0",
+    "evm-chains": "^0.2.0",
+    "moment": "^2.29.1",
     "next": "^11.0.0",
-    "react": "^17.0.2",
-    "react-apollo": "^2.4.1",
-    "react-dom": "^17.0.2"
+    "react": "17.0.1",
+    "react-dom": "17.0.1",
+    "react-identicons": "^1.2.5",
+    "react-select": "^5.2.1",
+    "walletlink": "^2.2.8",
+    "web3": "^1.5.3",
+    "web3modal": "^1.9.4"
   },
-  "browserslist": [
-    ">0.2%",
-    "not dead",
-    "not ie <= 11",
-    "not op_mini all"
-  ],
   "devDependencies": {
-    "eslint": "^7.30.0",
-    "eslint-config-next": "^11.0.1"
+    "@svgr/webpack": "^5.5.0",
+    "babel-eslint": "^10.1.0",
+    "eslint": "^7.17.0",
+    "eslint-loader": "^4.0.2",
+    "eslint-plugin-react": "^7.22.0",
+    "eslint-plugin-react-hooks": "^4.2.0",
+    "pm2": "^4.5.1"
   }
 }

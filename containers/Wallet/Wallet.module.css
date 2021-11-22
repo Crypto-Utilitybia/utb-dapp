@@ -1,0 +1,49 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  background-image: url('/images/background/home.jpg');
+  background-size: cover;
+  background-position: center;
+}
+
+.utilities {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  overflow: auto;
+}
+
+.utility {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-highlight);
+  box-shadow: 0 0 10px var(--color-secondary);
+  background-color: var(--color-highlight);
+  cursor: pointer;
+  border-radius: 5px;
+  overflow: hidden;
+
+  width: 100%;
+  max-width: 240px;
+  margin: 0.6rem 1rem;
+
+  transition: all 0.2s;
+  position: relative;
+}
+
+.utility:hover {
+  box-shadow: 0 0 10px var(--color-highlight);
+}
+
+.utility img {
+  width: 100%;
+}
+
+.title {
+  position: absolute;
+  top: 1rem;
+  font-size: 1.6rem;
+}
