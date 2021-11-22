@@ -51,6 +51,10 @@ export const links = {
 }
 
 export const addresses = {
-  43114: {},
-  43113: {},
+  43114: {
+    //
+  },
+  43113: {
+    //
+  },
 }
