@@ -37,7 +37,7 @@ export const links = {
     block: 'https://snowtrace.io/blocks',
     address: 'https://snowtrace.io/address',
     tx: 'https://snowtrace.io/tx',
-    graph: 'https://api.thegraph.com/subgraphs/name/crypto-utilitybia/utilitybia-fuji',
+    graph: 'https://api.thegraph.com/subgraphs/name/crypto-utilitybia/utilitybia-avalanche',
     tokens: 'https://raw.githubusercontent.com/pangolindex/tokenlists/main/defi.tokenlist.json',
   },
   43113: {
