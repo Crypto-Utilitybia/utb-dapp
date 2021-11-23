@@ -5,7 +5,7 @@ import Select from 'react-select'
 import { getToken } from 'library/queries'
 import { getGraph, handleTransaction } from 'library/utils'
 import styles from './Token.module.css'
-import { links, utilityABIs } from 'library/constants'
+import { links } from 'library/constants'
 import { getEllipsis } from 'utils/helpers'
 
 const INFINITY = '115792089237316195423570985008687907853269984665640564039457584007913129639935'
@@ -72,32 +72,44 @@ export default function TokenContainer({ state, library, dispatch }) {
   }, [id, fetchData])
 
   useEffect(() => {
-    axios
-      .get(links[state.account.network].tokens)
-      .then(({ data }) => data)
-      .then(({ tokens }) =>
-        dispatch({
-          type: 'TOKENS',
-          payload: [
-            {
-              label: 'AVAX',
-              value: 0,
-              logoURI: '/coins/avax.png',
-              decimals: 18,
+    Promise.all([axios.get(links[state.account.network].tokens), axios.get(links[state.account.network].nfts)])
+      .then(
+        ([
+          {
+            data: { tokens: coins },
+          },
+          { data: nfts },
+        ]) =>
+          dispatch({
+            type: 'TOKENS',
+            payload: {
+              coins: [
+                {
+                  label: 'AVAX',
+                  value: 0,
+                  logoURI: '/coins/avax.png',
+                  decimals: 18,
+                },
+                ...coins.map(({ address, symbol, logoURI, decimals }) => ({
+                  label: symbol,
+                  value: address,
+                  logoURI,
+                  decimals,
+                })),
+              ],
+              nfts: nfts.map(({ address, name, symbol, image }) => ({
+                label: name,
+                symbol,
+                value: address,
+                image,
+              })),
             },
-            ...tokens.map(({ address, symbol, logoURI, decimals }) => ({
-              label: symbol,
-              value: address,
-              logoURI,
-              decimals,
-            })),
-          ],
-        })
+          })
       )
       .catch(console.log)
   }, [state.account])
 
-  const tokens = state.tokens || []
+  const tokens = state.tokens || { coins: [], nfts: [] }
 
   const handleCoin = (coin) => {
     const contract = coin.value !== 0 && library.getContract(coin.value, 'ERC20', true)
@@ -169,6 +181,12 @@ export default function TokenContainer({ state, library, dispatch }) {
 
   const handleNFT = (nft) => {
     if (nft.tokenId && library.web3.utils.isAddress(nft.address)) {
+      setNFT({
+        ...nft,
+        address: library.web3.utils.toChecksumAddress(nft.address),
+        valid: false,
+        metadata: null,
+      })
       const contract = library.getContract(nft.address, 'ERC721', true)
       library
         .contractCall(contract, 'ownerOf', [nft.tokenId])
@@ -176,11 +194,12 @@ export default function TokenContainer({ state, library, dispatch }) {
           setNFT({
             ...nft,
             address: library.web3.utils.toChecksumAddress(nft.address),
-            valid: owner === state.account.address,
+            valid: true,
+            owner,
             metadata: null,
           })
         })
-        .catch(() => setNFT({ ...nft, valid: false, metadata: null }))
+        .catch(console.log)
     } else {
       setNFT({ ...nft, valid: false, metadata: null })
     }
@@ -188,7 +207,6 @@ export default function TokenContainer({ state, library, dispatch }) {
 
   useEffect(() => {
     if (nft.valid && !nft.metadata) {
-      debugger
       const contract = library.getContract(nft.address, 'ERC721', true)
       Promise.all([
         library.contractCall(contract, 'tokenURI', [nft.tokenId]),
@@ -196,9 +214,18 @@ export default function TokenContainer({ state, library, dispatch }) {
       ])
         .then(([uri, approved]) => {
           axios
-            .get(uri)
+            .get(uri.replace('ipfs://', 'https://ipfs.io/ipfs/'))
             .then(({ data }) => data)
-            .then((metadata) => setNFT({ ...nft, metadata, approved }))
+            .then((metadata) =>
+              setNFT({
+                ...nft,
+                metadata: {
+                  ...metadata,
+                  image: metadata.image.replace('ipfs://', 'https://ipfs.io/ipfs/'),
+                },
+                approved,
+              })
+            )
             .catch(console.log)
         })
         .catch(console.log)
@@ -325,7 +352,7 @@ export default function TokenContainer({ state, library, dispatch }) {
                 setGifts({
                   avax: Number(library.fromWei(avax)),
                   coins: coins.map(([address, amount]) => {
-                    const token = tokens.find((item) => item.value === address)
+                    const token = tokens.coins.find((item) => item.value === address)
                     return {
                       ...token,
                       amount: Number(library.fromWei(amount, token?.decimals)),
@@ -391,7 +418,7 @@ export default function TokenContainer({ state, library, dispatch }) {
                 <div className={styles.inputs}>
                   {active === 0 && token.status === 0 && (
                     <>
-                      <Select value={coin} onChange={handleCoin} options={tokens} />
+                      <Select value={coin} onChange={handleCoin} options={tokens.coins} />
                       {coin && (
                         <table className={styles.table}>
                           <tbody>
@@ -476,6 +503,10 @@ export default function TokenContainer({ state, library, dispatch }) {
                   )}
                   {active === 1 && token.status === 0 && (
                     <>
+                      <Select
+                        onChange={(value) => handleNFT({ address: value.value, tokenId: 1 })}
+                        options={tokens.nfts}
+                      />
                       <div className={styles.nftInput}>
                         <label className="label">Contract:</label>
                         <input
@@ -497,35 +528,39 @@ export default function TokenContainer({ state, library, dispatch }) {
                           <div className={styles.nftPreview}>
                             <img src={nft.metadata.image} />
                           </div>
-                          <div className={styles.confirm}>
-                            <input
-                              id="with-wrap"
-                              type="checkbox"
-                              value={withWrap}
-                              onChange={(e) => setWithWrap(e.target.checked)}
-                            />
-                            <label for="with-wrap">Wrap the box with current assets</label>
-                          </div>
-                          <div className={styles.buttons}>
-                            {!nft.approved ? (
-                              <button onClick={handleApproveNFT} disabled={!!txHash}>
-                                Approve NFT
-                              </button>
-                            ) : withWrap ? (
-                              <button onClick={handlePutNFT} disabled={!!txHash}>
-                                Put Assets and Wrap
-                              </button>
-                            ) : (
-                              <>
-                                <button onClick={handlePutNFT} disabled={!!txHash}>
-                                  Put Assets
-                                </button>
-                                <button onClick={handleWrap} disabled={!!txHash}>
-                                  Wrap
-                                </button>
-                              </>
-                            )}
-                          </div>
+                          {nft.owner === state.account.address && (
+                            <>
+                              <div className={styles.confirm}>
+                                <input
+                                  id="with-wrap"
+                                  type="checkbox"
+                                  value={withWrap}
+                                  onChange={(e) => setWithWrap(e.target.checked)}
+                                />
+                                <label for="with-wrap">Wrap the box with current assets</label>
+                              </div>
+                              <div className={styles.buttons}>
+                                {!nft.approved ? (
+                                  <button onClick={handleApproveNFT} disabled={!!txHash}>
+                                    Approve NFT
+                                  </button>
+                                ) : withWrap ? (
+                                  <button onClick={handlePutNFT} disabled={!!txHash}>
+                                    Put Assets and Wrap
+                                  </button>
+                                ) : (
+                                  <>
+                                    <button onClick={handlePutNFT} disabled={!!txHash}>
+                                      Put Assets
+                                    </button>
+                                    <button onClick={handleWrap} disabled={!!txHash}>
+                                      Wrap
+                                    </button>
+                                  </>
+                                )}
+                              </div>
+                            </>
+                          )}
                         </>
                       )}
                     </>
