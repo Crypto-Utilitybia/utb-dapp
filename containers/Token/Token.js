@@ -476,14 +476,16 @@ export default function TokenContainer({ state, library, dispatch }) {
                                 <img src={coin.logoURI} />
                               </td>
                               <td>
-                                <a
-                                  className={styles.buy}
-                                  href={`${links[state.account.network].coin}/${coin.value.toLowerCase()}`}
-                                  target="_blank"
-                                  rel="noreferrer"
-                                >
-                                  + buy +
-                                </a>
+                                {!!coin.value && (
+                                  <a
+                                    className={styles.buy}
+                                    href={`${links[state.account.network].coin}/${coin.value.toLowerCase()}`}
+                                    target="_blank"
+                                    rel="noreferrer"
+                                  >
+                                    + buy +
+                                  </a>
+                                )}
                               </td>
                             </tr>
                             <tr>
