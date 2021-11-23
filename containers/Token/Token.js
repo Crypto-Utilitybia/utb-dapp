@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
 import axios from 'axios'
-import Select from 'react-select'
+import Select, { components } from 'react-select'
 import { getToken } from 'library/queries'
 import { getGraph, handleTransaction } from 'library/utils'
 import styles from './Token.module.css'
@@ -9,6 +9,10 @@ import { links } from 'library/constants'
 import { getEllipsis } from 'utils/helpers'
 
 const INFINITY = '115792089237316195423570985008687907853269984665640564039457584007913129639935'
+
+const NFT_PREFIXES = {
+  '0xdb350245d143a8b575d909b1fa93df99844264b0': 'https://avaxcoins.com',
+}
 
 function getTabs(status) {
   switch (status) {
@@ -221,7 +225,9 @@ export default function TokenContainer({ state, library, dispatch }) {
                 ...nft,
                 metadata: {
                   ...metadata,
-                  image: metadata.image.replace('ipfs://', 'https://ipfs.io/ipfs/'),
+                  image:
+                    (NFT_PREFIXES[nft.address.toLowerCase()] || '') +
+                    metadata.image.replace('ipfs://', 'https://ipfs.io/ipfs/'),
                 },
                 approved,
               })
@@ -418,23 +424,66 @@ export default function TokenContainer({ state, library, dispatch }) {
                 <div className={styles.inputs}>
                   {active === 0 && token.status === 0 && (
                     <>
-                      <Select value={coin} onChange={handleCoin} options={tokens.coins} />
+                      <Select
+                        value={coin}
+                        onChange={handleCoin}
+                        options={tokens.coins}
+                        components={{
+                          Control: ({ children, ...rest }) => {
+                            const value = rest.getValue()
+                            return (
+                              <components.Control className={styles.control} {...rest}>
+                                {value.length > 0 && (
+                                  <img
+                                    src={value[0].logoURI}
+                                    style={{
+                                      width: 20,
+                                      borderRadius: 10,
+                                      overflow: 'hidden',
+                                      marginLeft: 6,
+                                      marginRight: 6,
+                                    }}
+                                  />
+                                )}{' '}
+                                {children}
+                              </components.Control>
+                            )
+                          },
+                          Option: ({ children, innerProps, data }) => {
+                            return (
+                              <div
+                                className="cursor"
+                                style={{ display: 'flex', alignItems: 'center', padding: `3px 6px` }}
+                                {...innerProps}
+                              >
+                                <img
+                                  src={data.logoURI}
+                                  style={{ width: 20, borderRadius: 10, overflow: 'hidden', marginRight: 6 }}
+                                />{' '}
+                                {children}
+                              </div>
+                            )
+                          },
+                        }}
+                      />
                       {coin && (
                         <table className={styles.table}>
                           <tbody>
                             <tr>
+                              <td className={styles.balance}>
+                                {Number(coin.balance).toFixed(Math.min(8, coin.decimals - 4))}
+                                &nbsp;
+                                <img src={coin.logoURI} />
+                              </td>
                               <td>
                                 <a
-                                  href={`${links[state.account.network].address}/${coin.value || ''}`}
+                                  className={styles.buy}
+                                  href={`${links[state.account.network].coin}/${coin.value.toLowerCase()}`}
                                   target="_blank"
                                   rel="noreferrer"
                                 >
-                                  {coin.label}
+                                  + buy +
                                 </a>
-                              </td>
-                              <td className={styles.balance}>
-                                {Number(coin.balance).toFixed(Math.min(8, coin.decimals - 4))}&nbsp;
-                                <img src={coin.logoURI} />
                               </td>
                             </tr>
                             <tr>
@@ -506,6 +555,43 @@ export default function TokenContainer({ state, library, dispatch }) {
                       <Select
                         onChange={(value) => handleNFT({ address: value.value, tokenId: 1 })}
                         options={tokens.nfts}
+                        components={{
+                          Control: ({ children, ...rest }) => {
+                            const value = rest.getValue()
+                            return (
+                              <components.Control className={styles.control} {...rest}>
+                                {value.length > 0 && (
+                                  <img
+                                    src={value[0].image}
+                                    style={{
+                                      width: 20,
+                                      borderRadius: 10,
+                                      overflow: 'hidden',
+                                      marginLeft: 6,
+                                      marginRight: 6,
+                                    }}
+                                  />
+                                )}{' '}
+                                {children}
+                              </components.Control>
+                            )
+                          },
+                          Option: ({ children, innerProps, data }) => {
+                            return (
+                              <div
+                                className="cursor"
+                                style={{ display: 'flex', alignItems: 'center', padding: `3px 6px` }}
+                                {...innerProps}
+                              >
+                                <img
+                                  src={data.image}
+                                  style={{ width: 20, borderRadius: 10, overflow: 'hidden', marginRight: 6 }}
+                                />{' '}
+                                {children}
+                              </div>
+                            )
+                          },
+                        }}
                       />
                       {/* <div className={styles.nftInput}>
                         <label className="label">Contract:</label>
@@ -526,7 +612,13 @@ export default function TokenContainer({ state, library, dispatch }) {
                       {nft.valid && nft.metadata && (
                         <>
                           <div className={styles.nftPreview}>
-                            <img src={nft.metadata.image} />
+                            <a
+                              href={`${links[state.account.network].marketplace}/${nft.address}/${nft.tokenId}`}
+                              target="_blank"
+                              rel="noreferrer"
+                            >
+                              <img src={nft.metadata.image} />
+                            </a>
                           </div>
                           {nft.owner === state.account.address && (
                             <>
