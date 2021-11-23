@@ -51,7 +51,11 @@ export default function ProductContainer({ state, library }) {
   )
 
   useEffect(() => {
-    fetchData(address)
+    if (address === 'gift-box') {
+      router.replace('/product/0xb2a846ecf0d7755340c8f64557cd92b26eed3725')
+    } else {
+      fetchData(address)
+    }
   }, [address, fetchData])
 
   return (
