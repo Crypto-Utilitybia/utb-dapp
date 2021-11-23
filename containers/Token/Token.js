@@ -507,14 +507,14 @@ export default function TokenContainer({ state, library, dispatch }) {
                         onChange={(value) => handleNFT({ address: value.value, tokenId: 1 })}
                         options={tokens.nfts}
                       />
-                      <div className={styles.nftInput}>
+                      {/* <div className={styles.nftInput}>
                         <label className="label">Contract:</label>
                         <input
                           value={nft.address}
                           onChange={(e) => handleNFT({ address: e.target.value, tokenId: nft.tokenId })}
                           placeholder="Address"
                         />
-                      </div>
+                      </div> */}
                       <div className={styles.nftInput}>
                         <label className="label">Token Id:</label>
                         <input
