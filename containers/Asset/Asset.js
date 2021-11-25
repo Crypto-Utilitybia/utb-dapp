@@ -36,7 +36,14 @@ export default function AssetContainer({ state, library }) {
                       name: item.attributes.find((item) => item.trait_type === 'State').value,
                     })),
                     promo: `${process.env.NEXT_PUBLIC_IPFS_BASE}${asset.promo}`,
-                    priceShow: library.fromWei(asset.price),
+                    price:
+                      Number(asset.discount) * 1000 > Date.now()
+                        ? library.toWei(library.fromWei(asset.price) * 0.9)
+                        : asset.price,
+                    priceShow:
+                      Number(asset.discount) * 1000 > Date.now()
+                        ? library.fromWei(asset.price) * 0.9
+                        : library.fromWei(asset.price),
                     limit: Number(asset.limit),
                     mints: Number(mints),
                   })
@@ -111,7 +118,7 @@ export default function AssetContainer({ state, library }) {
                 <i className="fa fa-minus" />
               </button>
               <button className={styles.buy} onClick={handleSubmit}>
-                Buy {amount} ({(asset.priceShow * amount).toFixed(2)} <img src="/coins/avax.png" />)
+                Buy {amount} ({(asset.priceShow * amount).toFixed(3)} <img src="/coins/avax.png" />)
               </button>
               <button className={`${styles.ticker} ${styles.right}`} onClick={() => setAmount(amount + 1)}>
                 <i className="fa fa-plus" />

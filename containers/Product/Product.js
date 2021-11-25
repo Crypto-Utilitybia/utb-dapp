@@ -35,7 +35,11 @@ export default function ProductContainer({ state, library }) {
                     data.map(([item, mints]) => ({
                       ...item,
                       promo: `${process.env.NEXT_PUBLIC_IPFS_BASE}${item.promo}`,
-                      price: library.fromWei(item.price),
+                      priceOrigin: Number(item.discount) * 1000 > Date.now() ? library.fromWei(item.price) : '',
+                      price:
+                        Number(item.discount) * 1000 > Date.now()
+                          ? (library.fromWei(item.price) * 0.9).toFixed(3)
+                          : library.fromWei(item.price),
                       limit: Number(item.limit),
                       mints: Number(mints),
                     }))
@@ -74,7 +78,13 @@ export default function ProductContainer({ state, library }) {
               </p>
               <img src={item.promo} />
               <p className={styles.price}>
-                {item.price} <img src="/coins/avax.png" />
+                {item.price}{' '}
+                {item.priceOrigin && (
+                  <span style={{ textDecoration: 'line-through', fontSize: '75%' }}>
+                    &nbsp;{item.priceOrigin}&nbsp;
+                  </span>
+                )}
+                <img src="/coins/avax.png" />
               </p>
             </div>
           </Link>
