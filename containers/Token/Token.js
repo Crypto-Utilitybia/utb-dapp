@@ -76,13 +76,20 @@ export default function TokenContainer({ state, library, dispatch }) {
   }, [id, fetchData])
 
   useEffect(() => {
-    Promise.all([axios.get(links[state.account.network].tokens), axios.get(links[state.account.network].nfts)])
+    Promise.all([
+      axios.get(links[state.account.network].tokens),
+      axios.get(links[state.account.network].stables),
+      Promise.resolve(links[state.account.network].nfts),
+    ])
       .then(
         ([
           {
             data: { tokens: coins },
           },
-          { data: nfts },
+          {
+            data: { tokens: stables },
+          },
+          nfts,
         ]) =>
           dispatch({
             type: 'TOKENS',
@@ -94,6 +101,12 @@ export default function TokenContainer({ state, library, dispatch }) {
                   logoURI: '/coins/avax.png',
                   decimals: 18,
                 },
+                ...stables.map(({ address, symbol, logoURI, decimals }) => ({
+                  label: symbol,
+                  value: address,
+                  logoURI,
+                  decimals,
+                })),
                 ...coins.map(({ address, symbol, logoURI, decimals }) => ({
                   label: symbol,
                   value: address,

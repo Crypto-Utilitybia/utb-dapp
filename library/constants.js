@@ -1,3 +1,5 @@
+import NFT_Avalanche from './jsons/NFT_Avalanche.json'
+
 export const ZERO = '0x0000000000000000000000000000000000000000'
 
 export const mainnets = [43114]
@@ -39,7 +41,8 @@ export const links = {
     tx: 'https://snowtrace.io/tx',
     graph: 'https://api.thegraph.com/subgraphs/name/crypto-utilitybia/utilitybia-avalanche',
     tokens: 'https://raw.githubusercontent.com/pangolindex/tokenlists/main/defi.tokenlist.json',
-    nfts: 'https://api.nftrade.com/api/v1/contracts?limit=100&skip=0&chains[]=43114&verified=true',
+    stables: 'https://raw.githubusercontent.com/pangolindex/tokenlists/main/stablecoin.tokenlist.json',
+    nfts: NFT_Avalanche,
     coin: 'https://info.pangolin.exchange/#/token',
     marketplace: 'https://nftrade.com/assets/avalanche',
   },
@@ -50,6 +53,7 @@ export const links = {
     tx: 'https://testnet.snowtrace.io/tx',
     graph: 'https://api.thegraph.com/subgraphs/name/crypto-utilitybia/utilitybia-fuji',
     tokens: 'https://raw.githubusercontent.com/pangolindex/tokenlists/main/fuji.tokenlist.json',
+    stables: 'https://raw.githubusercontent.com/pangolindex/tokenlists/main/stablecoin.tokenlist.json',
     nfts: 'https://api.nftrade.com/api/v1/contracts?limit=100&skip=0&chains[]=43114&verified=true',
     coin: 'https://info.pangolin.exchange/#/token',
     marketplace: 'https://nftrade.com/assets/avalanche',
