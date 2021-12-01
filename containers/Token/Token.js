@@ -684,7 +684,7 @@ export default function TokenContainer({ state, library, dispatch }) {
                   )}
                   {active === 0 &&
                     token.status === 1 &&
-                    (token.lastActor === state.account.address.toLowerCase() ? (
+                    (token.lastActor === state.account.address.toLowerCase() || !token.lastActor ? (
                       <>
                         <div style={{ flex: 1 }}>
                           <div className={styles.nftInput}>
