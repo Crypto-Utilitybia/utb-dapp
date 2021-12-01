@@ -10,9 +10,9 @@ export default function Header({ account, onLogout }) {
       </Link>
       <div className={styles.account}>
         <Link href="/wallet">
-          <span>{getEllipsis(account.address)}</span>
+          <i className="fa fa-user-circle-o cursor" />
         </Link>
-        <i className="fa fa-sign-out cursor" onClick={onLogout}></i>
+        <i className="fa fa-sign-out cursor" onClick={onLogout} />
       </div>
     </header>
   )
