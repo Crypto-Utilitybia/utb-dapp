@@ -1,4 +1,4 @@
-export const getUtilities = ({ first = 10, skip = 0 } = {}) => `query {
+export const getUtilities = ({ first = 32, skip = 0 } = {}) => `query {
   utilities(
     first: ${first}, skip: ${skip} orderBy: updatedAt, orderDirection: desc
   ) {
@@ -28,7 +28,7 @@ export const getAsset = (id) => `query {
   }
 }`
 
-export const getAssets = ({ first = 10, skip = 0, filter } = {}) => `query {
+export const getAssets = ({ first = 32, skip = 0, filter } = {}) => `query {
   assets(
     first: ${first}, skip: ${skip} orderBy: updatedAt, orderDirection: desc
     ${filter ? `where: { ${filter} }` : ''}
@@ -65,7 +65,7 @@ export const getToken = (id) => `query {
   }
 }`
 
-export const getTokens = (owner, { first = 10, skip = 0 } = {}) => `query {
+export const getTokens = (owner, { first = 32, skip = 0 } = {}) => `query {
   tokens(
     first: ${first}, skip: ${skip} orderBy: updatedAt, orderDirection: desc
     where: { owner: "${owner.toLowerCase()}" }
