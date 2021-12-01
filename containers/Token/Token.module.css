@@ -17,6 +17,13 @@
   margin: auto;
 }
 
+@media all and (max-width: 767px) {
+  .wrapper {
+    flex-direction: column;
+    justify-content: flex-start;
+  }
+}
+
 .wrapper > div {
   flex: 1;
   margin: 0.6rem;
