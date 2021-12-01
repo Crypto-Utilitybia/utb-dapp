@@ -7,6 +7,7 @@ import { getGraph, handleTransaction } from 'library/utils'
 import styles from './Token.module.css'
 import { links } from 'library/constants'
 import { getEllipsis } from 'utils/helpers'
+import Loading from 'components/Loading/Loading'
 
 const INFINITY = '115792089237316195423570985008687907853269984665640564039457584007913129639935'
 
@@ -37,9 +38,13 @@ export default function TokenContainer({ state, library, dispatch }) {
   // const [formNFTs, setFormNFTs] = useState([])
   const [formGift, setFormGift] = useState({})
   const [txHash, setTxHash] = useState('')
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => setLoading(false), [token])
 
   const fetchData = useCallback(
     (id) => {
+      setLoading(true)
       const [address, tokenId] = id.split('-')
 
       library
@@ -48,15 +53,19 @@ export default function TokenContainer({ state, library, dispatch }) {
           const contract = library.getContract(address, abi, true)
           Promise.all([
             getGraph(state.account.network, getToken(id)),
+            library.contractCall(contract, 'ownerOf', [tokenId]),
+            library.contractCall(contract, 'tokenURI', [tokenId]),
             library.contractCall(contract, 'tokenState', [tokenId]),
           ])
-            .then(([{ token }, status]) => {
+            .then(([{ token }, owner, tokenURI, status]) => {
               axios
-                .get(token.tokenURI)
+                .get(tokenURI)
                 .then(({ data: metadata }) => {
                   setToken({
                     ...token,
                     tokenId,
+                    owner: owner.toLowerCase(),
+                    tokenURI,
                     status: Number(status),
                     metadata,
                     utility: library.web3.utils.toChecksumAddress(token.utility),
@@ -296,6 +305,7 @@ export default function TokenContainer({ state, library, dispatch }) {
         const transaction = library.contractSend(contract, 'wrap', [tokenId, { from: state.account.address }])
         handleTransaction(transaction, setTxHash, () => {
           fetchData(id)
+          setActive(0)
         })
       })
       .catch(console.log)
@@ -545,7 +555,7 @@ export default function TokenContainer({ state, library, dispatch }) {
                           value={withWrap}
                           onChange={(e) => setWithWrap(e.target.checked)}
                         />
-                        <label for="with-wrap">Wrap the box with current assets</label>
+                        <label htmlFor="with-wrap">Wrap the box with current assets</label>
                       </div>
                       <div className={styles.buttons}>
                         {withWrap ? (
@@ -755,6 +765,7 @@ export default function TokenContainer({ state, library, dispatch }) {
           </div>
         </>
       )}
+      {(loading || txHash) && <Loading />}
     </section>
   )
 }

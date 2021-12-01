@@ -54,7 +54,7 @@ export const links = {
     graph: 'https://api.thegraph.com/subgraphs/name/crypto-utilitybia/utilitybia-fuji',
     tokens: 'https://raw.githubusercontent.com/pangolindex/tokenlists/main/fuji.tokenlist.json',
     stables: 'https://raw.githubusercontent.com/pangolindex/tokenlists/main/stablecoin.tokenlist.json',
-    nfts: 'https://api.nftrade.com/api/v1/contracts?limit=100&skip=0&chains[]=43114&verified=true',
+    nfts: NFT_Avalanche,
     coin: 'https://info.pangolin.exchange/#/token',
     marketplace: 'https://nftrade.com/assets/avalanche',
   },

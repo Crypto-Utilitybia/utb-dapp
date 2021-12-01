@@ -4,12 +4,17 @@ import axios from 'axios'
 import { getTokens } from 'library/queries'
 import { getGraph } from 'library/utils'
 import styles from './Wallet.module.css'
+import Loading from 'components/Loading/Loading'
 
 export default function WalletContainer({ state }) {
   const [utilities, setUtilities] = useState([])
   const [, setEnd] = useState(false)
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => setLoading(false), [utilities])
 
   const fetchData = useCallback(() => {
+    setLoading(true)
     getGraph(state.account.network, getTokens(state.account.address))
       .then(({ tokens }) => {
         setEnd(tokens.length < 10)
@@ -50,6 +55,7 @@ export default function WalletContainer({ state }) {
           </Link>
         ))}
       </div>
+      {loading && <Loading />}
     </section>
   )
 }

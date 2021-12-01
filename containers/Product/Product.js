@@ -4,6 +4,7 @@ import { useRouter } from 'next/router'
 import { getAssets } from 'library/queries'
 import { getGraph } from 'library/utils'
 import styles from './Product.module.css'
+import Loading from 'components/Loading/Loading'
 
 export default function ProductContainer({ state, library }) {
   const [name, setName] = useState('')
@@ -11,9 +12,13 @@ export default function ProductContainer({ state, library }) {
   const [, setEnd] = useState(false)
   const router = useRouter()
   const { address } = router.query
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => setLoading(false), [assets])
 
   const fetchData = useCallback(
     (address) => {
+      setLoading(true)
       library
         .getContractABI(address)
         .then((abi) => {
@@ -90,6 +95,7 @@ export default function ProductContainer({ state, library }) {
           </Link>
         ))}
       </div>
+      {loading && <Loading />}
     </section>
   )
 }

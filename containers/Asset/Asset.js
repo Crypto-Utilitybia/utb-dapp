@@ -6,6 +6,7 @@ import { getGraph, handleTransaction } from 'library/utils'
 import styles from './Asset.module.css'
 import { links } from 'library/constants'
 import BigNumber from 'bignumber.js'
+import Loading from 'components/Loading/Loading'
 
 export default function AssetContainer({ state, library }) {
   const router = useRouter()
@@ -13,9 +14,13 @@ export default function AssetContainer({ state, library }) {
   const [asset, setAsset] = useState(null)
   const [status, setStatus] = useState(0)
   const [amount, setAmount] = useState(1)
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => setLoading(false), [asset])
 
   const fetchData = useCallback(
     (id) => {
+      setLoading(true)
       const [address, index] = id.split('-')
       library
         .getContractABI(address)
@@ -134,6 +139,7 @@ export default function AssetContainer({ state, library }) {
           </div>
         </>
       )}
+      {loading && <Loading />}
     </section>
   )
 }
