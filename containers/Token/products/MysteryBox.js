@@ -5,7 +5,7 @@ import Select, { components } from 'react-select'
 import { getToken } from 'library/queries'
 import { getGraph, handleTransaction } from 'library/utils'
 import styles from '../Token.module.css'
-import { links } from 'library/constants'
+import { links, networks } from 'library/constants'
 import { getEllipsis } from 'utils/helpers'
 import Loading from 'components/Loading/Loading'
 import Coin, { getCoin } from 'components/Coin/Coin'
@@ -41,7 +41,9 @@ export default function MysteryBox({ state, library, dispatch }) {
   const [txHash, setTxHash] = useState('')
   const [loading, setLoading] = useState(true)
 
-  useEffect(() => setLoading(false), [token])
+  const tokens = state.tokens || { coins: [], nfts: [] }
+
+  useEffect(() => loading && setLoading(false), [token, setLoading])
 
   const fetchData = useCallback(
     (id) => {
@@ -100,7 +102,9 @@ export default function MysteryBox({ state, library, dispatch }) {
   useEffect(() => {
     Promise.all([
       axios.get(links[state.account.network].tokens),
-      links[state.account.network].stables ? axios.get(links[state.account.network].stables) : Promise.resolve([]),
+      links[state.account.network].stables
+        ? axios.get(links[state.account.network].stables)
+        : Promise.resolve({ data: { tokens: [] } }),
       Promise.resolve(links[state.account.network].nfts),
     ])
       .then(
@@ -118,7 +122,7 @@ export default function MysteryBox({ state, library, dispatch }) {
             payload: {
               coins: [
                 {
-                  label: 'AVAX',
+                  label: networks[state.account.network].nativeCurrency.name,
                   value: 0,
                   logoURI: getCoin(state?.account?.network),
                   decimals: 18,
@@ -148,8 +152,6 @@ export default function MysteryBox({ state, library, dispatch }) {
       )
       .catch(console.log)
   }, [state.account])
-
-  const tokens = state.tokens || { coins: [], nfts: [] }
 
   const handleCoin = (coin) => {
     const contract = coin.value !== 0 && library.getContract(coin.value, 'ERC20', true)
@@ -779,6 +781,7 @@ export default function MysteryBox({ state, library, dispatch }) {
                   {active === 0 && token.status === 2 && (
                     <>
                       <div style={{ flex: 1 }}>
+                        <p>Your Claimable Tokens</p>
                         {gifts && (
                           <div className={styles.formCoins}>
                             {gifts.avax > 0 && (
