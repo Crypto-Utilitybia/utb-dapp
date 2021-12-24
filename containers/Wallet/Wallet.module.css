@@ -24,11 +24,10 @@
   background-color: var(--color-highlight);
   cursor: pointer;
   border-radius: 5px;
-  overflow: hidden;
 
   width: 100%;
   max-width: 240px;
-  margin: 0.6rem 1rem;
+  margin: 2.4rem 1rem 0.6rem;
 
   transition: all 0.2s;
   position: relative;
@@ -44,6 +43,14 @@
 
 .title {
   position: absolute;
-  top: 1rem;
+  top: -2rem;
   font-size: 1.6rem;
+}
+
+.filter {
+  margin: 0.6rem auto;
+}
+
+.filter label {
+  margin-right: 0.6rem;
 }

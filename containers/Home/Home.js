@@ -20,7 +20,10 @@ export default function HomeContainer({ state, library }) {
         )
           .then((data) =>
             setUtilities(
-              data.map(([item, promo]) => ({ ...item, promo: `${process.env.NEXT_PUBLIC_IPFS_BASE}${promo}` }))
+              data.map(([item, promo]) => ({
+                ...item,
+                promo: promo.startsWith('http') ? promo : `${process.env.NEXT_PUBLIC_IPFS_BASE}${promo}`,
+              }))
             )
           )
           .catch(console.log)

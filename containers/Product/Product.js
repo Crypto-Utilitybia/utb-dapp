@@ -5,6 +5,16 @@ import { getAssets } from 'library/queries'
 import { getGraph } from 'library/utils'
 import styles from './Product.module.css'
 import Loading from 'components/Loading/Loading'
+import Coin from 'components/Coin/Coin'
+
+const products = {
+  'gift-box': '0x64A6d08DE0cC1B0f8002DB98e16831E329e53BD9',
+  'mystery-box': '0x8a323cF1dD8e5E03DC73B8285912ff8c7B677c02',
+}
+
+const promoMap = {
+  QmahbX13Zkk8Th3i3cwzasqdLhNMbJtdY1JbC7B7WnfqpM: 'https://www.utilitybia.finance/products/gift-box/promo.png',
+}
 
 export default function ProductContainer({ state, library }) {
   const [name, setName] = useState('')
@@ -25,10 +35,10 @@ export default function ProductContainer({ state, library }) {
           const contract = library.getContract(address, abi, true)
           Promise.all([
             library.contractCall(contract, 'name'),
-            getGraph(state.account.network, getAssets(`utility: "${address}"`)),
+            getGraph(state.account.network, getAssets({ filter: `utility: "${address}"` })),
           ])
             .then(([name, { assets }]) => {
-              setName(name)
+              setName(name.replace('Utilitybia - ', ''))
               setEnd(assets.length < 10)
               Promise.all(
                 assets.map((item) =>
@@ -39,7 +49,11 @@ export default function ProductContainer({ state, library }) {
                   setAssets(
                     data.map(([item, mints]) => ({
                       ...item,
-                      promo: `${process.env.NEXT_PUBLIC_IPFS_BASE}${item.promo}`,
+                      promo:
+                        promoMap[item.promo] ||
+                        (item.promo.startsWith('http')
+                          ? item.promo
+                          : `${process.env.NEXT_PUBLIC_IPFS_BASE}${item.promo}`),
                       priceOrigin: Number(item.discount) * 1000 > Date.now() ? library.fromWei(item.price) : '',
                       price:
                         Number(item.discount) * 1000 > Date.now()
@@ -60,11 +74,10 @@ export default function ProductContainer({ state, library }) {
   )
 
   useEffect(() => {
-    if (address === 'gift-box') {
-      router.replace('/product/0xf5135d3883e43af4ac00c38e54fcd2d5058c9270')
-    } else {
-      fetchData(address)
+    if (products[address]) {
+      router.replace(`/product/${products[address].toLowerCase()}`)
     }
+    fetchData(address)
   }, [address, fetchData])
 
   return (
@@ -89,7 +102,7 @@ export default function ProductContainer({ state, library }) {
                     &nbsp;{item.priceOrigin}&nbsp;
                   </span>
                 )}
-                <img src="/coins/avax.png" />
+                <Coin network={state.account.network} />
               </p>
             </div>
           </Link>

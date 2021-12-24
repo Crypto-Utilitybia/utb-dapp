@@ -1,0 +1,16 @@
+{
+  "name": "Gift Box - Song",
+  "description": "Utilitybia - Gift Box",
+  "external": "https://www.utilitybia.finance",
+  "image": "https://www.utilitybia.finance/products/gift-box/song/images/3.png",
+  "attributes": [
+    {
+      "trait_type": "State",
+      "value": "Surprise"
+    },
+    {
+      "trait_type": "Author",
+      "value": "Utilitybia Finance"
+    }
+  ]
+}

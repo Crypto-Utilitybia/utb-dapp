@@ -197,3 +197,13 @@
   text-decoration: underline;
   font-size: 90%;
 }
+
+.promo {
+  display: flex;
+  justify-content: center;
+}
+
+.promo img {
+  width: 100%;
+  max-width: 640px;
+}

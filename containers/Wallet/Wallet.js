@@ -10,6 +10,7 @@ export default function WalletContainer({ state }) {
   const [utilities, setUtilities] = useState([])
   const [, setEnd] = useState(false)
   const [loading, setLoading] = useState(true)
+  const [filter, setFilter] = useState('all')
 
   useEffect(() => setLoading(false), [utilities])
 
@@ -43,17 +44,28 @@ export default function WalletContainer({ state }) {
   return (
     <section className={styles.container}>
       <h1>My Utilities</h1>
+      <div className={styles.filter}>
+        <label>Filter by State:</label>
+        <select vale={filter} onChange={(e) => setFilter(e.target.value)}>
+          <option value="all">All</option>
+          <option value="0">Empty</option>
+          <option value="1">Wrapped</option>
+          <option value="2">Suprise</option>
+        </select>
+      </div>
       <div className={styles.utilities}>
-        {utilities.map((item) => (
-          <Link href={`/token/${item.id}`} key={item.id}>
-            <div className={styles.utility}>
-              <p className={styles.title}>
-                {item.asset.name} #{Number(item.tokenId)}
-              </p>
-              <img src={item.metadata.image} />
-            </div>
-          </Link>
-        ))}
+        {utilities
+          .filter((item) => filter === 'all' || item.state === Number(filter))
+          .map((item) => (
+            <Link href={`/token/${item.id}`} key={item.id}>
+              <div className={styles.utility}>
+                <p className={styles.title}>
+                  {item.asset.name} #{Number(item.tokenId)}
+                </p>
+                <img src={item.metadata.image} />
+              </div>
+            </Link>
+          ))}
       </div>
       {loading && <Loading />}
     </section>

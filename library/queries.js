@@ -65,7 +65,7 @@ export const getToken = (id) => `query {
   }
 }`
 
-export const getTokens = (owner, { first = 32, skip = 0 } = {}) => `query {
+export const getTokens = (owner, { first = 100, skip = 0 } = {}) => `query {
   tokens(
     first: ${first}, skip: ${skip} orderBy: updatedAt, orderDirection: desc
     where: { owner: "${owner.toLowerCase()}" }
@@ -78,6 +78,7 @@ export const getTokens = (owner, { first = 32, skip = 0 } = {}) => `query {
     utility
     tokenURI
     owner
+    state
     createdAt
     updatedAt
   }
