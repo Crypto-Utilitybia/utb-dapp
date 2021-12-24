@@ -60,7 +60,7 @@ export default function WalletContainer({ state }) {
             <Link href={`/token/${item.id}`} key={item.id}>
               <div className={styles.utility}>
                 <p className={styles.title}>
-                  {item.asset.name} #{Number(item.tokenId)}
+                  {item.asset.name} <span>#{Number(item.tokenId)}</span>
                 </p>
                 <img src={item.metadata.image} />
               </div>

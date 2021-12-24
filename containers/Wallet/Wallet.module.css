@@ -27,7 +27,7 @@
 
   width: 100%;
   max-width: 240px;
-  margin: 2.4rem 1rem 0.6rem;
+  margin: 3.2rem 1rem 0.6rem;
 
   transition: all 0.2s;
   position: relative;
@@ -43,8 +43,16 @@
 
 .title {
   position: absolute;
-  top: -2rem;
+  top: -3.2rem;
   font-size: 1.6rem;
+  text-align: center;
+
+  display: flex;
+  flex-direction: column;
+}
+
+.title span {
+  font-size: 80%;
 }
 
 .filter {
