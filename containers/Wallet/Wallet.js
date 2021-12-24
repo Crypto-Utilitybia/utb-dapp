@@ -44,6 +44,11 @@ export default function WalletContainer({ state }) {
   return (
     <section className={styles.container}>
       <h1>My Utilities</h1>
+      {state.account.network === 56 && (
+        <p className={styles.note}>
+          Note: Your boxes will be appear in 5~10 minutes due to the graph of BSC network indexing.
+        </p>
+      )}
       <div className={styles.filter}>
         <label>Filter by State:</label>
         <select vale={filter} onChange={(e) => setFilter(e.target.value)}>
