@@ -27,7 +27,7 @@
 
   width: 100%;
   max-width: 240px;
-  margin: 2.6rem 1rem 0.6rem;
+  margin: 3.2rem 1rem 0.6rem;
 
   transition: all 0.2s;
   position: relative;
@@ -37,7 +37,7 @@
 @media all and (max-width: 767px) {
   .asset {
     width: 42%;
-    margin: 2rem 0.6rem 0.6rem;
+    margin: 2.6rem 0.6rem 0.6rem;
     border-width: 4px;
   }
 }
@@ -52,7 +52,7 @@
 
 .status {
   position: absolute;
-  top: -2.4rem;
+  top: -3.6rem;
   left: 0.4rem;
   right: 0.4rem;
 
@@ -60,10 +60,16 @@
   text-shadow: 1px 1px 3px var(--color-white);
   font-size: 120%;
   font-weight: bold;
+
+  height: 3rem;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  white-space: nowrap;
 }
 @media all and (max-width: 767px) {
   .status {
-    top: -1.8rem;
+    top: -2.6rem;
   }
 }
 
@@ -75,6 +81,7 @@
 
 .status span {
   font-size: 80%;
+  margin-top: 0.2rem;
 }
 
 .price {
@@ -86,9 +93,24 @@
   align-items: center;
   color: var(--color-highlight);
   text-shadow: 1px 1px 3px var(--color-white);
+
+  padding: 0.2rem 0.6rem;
+  background: rgb(255 255 255 / 60%);
+  border-radius: 0.2rem;
 }
 
 .price img {
   width: 1.2rem;
   margin-left: 0.3rem;
+}
+
+.promo {
+  display: flex;
+  justify-content: center;
+  margin: 0 auto;
+}
+
+.promo img {
+  width: 100%;
+  max-width: 640px;
 }

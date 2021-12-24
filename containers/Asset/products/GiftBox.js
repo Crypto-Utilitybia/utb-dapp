@@ -99,6 +99,9 @@ export default function GiftBox({ state, library }) {
       <i className="fa fa-arrow-left back" onClick={() => router.back()} />
       {asset && (
         <>
+          <a className={styles.promo} href="https://www.annex.finance/" target="_blank" rel="noreferrer">
+            <img src="https://www.utilitybia.finance/products/mystery-box/annex/banner.png" />
+          </a>
           <h1>
             {asset.name}{' '}
             <span>

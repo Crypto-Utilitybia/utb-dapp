@@ -37,6 +37,9 @@ export default function HomeContainer({ state, library }) {
 
   return (
     <section className={styles.container}>
+      <a className={styles.promo} href="https://www.annex.finance/" target="_blank" rel="noreferrer">
+        <img src="https://www.utilitybia.finance/products/mystery-box/annex/banner.png" />
+      </a>
       <h1>Welcome to Utilitybia!</h1>
       <div className={styles.utilities}>
         {utilities.map((item) => (

@@ -99,7 +99,16 @@ export const links = {
     graph: 'https://api.thegraph.com/subgraphs/name/crypto-utilitybia/utilitybia-bsc',
     tokens: 'https://tokens.pancakeswap.finance/pancakeswap-extended.json',
     stables: '',
-    manuals: [],
+    manuals: [
+      {
+        value: '0x98936Bde1CF1BFf1e7a8012Cee5e2583851f2067',
+        chainId: 56,
+        name: 'Annex',
+        label: 'ANN',
+        decimals: 18,
+        logoURI: 'https://www.annex.finance/images/ANN_200x200.png',
+      },
+    ],
     nfts: [],
     coin: 'https://pancakeswap.finance/info/token',
     marketplace: '',
