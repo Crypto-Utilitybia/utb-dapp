@@ -1,3 +1,4 @@
+import Link from 'next/link'
 import { useCallback, useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
 import axios from 'axios'
@@ -31,8 +32,9 @@ export default function MysteryBox({ state, library }) {
             getGraph(state.account.network, getAsset(id)),
             library.contractCall(contract, 'mints', [index]),
             library.contractCall(contract, 'companies', [index]),
+            library.contractCall(contract, 'balanceOf', [state.account.address]),
           ])
-            .then(([{ asset }, mints, company]) => {
+            .then(([{ asset }, mints, company, balance]) => {
               Promise.all(
                 asset.asset.map((uri) =>
                   axios
@@ -61,6 +63,7 @@ export default function MysteryBox({ state, library }) {
                     limit: Number(asset.limit),
                     mints: Number(mints),
                     company,
+                    balance,
                   })
                 )
                 .catch(console.log)
@@ -113,6 +116,11 @@ export default function MysteryBox({ state, library }) {
               ({asset.mints}/{asset.limit})
             </span>
           </h1>
+          {asset.balance > 0 && (
+            <Link href="/wallet">
+              <div className={styles.mine}>My Boxes ({asset.balance})</div>
+            </Link>
+          )}
           <div className={styles.form}>
             <img src={asset.metadatas[status].image} className={styles.image} />
             <div className={styles.asset}>

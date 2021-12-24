@@ -124,3 +124,9 @@
   width: 100%;
   max-width: 640px;
 }
+
+.mine {
+  margin: 0 auto 0.6rem;
+  color: var(--color-highlight);
+  cursor: pointer;
+}
