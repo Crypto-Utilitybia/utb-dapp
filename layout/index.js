@@ -15,7 +15,7 @@ export default function Layout({ children }) {
     library.web3.currentProvider
       .request({
         method: 'wallet_addEthereumChain',
-        params: [networks[supported[0]]],
+        params: [networks[56]],
       })
       .then(() => connectWallet())
       .catch(console.log)
