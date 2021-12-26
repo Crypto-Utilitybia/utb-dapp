@@ -136,3 +136,40 @@ export const links = {
     marketplace: '',
   },
 }
+
+export const ipfsMap = {
+  QmahbX13Zkk8Th3i3cwzasqdLhNMbJtdY1JbC7B7WnfqpM: 'https://www.utilitybia.finance/products/gift-box/promo.png',
+  QmYQNngu73dkGp5nprzYzcUCNLBAaDr4JTLJjT5FvEkWv8:
+    'https://www.utilitybia.finance/products/gift-box/raider/metadata/1.json',
+  QmWQ8T92ifgPUmfFXj3ALEK9ywtuw2rAYkhYLthy5NThrB:
+    'https://www.utilitybia.finance/products/gift-box/raider/images/1.png',
+  QmST8ZFUSCENCATVVR4e2NmJQFDRiYekYzkXC7pXeWbZYF:
+    'https://www.utilitybia.finance/products/gift-box/raider/metadata/2.json',
+  QmaaZ328cVNTpkvpF1vcVSHMwxbN4ZeJ3rdJ3rkgYbEYkj:
+    'https://www.utilitybia.finance/products/gift-box/raider/images/2.png',
+  QmUPHRG9YB5JkDoEd8SCpH1jjJM3f55D9dQUC4Cv1rVZfW:
+    'https://www.utilitybia.finance/products/gift-box/raider/metadata/3.json',
+  QmfRp1yXV86xuUw5EicxBkAbuMkuQ85akt4Yejg5QePnqX:
+    'https://www.utilitybia.finance/products/gift-box/raider/images/3.png',
+  QmPYWzo1QscY8KRu5sWcrD4buTXrtFTJmECvdro5Ad8Zv1:
+    'https://www.utilitybia.finance/products/gift-box/popular/metadata/1.json',
+  QmVDV5yrnvNtLrWD9XiuoLiT3rBSoCdTghL4ErEoKNoj6r:
+    'https://www.utilitybia.finance/products/gift-box/popular/images/1.png',
+  QmfHRJ3HLJU9Gr33HX1FYHjuy1HA9BAcrZCvmo4syvNNDo:
+    'https://www.utilitybia.finance/products/gift-box/popular/metadata/2.json',
+  QmeeSJC79C6NJS18FqcmhCPVMcvYMSfxLDtwgZUKwYuw7c:
+    'https://www.utilitybia.finance/products/gift-box/popular/images/2.png',
+  QmScEDMCBneK4fvs1w2wWnZqvrYoCJfUvRg7CiBUojaAsA:
+    'https://www.utilitybia.finance/products/gift-box/popular/metadata/3.json',
+  Qmd8XdBRxPioqLZdrL94pHgL3cNTZMTDtpzCmsvDkQEPCb:
+    'https://www.utilitybia.finance/products/gift-box/popular/images/3.png',
+  QmViYogtrUpvH7bhu1p46cy7LdaeCt5TvZxrXE8aDyv29K:
+    'https://www.utilitybia.finance/products/gift-box/song/metadata/1.json',
+  Qmet51etqDJUwkQJCYwxeNTwfjf1aX2Mdccu6mE2a5LB2t: 'https://www.utilitybia.finance/products/gift-box/song/images/1.png',
+  QmaQ1uiCJGpmixW69opknqJXHAhmRpcThjJbkWojMa5kpu:
+    'https://www.utilitybia.finance/products/gift-box/song/metadata/2.json',
+  QmQvrvxDnXiYUAUYAKqWtLomdRpFDwjGo23r7ArY38LNfr: 'https://www.utilitybia.finance/products/gift-box/song/images/2.png',
+  QmaHMX7YyMRwbej73hgwXkRMsDg1Wbk8tuMF7AGjxKhhJU:
+    'https://www.utilitybia.finance/products/gift-box/song/metadata/3.json',
+  QmRo9x9JGbFCVAWv6cpF1qbWtgswgbC233ptuNsoCj7q9Z: 'https://www.utilitybia.finance/products/gift-box/song/images/3.png',
+}

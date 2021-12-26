@@ -6,14 +6,11 @@ import { getGraph } from 'library/utils'
 import styles from './Product.module.css'
 import Loading from 'components/Loading/Loading'
 import Coin from 'components/Coin/Coin'
+import { ipfsMap } from 'library/constants'
 
 const products = {
   'gift-box': '0x64A6d08DE0cC1B0f8002DB98e16831E329e53BD9',
   'mystery-box': '0x8a323cF1dD8e5E03DC73B8285912ff8c7B677c02',
-}
-
-const promoMap = {
-  QmahbX13Zkk8Th3i3cwzasqdLhNMbJtdY1JbC7B7WnfqpM: 'https://www.utilitybia.finance/products/gift-box/promo.png',
 }
 
 export default function ProductContainer({ state, library }) {
@@ -50,7 +47,7 @@ export default function ProductContainer({ state, library }) {
                     data.map(([item, mints]) => ({
                       ...item,
                       promo:
-                        promoMap[item.promo] ||
+                        ipfsMap[item.promo] ||
                         (item.promo.startsWith('http')
                           ? item.promo
                           : `${process.env.NEXT_PUBLIC_IPFS_BASE}${item.promo}`),

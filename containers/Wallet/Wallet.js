@@ -5,6 +5,7 @@ import { getTokens } from 'library/queries'
 import { getGraph } from 'library/utils'
 import styles from './Wallet.module.css'
 import Loading from 'components/Loading/Loading'
+import { ipfsMap } from 'library/constants'
 
 export default function WalletContainer({ state }) {
   const [utilities, setUtilities] = useState([])
@@ -20,13 +21,23 @@ export default function WalletContainer({ state }) {
       .then(({ tokens }) => {
         setEnd(tokens.length < 10)
         Promise.all(
-          tokens.map((item) => Promise.all([Promise.resolve(item), axios.get(item.tokenURI).then(({ data }) => data)]))
+          tokens.map((item) =>
+            Promise.all([
+              Promise.resolve(item),
+              axios
+                .get(ipfsMap[item.tokenURI.replace('https://ipfs.io/ipfs/', '')] || item.tokenURI)
+                .then(({ data }) => data),
+            ])
+          )
         )
           .then((data) =>
             setUtilities(
               data.map(([item, metadata]) => ({
                 ...item,
-                metadata,
+                metadata: {
+                  ...metadata,
+                  image: ipfsMap[metadata.image.replace('https://ipfs.io/ipfs/', '')] || metadata.image,
+                },
                 tokenId: item.id.split('-')[1],
                 token: item.id.split('-')[0],
               }))
@@ -36,6 +47,7 @@ export default function WalletContainer({ state }) {
       })
       .catch(console.log)
   }, [state.account])
+  console.log(utilities)
 
   useEffect(() => {
     fetchData()

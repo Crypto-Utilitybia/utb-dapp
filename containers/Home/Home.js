@@ -3,6 +3,7 @@ import Link from 'next/link'
 import { getUtilities } from 'library/queries'
 import { getGraph } from 'library/utils'
 import styles from './Home.module.css'
+import { ipfsMap } from 'library/constants'
 
 export default function HomeContainer({ state, library }) {
   const [utilities, setUtilities] = useState([])
@@ -22,7 +23,8 @@ export default function HomeContainer({ state, library }) {
             setUtilities(
               data.map(([item, promo]) => ({
                 ...item,
-                promo: promo.startsWith('http') ? promo : `${process.env.NEXT_PUBLIC_IPFS_BASE}${promo}`,
+                promo:
+                  ipfsMap[promo] || (promo.startsWith('http') ? promo : `${process.env.NEXT_PUBLIC_IPFS_BASE}${promo}`),
               }))
             )
           )

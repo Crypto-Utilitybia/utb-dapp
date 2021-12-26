@@ -4,7 +4,7 @@ import axios from 'axios'
 import { getAsset } from 'library/queries'
 import { getGraph, handleTransaction } from 'library/utils'
 import styles from '../Asset.module.css'
-import { links } from 'library/constants'
+import { ipfsMap, links } from 'library/constants'
 import BigNumber from 'bignumber.js'
 import Loading from 'components/Loading/Loading'
 import Coin from 'components/Coin/Coin'
@@ -13,7 +13,7 @@ export default function GiftBox({ state, library }) {
   const router = useRouter()
   const { id } = router.query
   const [asset, setAsset] = useState(null)
-  const [status, setStatus] = useState(0)
+  const [status, setStatus] = useState(1)
   const [amount, setAmount] = useState(1)
   const [loading, setLoading] = useState(true)
 
@@ -30,11 +30,13 @@ export default function GiftBox({ state, library }) {
           Promise.all([getGraph(state.account.network, getAsset(id)), library.contractCall(contract, 'mints', [index])])
             .then(([{ asset }, mints]) =>
               Promise.all(
-                asset.asset.map((uri) =>
-                  axios
-                    .get(uri.startsWith('http') ? uri : `${process.env.NEXT_PUBLIC_IPFS_BASE}${uri}`)
-                    .then(({ data }) => data)
-                )
+                asset.asset
+                  .map((uri) => ipfsMap[uri] || uri)
+                  .map((uri) =>
+                    axios
+                      .get(uri.startsWith('http') ? uri : `${process.env.NEXT_PUBLIC_IPFS_BASE}${uri}`)
+                      .then(({ data }) => data)
+                  )
               )
                 .then((uris) =>
                   setAsset({
@@ -43,9 +45,11 @@ export default function GiftBox({ state, library }) {
                       ...item,
                       name: item.attributes.find((item) => item.trait_type === 'State').value,
                     })),
-                    promo: asset.promo.startsWith('http')
-                      ? asset.promo
-                      : `${process.env.NEXT_PUBLIC_IPFS_BASE}${asset.promo}`,
+                    promo:
+                      ipfsMap[asset.promo] ||
+                      (asset.promo.startsWith('http')
+                        ? asset.promo
+                        : `${process.env.NEXT_PUBLIC_IPFS_BASE}${asset.promo}`),
                     price:
                       Number(asset.discount) * 1000 > Date.now()
                         ? library.toWei(library.fromWei(asset.price) * 0.9)

@@ -5,7 +5,7 @@ import Select, { components } from 'react-select'
 import { getToken } from 'library/queries'
 import { getGraph, handleTransaction } from 'library/utils'
 import styles from '../Token.module.css'
-import { links, networks } from 'library/constants'
+import { ipfsMap, links, networks } from 'library/constants'
 import { getEllipsis } from 'utils/helpers'
 import Loading from 'components/Loading/Loading'
 import Coin, { getCoin } from 'components/Coin/Coin'
@@ -68,13 +68,13 @@ export default function MysteryBox({ state, library, dispatch }) {
                 .contractCall(contract, 'companies', [assetId])
                 .then((company) => {
                   axios
-                    .get(tokenURI)
+                    .get(ipfsMap[tokenURI.replace('https://ipfs.io/ipfs/', '')] || tokenURI)
                     .then(({ data: metadata }) => {
                       setToken({
                         ...token,
                         tokenId,
                         owner: owner.toLowerCase(),
-                        tokenURI,
+                        tokenURI: ipfsMap[tokenURI.replace('https://ipfs.io/ipfs/', '')] || tokenURI,
                         status: Number(status),
                         metadata,
                         utility: library.web3.utils.toChecksumAddress(token.utility),
