@@ -1,0 +1,16 @@
+{
+  "name": "Mystery Box - Annex",
+  "description": "Annex Christmas Mystery Box",
+  "external": "https://annex.finance",
+  "image": "https://www.utilitybia.finance/products/mystery-box/annex/images/1.png",
+  "attributes": [
+    {
+      "trait_type": "State",
+      "value": "Empty"
+    },
+    {
+      "trait_type": "Author",
+      "value": "Annex Finance"
+    }
+  ]
+}

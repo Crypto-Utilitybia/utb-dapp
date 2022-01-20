@@ -3,8 +3,8 @@ export const getUtilities = ({ first = 32, skip = 0 } = {}) => `query {
     first: ${first}, skip: ${skip} orderBy: updatedAt, orderDirection: desc
   ) {
     id
+    index
     address
-    owner
     createdAt
     updatedAt
   }
