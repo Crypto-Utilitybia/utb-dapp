@@ -5,6 +5,22 @@ export const getUtilities = ({ first = 32, skip = 0 } = {}) => `query {
     id
     index
     address
+    token
+    owner
+    states
+    createdAt
+    updatedAt
+  }
+}`
+
+export const getUtility = (id) => `query {
+  utility(id: "${id}") {
+    id
+    index
+    address
+    token
+    owner
+    states
     createdAt
     updatedAt
   }
@@ -13,16 +29,13 @@ export const getUtilities = ({ first = 32, skip = 0 } = {}) => `query {
 export const getAsset = (id) => `query {
   asset(id: "${id}") {
     id
-    utility
     index
     name
     promo
     asset
     author
     price
-    limit
-    mints
-    discount
+    stock
     createdAt
     updatedAt
   }
@@ -34,16 +47,13 @@ export const getAssets = ({ first = 32, skip = 0, filter } = {}) => `query {
     ${filter ? `where: { ${filter} }` : ''}
   ) {
     id
-    utility
     index
     name
     promo
     asset
     author
     price
-    limit
-    mints
-    discount
+    stock
     createdAt
     updatedAt
   }

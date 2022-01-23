@@ -5,7 +5,7 @@ import reducer, { initState } from './store'
 import Welcome from 'components/Welcome/Welcome'
 import Header from 'containers/Header/Header'
 import Footer from 'containers/Footer/Footer'
-import { isSupported, networks, supported } from 'library/constants'
+import { isSupported, networks } from 'library/constants'
 
 export default function Layout({ children }) {
   const [state, dispatch] = useReducer(reducer, initState)

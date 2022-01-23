@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
-import { getAssets } from 'library/queries'
+import { getAssets, getUtility } from 'library/queries'
 import { getGraph } from 'library/utils'
 import styles from './Product.module.css'
 import Loading from 'components/Loading/Loading'
@@ -26,42 +26,26 @@ export default function ProductContainer({ state, library }) {
   const fetchData = useCallback(
     (address) => {
       setLoading(true)
-      library
-        .getContractABI(address)
-        .then((abi) => {
-          const contract = library.getContract(address, abi, true)
+      getGraph(state.account.network, getUtility(address.toLowerCase()))
+        .then(({ utility: { token } }) => {
+          const contract = library.getContract(token, 'ERC721', true)
           Promise.all([
             library.contractCall(contract, 'name'),
-            getGraph(state.account.network, getAssets({ filter: `utility: "${address}"` })),
+            getGraph(state.account.network, getAssets({ filter: `author: "${address}"` })),
           ])
             .then(([name, { assets }]) => {
               setName(name.replace('Utilitybia - ', ''))
               setEnd(assets.length < 10)
-              Promise.all(
-                assets.map((item) =>
-                  Promise.all([Promise.resolve(item), library.contractCall(contract, 'mints', [item.index])])
-                )
+              setAssets(
+                assets.map((item) => ({
+                  ...item,
+                  promo:
+                    ipfsMap[item.promo] ||
+                    (item.promo.startsWith('http') ? item.promo : `${process.env.NEXT_PUBLIC_IPFS_BASE}${item.promo}`),
+                  price: library.fromWei(item.price),
+                  stock: Number(item.stock),
+                }))
               )
-                .then((data) =>
-                  setAssets(
-                    data.map(([item, mints]) => ({
-                      ...item,
-                      promo:
-                        ipfsMap[item.promo] ||
-                        (item.promo.startsWith('http')
-                          ? item.promo
-                          : `${process.env.NEXT_PUBLIC_IPFS_BASE}${item.promo}`),
-                      priceOrigin: Number(item.discount) * 1000 > Date.now() ? library.fromWei(item.price) : '',
-                      price:
-                        Number(item.discount) * 1000 > Date.now()
-                          ? (library.fromWei(item.price) * 0.9).toFixed(3)
-                          : library.fromWei(item.price),
-                      limit: Number(item.limit),
-                      mints: Number(mints),
-                    }))
-                  )
-                )
-                .catch(console.log)
             })
             .catch(console.log)
         })
@@ -92,19 +76,11 @@ export default function ProductContainer({ state, library }) {
             <div className={styles.asset}>
               <p className={styles.status}>
                 {item.name}&nbsp;
-                <span>
-                  ({item.mints}/{item.limit})
-                </span>
+                <span>({item.stock})</span>
               </p>
               <img src={item.promo} />
               <p className={styles.price}>
-                {item.price}{' '}
-                {item.priceOrigin && (
-                  <span style={{ textDecoration: 'line-through', fontSize: '75%' }}>
-                    &nbsp;{item.priceOrigin}&nbsp;
-                  </span>
-                )}
-                <Coin network={state.account.network} />
+                {item.price} <Coin network={state.account.network} />
               </p>
             </div>
           </Link>

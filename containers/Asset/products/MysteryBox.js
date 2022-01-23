@@ -1,11 +1,10 @@
-import Link from 'next/link'
 import { useCallback, useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
 import axios from 'axios'
 import { getAsset } from 'library/queries'
 import { getGraph, handleTransaction } from 'library/utils'
 import styles from '../Asset.module.css'
-import { ipfsMap, links } from 'library/constants'
+import { contracts, ipfsMap, links } from 'library/constants'
 import BigNumber from 'bignumber.js'
 import Loading from 'components/Loading/Loading'
 import Coin from 'components/Coin/Coin'
@@ -23,55 +22,35 @@ export default function MysteryBox({ state, library }) {
   const fetchData = useCallback(
     (id) => {
       setLoading(true)
-      const [address, index] = id.split('-')
-      library
-        .getContractABI(address)
-        .then((abi) => {
-          const contract = library.getContract(address, abi, true)
-          Promise.all([
-            getGraph(state.account.network, getAsset(id)),
-            library.contractCall(contract, 'mints', [index]),
-            library.contractCall(contract, 'companies', [index]),
-            library.contractCall(contract, 'balanceOf', [state.account.address]),
-          ])
-            .then(([{ asset }, mints, company, balance]) => {
-              Promise.all(
-                asset.asset.map((uri) =>
-                  axios
-                    .get(uri.startsWith('http') ? uri : `${process.env.NEXT_PUBLIC_IPFS_BASE}${uri}`)
-                    .then(({ data }) => data)
-                )
+      const [, index] = id.split('-')
+      getGraph(state.account.network, getAsset(`${contracts[state.account.network].AssetStore.toLowerCase()}-${index}`))
+        .then(({ asset }) =>
+          Promise.all(
+            asset.asset
+              .map((uri) => ipfsMap[uri] || uri)
+              .map((uri) =>
+                axios
+                  .get(uri.startsWith('http') ? uri : `${process.env.NEXT_PUBLIC_IPFS_BASE}${uri}`)
+                  .then(({ data }) => data)
               )
-                .then((uris) =>
-                  setAsset({
-                    ...asset,
-                    metadatas: uris.map((item) => ({
-                      ...item,
-                      name: item.attributes.find((item) => item.trait_type === 'State').value,
-                    })),
-                    promo:
-                      ipfsMap[asset.promo] ||
-                      (asset.promo.startsWith('http')
-                        ? asset.promo
-                        : `${process.env.NEXT_PUBLIC_IPFS_BASE}${asset.promo}`),
-                    price:
-                      Number(asset.discount) * 1000 > Date.now()
-                        ? library.toWei(library.fromWei(asset.price) * 0.9)
-                        : asset.price,
-                    priceShow:
-                      Number(asset.discount) * 1000 > Date.now()
-                        ? library.fromWei(asset.price) * 0.9
-                        : library.fromWei(asset.price),
-                    limit: Number(asset.limit),
-                    mints: Number(mints),
-                    company,
-                    balance,
-                  })
-                )
-                .catch(console.log)
-            })
+          )
+            .then((uris) =>
+              setAsset({
+                ...asset,
+                metadatas: uris.map((item) => ({
+                  ...item,
+                  name: item.attributes.find((item) => item.trait_type === 'State').value,
+                })),
+                promo:
+                  ipfsMap[asset.promo] ||
+                  (asset.promo.startsWith('http') ? asset.promo : `${process.env.NEXT_PUBLIC_IPFS_BASE}${asset.promo}`),
+                price: asset.price,
+                priceShow: library.fromWei(asset.price),
+                stock: Number(asset.stock),
+              })
+            )
             .catch(console.log)
-        })
+        )
         .catch(console.log)
     },
     [library, state.account]
@@ -84,24 +63,18 @@ export default function MysteryBox({ state, library }) {
   const [txHash, setTxHash] = useState('')
   const handleSubmit = () => {
     const [address, index] = id.split('-')
-
-    library
-      .getContractABI(address)
-      .then((abi) => {
-        const contract = library.getContract(address, abi, true)
-        const transaction = library.contractSend(contract, 'buyItem', [
-          index,
-          amount,
-          {
-            from: state.account.address,
-            value: new BigNumber(asset.price).times(amount).toString(),
-          },
-        ])
-        handleTransaction(transaction, setTxHash, () => {
-          fetchData(id)
-        })
-      })
-      .catch(console.log)
+    const contract = library.getContract(address, 'UTBMysteryBox', true)
+    const transaction = library.contractSend(contract, 'mint', [
+      index,
+      amount,
+      {
+        from: state.account.address,
+        value: new BigNumber(asset.price).times(amount).toString(),
+      },
+    ])
+    handleTransaction(transaction, setTxHash, () => {
+      fetchData(id)
+    })
   }
 
   return (
@@ -109,20 +82,14 @@ export default function MysteryBox({ state, library }) {
       <i className="fa fa-arrow-left back" onClick={() => router.back()} />
       {asset && (
         <>
-          <a className={styles.promo} href={asset.company.link} target="_blank" rel="noreferrer">
-            <img src={asset.company.promo} />
-          </a>
-          <h1>
-            {asset.name}{' '}
-            <span>
-              ({asset.mints}/{asset.limit})
-            </span>
-          </h1>
-          {asset.balance > 0 && (
-            <Link href="/wallet">
-              <div className={styles.mine}>My Boxes ({asset.balance})</div>
-            </Link>
+          {state.account.network === 56 && (
+            <a className={styles.promo} href="https://www.annex.finance/" target="_blank" rel="noreferrer">
+              <img src="https://www.utilitybia.finance/products/mystery-box/annex/banner.png" />
+            </a>
           )}
+          <h1>
+            {asset.name} <span>({asset.stock})</span>
+          </h1>
           <div className={styles.form}>
             <img src={asset.metadatas[status].image} className={styles.image} />
             <div className={styles.asset}>

@@ -64,7 +64,16 @@ export const links = {
     graph: 'https://api.thegraph.com/subgraphs/name/crypto-utilitybia/utilitybia-avalanche',
     tokens: 'https://raw.githubusercontent.com/pangolindex/tokenlists/main/defi.tokenlist.json',
     stables: 'https://raw.githubusercontent.com/pangolindex/tokenlists/main/stablecoin.tokenlist.json',
-    manuals: [],
+    manuals: [
+      {
+        value: '0xD81D45E7635400dDD9c028839e9a9eF479006B28',
+        chainId: 43114,
+        name: 'Embr',
+        label: 'EMBR',
+        decimals: 18,
+        logoURI: 'https://app.embr.finance/img/embr.f76243fa.png',
+      },
+    ],
     nfts: NFT_Avalanche,
     coin: 'https://info.pangolin.exchange/#/token',
     marketplace: 'https://nftrade.com/assets/avalanche',
@@ -79,12 +88,12 @@ export const links = {
     stables: 'https://raw.githubusercontent.com/pangolindex/tokenlists/main/stablecoin.tokenlist.json',
     manuals: [
       {
-        value: '0xDffAda13dF74E915514CDdadbAC6c7d2679080E4',
-        chainId: 56,
-        name: 'Annex',
-        label: 'ANN',
+        value: '0xD81D45E7635400dDD9c028839e9a9eF479006B28',
+        chainId: 43113,
+        name: 'Embr',
+        label: 'EMBR',
         decimals: 18,
-        logoURI: 'https://www.annex.finance/images/ANN_200x200.png',
+        logoURI: 'https://app.embr.finance/img/embr.f76243fa.png',
       },
     ],
     nfts: NFT_Avalanche,
@@ -134,6 +143,12 @@ export const links = {
     nfts: [],
     coin: 'https://pancakeswap.finance/info/token',
     marketplace: '',
+  },
+}
+
+export const contracts = {
+  43113: {
+    AssetStore: '0x51440D3d08a7ea578389D7318cCe76bCe5Bdcb06',
   },
 }
 

@@ -3,11 +3,11 @@ import * as EvmChains from 'evm-chains'
 import BigNumber from 'bignumber.js'
 
 import Utilitybia from './abi/Utilitybia.json'
-import Utility from './abi/Utility.json'
+import Utility from './abi/UtilityVault.json'
 import UTBGiftBox from './abi/UTBGiftBox.json'
 import UTBMysteryBox from './abi/UTBMysteryBox.json'
-import ERC20 from './abi/IERC20.json'
-import ERC721 from './abi/ERC721.json'
+import ERC20 from './abi/ERC20.json'
+import ERC721 from './abi/ERC721Batch.json'
 import { call, send } from './utils'
 
 const abis = {
