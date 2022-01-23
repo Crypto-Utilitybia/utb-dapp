@@ -148,6 +148,9 @@ export const links = {
 }
 
 export const contracts = {
+  43114: {
+    AssetStore: '0xFaC48eB37b4c00d673e3242E8ee26a764895dF78',
+  },
   43113: {
     AssetStore: '0x51440D3d08a7ea578389D7318cCe76bCe5Bdcb06',
   },
