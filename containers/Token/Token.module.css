@@ -9,7 +9,6 @@
 }
 
 .wrapper {
-  overflow: auto;
   display: flex;
   justify-content: center;
   width: 90%;
@@ -122,10 +121,14 @@
 }
 
 .formCoins {
-  flex: 1;
   display: inline-block;
-  margin-top: 1rem;
+  margin-bottom: 1rem;
   overflow: auto;
+}
+
+.formCoins.put {
+  margin-top: 1rem;
+  flex: 1;
 }
 
 .formCoin {
@@ -163,19 +166,7 @@
 }
 
 .nftPreview img {
-  height: 120px;
-}
-
-.confirm {
-  margin-top: 1rem;
-  display: flex;
-  align-items: center;
-}
-
-.confirm input {
-  width: 18px;
-  height: 18px;
-  margin-right: 0.4rem;
+  height: 80px;
 }
 
 .buttons {
@@ -185,7 +176,7 @@
 
 .buttons button {
   width: 100%;
-  margin: 0.6rem;
+  margin: 0.2rem 0.6rem;
 }
 
 .txHash {
@@ -207,4 +198,11 @@
 .promo img {
   width: 100%;
   max-width: 640px;
+}
+
+.warning {
+  text-align: center;
+  font-size: 90%;
+  margin-bottom: 0.6rem;
+  color: var(--color-warning);
 }

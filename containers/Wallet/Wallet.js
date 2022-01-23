@@ -1,53 +1,41 @@
 import { useCallback, useEffect, useState } from 'react'
+import { useRouter } from 'next/router'
 import Link from 'next/link'
-import axios from 'axios'
-import { getTokens } from 'library/queries'
+import { getAssets, getUtilities } from 'library/queries'
 import { getGraph } from 'library/utils'
 import styles from './Wallet.module.css'
 import Loading from 'components/Loading/Loading'
-import { ipfsMap } from 'library/constants'
 
-export default function WalletContainer({ state }) {
+export default function WalletContainer({ state, library }) {
+  const router = useRouter()
   const [utilities, setUtilities] = useState([])
   const [, setEnd] = useState(false)
   const [loading, setLoading] = useState(true)
-  const [filter, setFilter] = useState('all')
 
   useEffect(() => setLoading(false), [utilities])
 
   const fetchData = useCallback(() => {
     setLoading(true)
-    getGraph(state.account.network, getTokens(state.account.address))
-      .then(({ tokens }) => {
-        setEnd(tokens.length < 10)
+    Promise.all([getGraph(state.account.network, getUtilities()), getGraph(state.account.network, getAssets())])
+      .then(([{ utilities }, { assets }]) => {
+        setEnd(assets.length < 10)
         Promise.all(
-          tokens.map((item) =>
-            Promise.all([
-              Promise.resolve(item),
-              axios
-                .get(ipfsMap[item.tokenURI.replace('https://ipfs.io/ipfs/', '')] || item.tokenURI)
-                .then(({ data }) => data),
-            ])
-          )
+          utilities
+            .map((item) => ({ ...item, assets: assets.filter((asset) => item.id === asset.author).slice(0, 4) }))
+            .map((item) => {
+              const token = library.getContract(item.token, 'ERC721', true)
+              return Promise.all([
+                Promise.resolve(item),
+                library.contractCall(token, 'name'),
+                library.contractCall(token, 'balanceOf', [state.account.address]).then(Number),
+              ])
+            })
         )
-          .then((data) =>
-            setUtilities(
-              data.map(([item, metadata]) => ({
-                ...item,
-                metadata: {
-                  ...metadata,
-                  image: ipfsMap[metadata.image.replace('https://ipfs.io/ipfs/', '')] || metadata.image,
-                },
-                tokenId: item.id.split('-')[1],
-                token: item.id.split('-')[0],
-              }))
-            )
-          )
+          .then((utilities) => setUtilities(utilities.map(([item, name, balance]) => ({ ...item, name, balance }))))
           .catch(console.log)
       })
       .catch(console.log)
-  }, [state.account])
-  console.log(utilities)
+  }, [library, state.account])
 
   useEffect(() => {
     fetchData()
@@ -55,34 +43,28 @@ export default function WalletContainer({ state }) {
 
   return (
     <section className={styles.container}>
+      <i className="fa fa-arrow-left back" onClick={() => router.back()} />
       <h1>My Utilities</h1>
       {state.account.network === 56 && (
         <p className={styles.note}>
           Note: Your boxes will be appear in 5~10 minutes due to the graph of BSC network indexing.
         </p>
       )}
-      <div className={styles.filter}>
-        <label>Filter by State:</label>
-        <select vale={filter} onChange={(e) => setFilter(e.target.value)}>
-          <option value="all">All</option>
-          <option value="0">Empty</option>
-          <option value="1">Wrapped</option>
-          <option value="2">Suprise</option>
-        </select>
-      </div>
       <div className={styles.utilities}>
-        {utilities
-          .filter((item) => filter === 'all' || item.state === Number(filter))
-          .map((item) => (
-            <Link href={`/token/${item.id}`} key={item.id}>
-              <div className={styles.utility}>
-                <p className={styles.title}>
-                  {item.asset.name} <span>#{Number(item.tokenId)}</span>
-                </p>
-                <img src={item.metadata.image} />
+        {utilities.map((item) => (
+          <Link href={`/wallet/utility/${item.id}`} key={item.id}>
+            <div className={styles.utility}>
+              <p className={styles.title}>
+                {item.name} <span>{Number(item.balance)}</span>
+              </p>
+              <div className={styles.assets}>
+                {item.assets.map((asset) => (
+                  <img key={asset.id} src={asset.promo} />
+                ))}
               </div>
-            </Link>
-          ))}
+            </div>
+          </Link>
+        ))}
       </div>
       {loading && <Loading />}
     </section>

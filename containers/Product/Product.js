@@ -63,7 +63,6 @@ export default function ProductContainer({ state, library }) {
 
   return (
     <section className={styles.container}>
-      <i className="fa fa-arrow-left back" onClick={() => router.back()} />
       {state.account.network === 56 && (
         <a className={styles.promo} href="https://www.annex.finance/" target="_blank" rel="noreferrer">
           <img src="https://www.utilitybia.finance/products/mystery-box/annex/banner.png" />

@@ -2,8 +2,7 @@ import { useCallback, useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
 import axios from 'axios'
 import Select, { components } from 'react-select'
-import { getToken } from 'library/queries'
-import { getGraph, handleTransaction } from 'library/utils'
+import { handleTransaction } from 'library/utils'
 import styles from '../Token.module.css'
 import { ipfsMap, links, networks } from 'library/constants'
 import { getEllipsis } from 'utils/helpers'
@@ -32,7 +31,6 @@ export default function GiftBox({ state, library, dispatch }) {
   const { id } = router.query
   const [token, setToken] = useState(null)
   const [active, setActive] = useState(0)
-  const [withWrap, setWithWrap] = useState(false)
   const [coin, setCoin] = useState(null)
   const [formCoins, setFormCoins] = useState([])
   const [nft, setNFT] = useState({})
@@ -48,37 +46,36 @@ export default function GiftBox({ state, library, dispatch }) {
       setLoading(true)
       const [address, tokenId] = id.split('-')
 
-      library
-        .getContractABI(address)
-        .then((abi) => {
-          const contract = library.getContract(address, abi, true)
+      const token = library.getContract(address, 'ERC721', true)
+      Promise.all([
+        library.contractCall(token, 'ownerOf', [tokenId]),
+        library.contractCall(token, 'tokenURI', [tokenId]),
+        library.contractCall(token, 'utility'),
+      ])
+        .then(([owner, tokenURI, utility]) => {
+          const contract = library.getContract(utility, 'UTBGiftBox', true)
           Promise.all([
-            getGraph(state.account.network, getToken(id)),
-            library.contractCall(contract, 'ownerOf', [tokenId]),
-            library.contractCall(contract, 'tokenURI', [tokenId]),
-            library.contractCall(contract, 'tokenState', [tokenId]),
+            library.contractCall(contract, 'vault'),
+            library.contractCall(contract, 'tokenStates', [tokenId]),
+            axios.get(ipfsMap[tokenURI.replace('https://ipfs.io/ipfs/', '')] || tokenURI),
           ])
-            .then(([{ token }, owner, tokenURI, status]) => {
-              axios
-                .get(ipfsMap[tokenURI.replace('https://ipfs.io/ipfs/', '')] || tokenURI)
-                .then(({ data: metadata }) => {
-                  setToken({
-                    ...token,
-                    tokenId,
-                    owner: owner.toLowerCase(),
-                    tokenURI: ipfsMap[tokenURI.replace('https://ipfs.io/ipfs/', '')] || tokenURI,
-                    status: Number(status),
-                    metadata,
-                    utility: library.web3.utils.toChecksumAddress(token.utility),
-                  })
-                })
-                .catch(console.log)
+            .then(([vault, status, { data: metadata }]) => {
+              setToken({
+                ...token,
+                tokenId,
+                owner: owner.toLowerCase(),
+                tokenURI: ipfsMap[tokenURI.replace('https://ipfs.io/ipfs/', '')] || tokenURI,
+                status: Number(status),
+                metadata,
+                utility: library.web3.utils.toChecksumAddress(utility),
+                vault: library.web3.utils.toChecksumAddress(vault),
+              })
             })
             .catch(console.log)
         })
         .catch(console.log)
     },
-    [library, state.account]
+    [library]
   )
 
   useEffect(() => {
@@ -134,7 +131,7 @@ export default function GiftBox({ state, library, dispatch }) {
           })
       )
       .catch(console.log)
-  }, [state.account])
+  }, [state.account, dispatch])
 
   const tokens = state.tokens || { coins: [], nfts: [] }
 
@@ -144,7 +141,7 @@ export default function GiftBox({ state, library, dispatch }) {
       contract
         ? library.contractCall(contract, 'balanceOf', [state.account.address])
         : library.web3.eth.getBalance(state.account.address),
-      contract ? library.contractCall(contract, 'allowance', [state.account.address, token.utility]) : INFINITY,
+      contract ? library.contractCall(contract, 'allowance', [state.account.address, token.vault]) : INFINITY,
     ])
       .then(([balance, allowance]) => {
         setCoin({
@@ -165,7 +162,7 @@ export default function GiftBox({ state, library, dispatch }) {
   const handleApproveCoin = () => {
     const contract = library.getContract(coin.value, 'ERC20', true)
     const transaction = library.contractSend(contract, 'approve', [
-      token.utility,
+      token.vault,
       INFINITY,
       {
         from: state.account.address,
@@ -177,33 +174,28 @@ export default function GiftBox({ state, library, dispatch }) {
   }
 
   const handlePut = () => {
-    const [address, tokenId] = id.split('-')
-    library
-      .getContractABI(address)
-      .then((abi) => {
-        const contract = library.getContract(address, abi, true)
-        const nativeCoin = formCoins.find((coin) => coin.value === 0)
-        const coins = formCoins.filter((coin) => coin.value !== 0)
-        const transaction = library.contractSend(contract, withWrap ? 'depositERC20AndWrap' : 'depositERC20', [
-          tokenId,
-          ...coins.reduce(
-            ([addresses, amounts], coin) => [
-              [...addresses, coin.value],
-              [...amounts, library.toWei(coin.amount, coin.decimals)],
-            ],
-            [[], []]
-          ),
-          {
-            from: state.account.address,
-            value: nativeCoin ? library.toWei(nativeCoin.amount) : undefined,
-          },
-        ])
-        handleTransaction(transaction, setTxHash, () => {
-          fetchData(id)
-          setFormCoins([])
-        })
-      })
-      .catch(console.log)
+    const [, tokenId] = id.split('-')
+    const contract = library.getContract(token.vault, 'Vault', true)
+    const nativeCoin = formCoins.find((coin) => coin.value === 0)
+    const coins = formCoins.filter((coin) => coin.value !== 0)
+    const transaction = library.contractSend(contract, 'depositERC20', [
+      tokenId,
+      ...coins.reduce(
+        ([addresses, amounts], coin) => [
+          [...addresses, coin.value],
+          [...amounts, library.toWei(coin.amount, coin.decimals)],
+        ],
+        [[], []]
+      ),
+      {
+        from: state.account.address,
+        value: nativeCoin ? library.toWei(nativeCoin.amount) : undefined,
+      },
+    ])
+    handleTransaction(transaction, setTxHash, () => {
+      fetchData(id)
+      setFormCoins([])
+    })
   }
 
   const handleNFT = (nft) => {
@@ -237,7 +229,7 @@ export default function GiftBox({ state, library, dispatch }) {
       const contract = library.getContract(nft.address, 'ERC721', true)
       Promise.all([
         library.contractCall(contract, 'tokenURI', [nft.tokenId]),
-        library.contractCall(contract, 'isApprovedForAll', [state.account.address, token.utility]),
+        library.contractCall(contract, 'isApprovedForAll', [state.account.address, token.vault]),
       ])
         .then(([uri, approved]) => {
           axios
@@ -255,16 +247,24 @@ export default function GiftBox({ state, library, dispatch }) {
                 approved,
               })
             )
-            .catch(console.log)
+            .catch(() =>
+              setNFT({
+                ...nft,
+                metadata: {
+                  image: 'https://via.placeholder.com/150?text=Unknown',
+                },
+                approved,
+              })
+            )
         })
         .catch(console.log)
     }
-  }, [nft])
+  }, [nft, library, state.account, token])
 
   const handleApproveNFT = () => {
     const contract = library.getContract(nft.address, 'ERC721', true)
     const transaction = library.contractSend(contract, 'setApprovalForAll', [
-      token.utility,
+      token.vault,
       true,
       {
         from: state.account.address,
@@ -276,125 +276,78 @@ export default function GiftBox({ state, library, dispatch }) {
   }
 
   const handlePutNFT = () => {
-    const [address, tokenId] = id.split('-')
-    library
-      .getContractABI(address)
-      .then((abi) => {
-        const contract = library.getContract(address, abi, true)
-        const transaction = library.contractSend(contract, withWrap ? 'depositERC721AndWrap' : 'depositERC721', [
-          tokenId,
-          [nft.address],
-          [nft.tokenId],
-          {
-            from: state.account.address,
-          },
-        ])
-        handleTransaction(transaction, setTxHash, () => {
-          fetchData(id)
-          setNFT({})
-        })
-      })
-      .catch(console.log)
+    const [, tokenId] = id.split('-')
+    const contract = library.getContract(token.vault, 'Vault', true)
+    const transaction = library.contractSend(contract, 'depositERC721', [
+      tokenId,
+      nft.address,
+      [nft.tokenId],
+      {
+        from: state.account.address,
+      },
+    ])
+    handleTransaction(transaction, setTxHash, () => {
+      fetchData(id)
+    })
   }
 
   const handleWrap = () => {
-    const [address, tokenId] = id.split('-')
-    library
-      .getContractABI(address)
-      .then((abi) => {
-        const contract = library.getContract(address, abi, true)
-        const transaction = library.contractSend(contract, 'wrap', [tokenId, { from: state.account.address }])
-        handleTransaction(transaction, setTxHash, () => {
-          fetchData(id)
-          setActive(0)
-        })
-      })
-      .catch(console.log)
+    const [, tokenId] = id.split('-')
+    const contract = library.getContract(token.utility, 'Utility', true)
+    const transaction = library.contractSend(contract, 'wrap', [tokenId, { from: state.account.address }])
+    handleTransaction(transaction, setTxHash, () => {
+      fetchData(id)
+      setActive(0)
+    })
   }
 
   const handleSend = () => {
     const [address, tokenId] = id.split('-')
-    library
-      .getContractABI(address)
-      .then((abi) => {
-        const contract = library.getContract(address, abi, true)
-        const transaction = library.contractSend(contract, 'transferFrom', [
-          state.account.address,
-          library.web3.utils.toChecksumAddress(formGift.gifty),
-          tokenId,
-          { from: state.account.address },
-        ])
-        handleTransaction(transaction, setTxHash, () => {
-          fetchData(id)
-        })
-      })
-      .catch(console.log)
+    const contract = library.getContract(address, 'ERC721', true)
+    const transaction = library.contractSend(contract, 'transferFrom', [
+      state.account.address,
+      library.web3.utils.toChecksumAddress(formGift.gifty),
+      tokenId,
+      { from: state.account.address },
+    ])
+    handleTransaction(transaction, setTxHash, () => {
+      fetchData(id)
+      setFormGift({})
+    })
   }
 
   const handleOpen = () => {
-    const [address, tokenId] = id.split('-')
-    library
-      .getContractABI(address)
-      .then((abi) => {
-        const contract = library.getContract(address, abi, true)
-        const transaction = library.contractSend(contract, 'open', [tokenId, { from: state.account.address }])
-        handleTransaction(transaction, setTxHash, () => {
-          fetchData(id)
-        })
-      })
-      .catch(console.log)
+    const [, tokenId] = id.split('-')
+    const contract = library.getContract(token.utility, 'Utility', true)
+    const transaction = library.contractSend(contract, 'open', [tokenId, { from: state.account.address }])
+    handleTransaction(transaction, setTxHash, () => {
+      fetchData(id)
+    })
   }
 
   const [gifts, setGifts] = useState(null)
   useEffect(() => {
     if (!token) return
-    if (token.status === 2 && token.owner === state.account.address.toLowerCase()) {
-      const [address, tokenId] = id.split('-')
-      library
-        .getContractABI(address)
-        .then((abi) => {
-          const contract = library.getContract(address, abi, true)
-          Promise.all([
-            library.contractCall(contract, 'viewETH', [tokenId]),
-            library.contractCall(contract, 'viewERC20s', [tokenId]),
-            library.contractCall(contract, 'viewERC721s', [tokenId]),
-          ])
-            .then(([avax, coins, nfts]) => {
-              Promise.all([
-                Promise.all(
-                  coins.map((token) =>
-                    Promise.all([
-                      Promise.resolve(token),
-                      library.contractCall(contract, 'viewERC20Amount', [tokenId, token]),
-                    ])
-                  )
-                ),
-                Promise.all(
-                  nfts.map((token) =>
-                    Promise.all([
-                      Promise.resolve(token),
-                      library.contractCall(contract, 'viewERC721Ids', [tokenId, token]),
-                    ])
-                  )
-                ),
-              ]).then(([coins, nfts]) => {
-                setGifts({
-                  avax: Number(library.fromWei(avax)),
-                  coins: coins.map(([address, amount]) => {
-                    const token = tokens.coins.find((item) => item.value === address)
-                    return {
-                      ...token,
-                      amount: Number(library.fromWei(amount, token?.decimals)),
-                    }
-                  }),
-                  nfts: nfts.reduce((total, [, tokenIds]) => total + tokenIds.length, 0),
-                })
-              })
-            })
-            .catch((err) => {
-              console.log(err)
-              setGifts(null)
-            })
+    if (token.status !== 1 && token.owner === state.account.address.toLowerCase()) {
+      const [, tokenId] = id.split('-')
+      const contract = library.getContract(token.vault, 'Vault', true)
+      Promise.all([
+        library.contractCall(contract, 'isEmpty', [tokenId]),
+        library.contractCall(contract, 'viewDeposits', [tokenId]),
+      ])
+        .then(([isEmpty, deposits]) => {
+          setGifts({
+            isEmpty,
+            avax: Number(library.fromWei(deposits.coin)),
+            coins: deposits.erc20s.map(({ token: address, amount }) => {
+              const token = tokens.coins.find((item) => item.value === address)
+              return {
+                ...token,
+                amount: Number(library.fromWei(amount, token?.decimals)),
+              }
+            }),
+            nfts: deposits.erc721s.reduce((total, { ids: tokenIds }) => total + tokenIds.length, 0),
+          })
         })
         .catch((err) => {
           console.log(err)
@@ -403,20 +356,15 @@ export default function GiftBox({ state, library, dispatch }) {
     } else {
       setGifts(null)
     }
-  }, [token, state.account, tokens])
+  }, [id, token, library, state.account, tokens.coins, setGifts])
 
   const handleCollect = () => {
-    const [address, tokenId] = id.split('-')
-    library
-      .getContractABI(address)
-      .then((abi) => {
-        const contract = library.getContract(address, abi, true)
-        const transaction = library.contractSend(contract, 'claimDeposits', [tokenId, { from: state.account.address }])
-        handleTransaction(transaction, setTxHash, () => {
-          fetchData(id)
-        })
-      })
-      .catch(console.log)
+    const [, tokenId] = id.split('-')
+    const contract = library.getContract(token.utility, 'Utility', true)
+    const transaction = library.contractSend(contract, 'claimDeposits', [tokenId, { from: state.account.address }])
+    handleTransaction(transaction, setTxHash, () => {
+      fetchData(id)
+    })
   }
 
   return (
@@ -425,7 +373,7 @@ export default function GiftBox({ state, library, dispatch }) {
       {token && (
         <>
           <h1>
-            {token.asset.name} #{Number(token.tokenId)}
+            {token.metadata.name.split(' - ')[1]} #{Number(token.tokenId)}
           </h1>
           <div className={styles.wrapper}>
             <div className={styles.image}>
@@ -445,6 +393,27 @@ export default function GiftBox({ state, library, dispatch }) {
                   ))}
                 </div>
                 <div className={styles.inputs}>
+                  {token.status !== 1 && (
+                    <label className={styles.warning}>
+                      Transaction will fail if box has more than 20 different tokens or NFTs
+                    </label>
+                  )}
+                  {gifts && (
+                    <div className={styles.formCoins}>
+                      {gifts.avax > 0 && (
+                        <div className={styles.formCoin}>
+                          {gifts.avax} <Coin network={state?.account?.network} />
+                        </div>
+                      )}
+                      {gifts.coins.map((coin, index) => (
+                        <div className={styles.formCoin} key={index}>
+                          {coin.amount}{' '}
+                          {coin.logoURI ? <img src={coin.logoURI} /> : `(${getEllipsis(coin.address || '')})`}
+                        </div>
+                      ))}
+                      {gifts.nfts > 0 && <div className={styles.formCoin}>{gifts.nfts} NFT(s)</div>}
+                    </div>
+                  )}
                   {active === 0 && token.status === 0 && (
                     <>
                       <Select
@@ -534,7 +503,7 @@ export default function GiftBox({ state, library, dispatch }) {
                           </tbody>
                         </table>
                       )}
-                      <div className={styles.formCoins}>
+                      <div className={`${styles.formCoins} ${styles.put}`}>
                         {formCoins.map((coin) => (
                           <div className={styles.formCoin} key={coin.timestamp}>
                             {coin.amount} <img src={coin.logoURI} />
@@ -548,30 +517,15 @@ export default function GiftBox({ state, library, dispatch }) {
                           </div>
                         ))}
                       </div>
-                      <div className={styles.confirm}>
-                        <input
-                          id="with-wrap"
-                          type="checkbox"
-                          value={withWrap}
-                          onChange={(e) => setWithWrap(e.target.checked)}
-                        />
-                        <label htmlFor="with-wrap">Wrap the box with current assets</label>
-                      </div>
                       <div className={styles.buttons}>
-                        {withWrap ? (
+                        {formCoins.length > 0 && (
                           <button onClick={handlePut} disabled={!!txHash}>
-                            Put Assets and Wrap
+                            Put Assets
                           </button>
-                        ) : (
-                          <>
-                            <button onClick={handlePut} disabled={!!txHash}>
-                              Put Assets
-                            </button>
-                            <button onClick={handleWrap} disabled={!!txHash}>
-                              Wrap
-                            </button>
-                          </>
                         )}
+                        <button onClick={handleWrap} disabled={!!txHash || gifts?.isEmpty}>
+                          Wrap
+                        </button>
                       </div>
                     </>
                   )}
@@ -634,8 +588,8 @@ export default function GiftBox({ state, library, dispatch }) {
                           placeholder="Token ID"
                         />
                       </div>
-                      {nft.valid && nft.metadata && (
-                        <>
+                      <div style={{ flex: 1 }}>
+                        {nft.valid && nft.metadata && (
                           <div className={styles.nftPreview}>
                             <a
                               href={`${links[state.account.network].marketplace}/${nft.address}/${nft.tokenId}`}
@@ -645,106 +599,63 @@ export default function GiftBox({ state, library, dispatch }) {
                               <img src={nft.metadata.image} />
                             </a>
                           </div>
-                          {nft.owner === state.account.address && (
-                            <>
-                              <div className={styles.confirm}>
-                                <input
-                                  id="with-wrap"
-                                  type="checkbox"
-                                  value={withWrap}
-                                  onChange={(e) => setWithWrap(e.target.checked)}
-                                />
-                                <label for="with-wrap">Wrap the box with current assets</label>
-                              </div>
-                              <div className={styles.buttons}>
-                                {!nft.approved ? (
-                                  <button onClick={handleApproveNFT} disabled={!!txHash}>
-                                    Approve NFT
-                                  </button>
-                                ) : withWrap ? (
-                                  <button onClick={handlePutNFT} disabled={!!txHash}>
-                                    Put Assets and Wrap
-                                  </button>
-                                ) : (
-                                  <>
-                                    <button onClick={handlePutNFT} disabled={!!txHash}>
-                                      Put Assets
-                                    </button>
-                                    <button onClick={handleWrap} disabled={!!txHash}>
-                                      Wrap
-                                    </button>
-                                  </>
-                                )}
-                              </div>
-                            </>
-                          )}
-                        </>
-                      )}
-                    </>
-                  )}
-                  {active === 0 &&
-                    token.status === 1 &&
-                    (token.lastActor === state.account.address.toLowerCase() || !token.lastActor ? (
-                      <>
-                        <div style={{ flex: 1 }}>
-                          <div className={styles.nftInput}>
-                            <label className="label">Gifty:</label>
-                            <input
-                              value={formGift.gifty}
-                              onChange={(e) => setFormGift({ gifty: e.target.value })}
-                              placeholder="Address"
-                            />
-                          </div>
-                        </div>
-                        <div className={styles.buttons}>
-                          <button
-                            onClick={handleSend}
-                            disabled={txHash || !library.web3.utils.isAddress(formGift.gifty)}
-                          >
-                            Send
-                          </button>
-                        </div>
-                      </>
-                    ) : (
-                      <>
-                        <div
-                          style={{
-                            flex: 1,
-                            textAlign: 'center',
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                          }}
-                        >
-                          Open your Gift Box!
-                        </div>
-                        <div className={styles.buttons}>
-                          <button onClick={handleOpen} disabled={txHash}>
-                            Open
-                          </button>
-                        </div>
-                      </>
-                    ))}
-                  {active === 0 && token.status === 2 && (
-                    <>
-                      <div style={{ flex: 1 }}>
-                        {gifts && (
-                          <div className={styles.formCoins}>
-                            {gifts.avax > 0 && (
-                              <div className={styles.formCoin}>
-                                {gifts.avax} <Coin network={state?.account?.network} />
-                              </div>
-                            )}
-                            {gifts.coins.map((coin, index) => (
-                              <div className={styles.formCoin} key={index}>
-                                {coin.amount}{' '}
-                                {coin.logoURI ? <img src={coin.logoURI} /> : `(${getEllipsis(coin.address || '')})`}
-                              </div>
-                            ))}
-                            {gifts.nfts > 0 && <div className={styles.formCoin}>{gifts.nfts} NFT(s)</div>}
-                          </div>
                         )}
                       </div>
+                      <div className={styles.buttons}>
+                        {nft.owner === state.account.address &&
+                          (!nft.approved ? (
+                            <button onClick={handleApproveNFT} disabled={!!txHash}>
+                              Approve NFT
+                            </button>
+                          ) : (
+                            <button onClick={handlePutNFT} disabled={!!txHash}>
+                              Put Assets
+                            </button>
+                          ))}
+                        <button onClick={handleWrap} disabled={!!txHash || gifts?.isEmpty}>
+                          Wrap
+                        </button>
+                      </div>
+                    </>
+                  )}
+                  {active === 0 && token.status === 1 && (
+                    <>
+                      <div style={{ flex: 1 }}>
+                        <div className={styles.nftInput}>
+                          <label className="label">Gifty:</label>
+                          <input
+                            value={formGift.gifty}
+                            onChange={(e) => setFormGift({ gifty: e.target.value })}
+                            placeholder="Address"
+                          />
+                        </div>
+                      </div>
+                      <div className={styles.buttons}>
+                        <button onClick={handleSend} disabled={txHash || !library.web3.utils.isAddress(formGift.gifty)}>
+                          Send
+                        </button>
+                      </div>
+                      <div
+                        style={{
+                          flex: 1,
+                          textAlign: 'center',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                        }}
+                      >
+                        Open your Gift Box!
+                      </div>
+                      <div className={styles.buttons}>
+                        <button onClick={handleOpen} disabled={txHash}>
+                          Open
+                        </button>
+                      </div>
+                    </>
+                  )}
+                  {active === 0 && token.status === 2 && (
+                    <>
+                      <div style={{ flex: 1 }} />
                       <div className={styles.buttons}>
                         <button onClick={handleCollect} disabled={txHash}>
                           Collect
@@ -765,7 +676,7 @@ export default function GiftBox({ state, library, dispatch }) {
           </div>
         </>
       )}
-      {(loading || txHash) && <Loading />}
+      {loading && <Loading />}
     </section>
   )
 }

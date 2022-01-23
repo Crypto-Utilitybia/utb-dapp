@@ -43,7 +43,8 @@
 
 .title {
   position: absolute;
-  top: -3.6rem;
+  top: -2.6rem;
+  width: 100%;
   font-size: 1.6rem;
   text-align: center;
   white-space: nowrap;
@@ -54,14 +55,31 @@
 
 .title span {
   font-size: 80%;
+
+  position: absolute;
+  right: 0;
+
+  display: flex;
+  align-items: center;
+  color: var(--color-highlight);
+  text-shadow: 1px 1px 3px var(--color-white);
+
+  padding: 0.2rem 0.6rem;
+  background: rgb(255 255 255 / 60%);
+  border-radius: 0.2rem;
 }
 
-.filter {
-  margin: 0.6rem auto;
+.assets {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
 }
 
-.filter label {
-  margin-right: 0.6rem;
+.assets img {
+  width: 50%;
+  padding: 0.6rem;
 }
 
 .note {

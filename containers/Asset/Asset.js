@@ -10,7 +10,7 @@ export default function AssetContainer({ state, library }) {
   const router = useRouter()
   const { id } = router.query
   const [address] = id.split('-')
-  const [contract, setContract] = useState('')
+  const [contract, setContract] = useState([])
 
   function renderBox() {
     switch (contract[0]) {

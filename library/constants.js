@@ -1,4 +1,5 @@
 import NFT_Avalanche from './jsons/NFT_Avalanche.json'
+import NFT_Fuji from './jsons/NFT_Fuji.json'
 
 export const ZERO = '0x0000000000000000000000000000000000000000'
 
@@ -88,7 +89,7 @@ export const links = {
     stables: 'https://raw.githubusercontent.com/pangolindex/tokenlists/main/stablecoin.tokenlist.json',
     manuals: [
       {
-        value: '0xD81D45E7635400dDD9c028839e9a9eF479006B28',
+        value: '0xe85242655AAa2295D2674AD2F711F6FaEEC6B8F6',
         chainId: 43113,
         name: 'Embr',
         label: 'EMBR',
@@ -96,7 +97,7 @@ export const links = {
         logoURI: 'https://app.embr.finance/img/embr.f76243fa.png',
       },
     ],
-    nfts: NFT_Avalanche,
+    nfts: NFT_Fuji,
     coin: 'https://info.pangolin.exchange/#/token',
     marketplace: 'https://nftrade.com/assets/avalanche',
   },

@@ -30,6 +30,7 @@ export const getAsset = (id) => `query {
   asset(id: "${id}") {
     id
     index
+    utilityIndex
     name
     promo
     asset
@@ -48,47 +49,13 @@ export const getAssets = ({ first = 32, skip = 0, filter } = {}) => `query {
   ) {
     id
     index
+    utilityIndex
     name
     promo
     asset
     author
     price
     stock
-    createdAt
-    updatedAt
-  }
-}`
-
-export const getToken = (id) => `query {
-  token(id: "${id}") {
-    id
-    asset {
-      id
-      name
-    }
-    utility
-    tokenURI
-    owner
-    lastActor
-    createdAt
-    updatedAt
-  }
-}`
-
-export const getTokens = (owner, { first = 100, skip = 0 } = {}) => `query {
-  tokens(
-    first: ${first}, skip: ${skip} orderBy: updatedAt, orderDirection: desc
-    where: { owner: "${owner.toLowerCase()}" }
-  ) {
-    id
-    asset {
-      id
-      name
-    }
-    utility
-    tokenURI
-    owner
-    state
     createdAt
     updatedAt
   }

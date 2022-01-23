@@ -62,10 +62,10 @@ export default function GiftBox({ state, library }) {
 
   const [txHash, setTxHash] = useState('')
   const handleSubmit = () => {
-    const [address, index] = id.split('-')
+    const [address] = id.split('-')
     const contract = library.getContract(address, 'UTBGiftBox', true)
     const transaction = library.contractSend(contract, 'mint', [
-      index,
+      asset.utilityIndex,
       amount,
       {
         from: state.account.address,
@@ -92,7 +92,7 @@ export default function GiftBox({ state, library }) {
           </h1>
           <div className={styles.form}>
             <img src={asset.metadatas[status].image} className={styles.image} />
-            <div className={styles.asset}>
+            {/* <div className={styles.asset}>
               {asset.metadatas.map((metadata, index) => (
                 <div
                   key={metadata.image}
@@ -103,7 +103,7 @@ export default function GiftBox({ state, library }) {
                   <img src={metadata.image} />
                 </div>
               ))}
-            </div>
+            </div> */}
             <div className={styles.buttons}>
               <button
                 className={`${styles.ticker} ${styles.left}`}

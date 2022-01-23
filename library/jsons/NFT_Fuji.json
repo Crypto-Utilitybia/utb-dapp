@@ -1,0 +1,30 @@
+[
+  {
+    "id": "f782e30e-6b47-4255-8684-d49089ac294a",
+    "address": "0x12296C57A0922eE91d14B7C8a039017D1aBe2462",
+    "name": "AvaxCoin",
+    "symbol": null,
+    "chainId": 43114,
+    "chainType": "evm",
+    "verified": true,
+    "forked": false,
+    "trending": false,
+    "hot": false,
+    "ai_generated": false,
+    "handmade": false,
+    "error": false,
+    "partial_royalty_support": false,
+    "full_royalty_support": false,
+    "image": null,
+    "cover_image": null,
+    "description": "",
+    "twitter": "",
+    "telegram": "",
+    "discord": "",
+    "website": "",
+    "telegramBotChatId": null,
+    "type": "EIP721",
+    "createdAt": "2021-10-14T20:05:34.680Z",
+    "updatedAt": "2021-10-14T20:45:52.440Z"
+  }
+]
