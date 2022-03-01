@@ -106,7 +106,8 @@ export const links = {
     block: 'https://bscscan.com/blocks',
     address: 'https://bscscan.com/address',
     tx: 'https://bscscan.com/tx',
-    graph: 'https://api.thegraph.com/subgraphs/name/crypto-utilitybia/utilitybia-bsc',
+    // graph: 'https://api.thegraph.com/subgraphs/name/crypto-utilitybia/utilitybia-bsc',
+    graph: 'https://api.thegraph.com/subgraphs/id/QmbohWCrNPr6kNVfSJSbDUpmZUwMQZbJZb6VNEUAq9Wqn1',
     tokens: 'https://tokens.pancakeswap.finance/pancakeswap-extended.json',
     stables: '',
     manuals: [
