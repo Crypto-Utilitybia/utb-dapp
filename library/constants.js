@@ -62,9 +62,11 @@ export const links = {
     block: 'https://snowtrace.io/blocks',
     address: 'https://snowtrace.io/address',
     tx: 'https://snowtrace.io/tx',
-    graph: 'https://api.thegraph.com/subgraphs/name/crypto-utilitybia/utilitybia-avalanche',
-    tokens: 'https://raw.githubusercontent.com/pangolindex/tokenlists/main/defi.tokenlist.json',
-    stables: 'https://raw.githubusercontent.com/pangolindex/tokenlists/main/stablecoin.tokenlist.json',
+    graph:
+      'https://api.thegraph.com/subgraphs/name/crypto-utilitybia/utilitybia-avalanche',
+    tokens:
+      'https://raw.githubusercontent.com/pangolindex/tokenlists/main/pangolin.tokenlist.json',
+    stables: '',
     manuals: [
       {
         value: '0xD81D45E7635400dDD9c028839e9a9eF479006B28',
@@ -84,9 +86,11 @@ export const links = {
     block: 'https://testnet.snowtrace.io/blocks',
     address: 'https://testnet.snowtrace.io/address',
     tx: 'https://testnet.snowtrace.io/tx',
-    graph: 'https://api.thegraph.com/subgraphs/name/crypto-utilitybia/utilitybia-fuji',
-    tokens: 'https://raw.githubusercontent.com/pangolindex/tokenlists/main/fuji.tokenlist.json',
-    stables: 'https://raw.githubusercontent.com/pangolindex/tokenlists/main/stablecoin.tokenlist.json',
+    graph:
+      'https://api.thegraph.com/subgraphs/name/crypto-utilitybia/utilitybia-fuji',
+    tokens:
+      'https://raw.githubusercontent.com/pangolindex/tokenlists/main/pangolin.tokenlist.json',
+    stables: '',
     manuals: [
       {
         value: '0xe85242655AAa2295D2674AD2F711F6FaEEC6B8F6',
@@ -107,7 +111,8 @@ export const links = {
     address: 'https://bscscan.com/address',
     tx: 'https://bscscan.com/tx',
     // graph: 'https://api.thegraph.com/subgraphs/name/crypto-utilitybia/utilitybia-bsc',
-    graph: 'https://api.thegraph.com/subgraphs/id/QmbohWCrNPr6kNVfSJSbDUpmZUwMQZbJZb6VNEUAq9Wqn1',
+    graph:
+      'https://api.thegraph.com/subgraphs/id/QmbohWCrNPr6kNVfSJSbDUpmZUwMQZbJZb6VNEUAq9Wqn1',
     tokens: 'https://tokens.pancakeswap.finance/pancakeswap-extended.json',
     stables: '',
     manuals: [
@@ -129,7 +134,8 @@ export const links = {
     block: 'https://testnet.bscscan.com/blocks',
     address: 'https://testnet.bscscan.com/address',
     tx: 'https://testnet.bscscan.com/tx',
-    graph: 'https://api.thegraph.com/subgraphs/name/crypto-utilitybia/utilitybia-bsctes',
+    graph:
+      'https://api.thegraph.com/subgraphs/name/crypto-utilitybia/utilitybia-bsctes',
     tokens: 'https://tokens.pancakeswap.finance/pancakeswap-extended.json',
     stables: '',
     manuals: [
@@ -158,7 +164,8 @@ export const contracts = {
 }
 
 export const ipfsMap = {
-  QmahbX13Zkk8Th3i3cwzasqdLhNMbJtdY1JbC7B7WnfqpM: 'https://www.utilitybia.finance/products/gift-box/promo.png',
+  QmahbX13Zkk8Th3i3cwzasqdLhNMbJtdY1JbC7B7WnfqpM:
+    'https://www.utilitybia.finance/products/gift-box/promo.png',
   QmYQNngu73dkGp5nprzYzcUCNLBAaDr4JTLJjT5FvEkWv8:
     'https://www.utilitybia.finance/products/gift-box/raider/metadata/1.json',
   QmWQ8T92ifgPUmfFXj3ALEK9ywtuw2rAYkhYLthy5NThrB:
@@ -185,11 +192,14 @@ export const ipfsMap = {
     'https://www.utilitybia.finance/products/gift-box/popular/images/3.png',
   QmViYogtrUpvH7bhu1p46cy7LdaeCt5TvZxrXE8aDyv29K:
     'https://www.utilitybia.finance/products/gift-box/song/metadata/1.json',
-  Qmet51etqDJUwkQJCYwxeNTwfjf1aX2Mdccu6mE2a5LB2t: 'https://www.utilitybia.finance/products/gift-box/song/images/1.png',
+  Qmet51etqDJUwkQJCYwxeNTwfjf1aX2Mdccu6mE2a5LB2t:
+    'https://www.utilitybia.finance/products/gift-box/song/images/1.png',
   QmaQ1uiCJGpmixW69opknqJXHAhmRpcThjJbkWojMa5kpu:
     'https://www.utilitybia.finance/products/gift-box/song/metadata/2.json',
-  QmQvrvxDnXiYUAUYAKqWtLomdRpFDwjGo23r7ArY38LNfr: 'https://www.utilitybia.finance/products/gift-box/song/images/2.png',
+  QmQvrvxDnXiYUAUYAKqWtLomdRpFDwjGo23r7ArY38LNfr:
+    'https://www.utilitybia.finance/products/gift-box/song/images/2.png',
   QmaHMX7YyMRwbej73hgwXkRMsDg1Wbk8tuMF7AGjxKhhJU:
     'https://www.utilitybia.finance/products/gift-box/song/metadata/3.json',
-  QmRo9x9JGbFCVAWv6cpF1qbWtgswgbC233ptuNsoCj7q9Z: 'https://www.utilitybia.finance/products/gift-box/song/images/3.png',
+  QmRo9x9JGbFCVAWv6cpF1qbWtgswgbC233ptuNsoCj7q9Z:
+    'https://www.utilitybia.finance/products/gift-box/song/images/3.png',
 }

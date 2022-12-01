@@ -9,7 +9,8 @@ import { getEllipsis } from 'utils/helpers'
 import Loading from 'components/Loading/Loading'
 import Coin, { getCoin } from 'components/Coin/Coin'
 
-const INFINITY = '115792089237316195423570985008687907853269984665640564039457584007913129639935'
+const INFINITY =
+  '115792089237316195423570985008687907853269984665640564039457584007913129639935'
 
 const NFT_PREFIXES = {
   '0xdb350245d143a8b575d909b1fa93df99844264b0': 'https://avaxcoins.com',
@@ -57,14 +58,19 @@ export default function GiftBox({ state, library, dispatch }) {
           Promise.all([
             library.contractCall(contract, 'vault'),
             library.contractCall(contract, 'tokenStates', [tokenId]),
-            axios.get(ipfsMap[tokenURI.replace('https://ipfs.io/ipfs/', '')] || tokenURI),
+            axios.get(
+              ipfsMap[tokenURI.replace('https://ipfs.io/ipfs/', '')] ||
+                tokenURI,
+            ),
           ])
             .then(([vault, status, { data: metadata }]) => {
               setToken({
                 ...token,
                 tokenId,
                 owner: owner.toLowerCase(),
-                tokenURI: ipfsMap[tokenURI.replace('https://ipfs.io/ipfs/', '')] || tokenURI,
+                tokenURI:
+                  ipfsMap[tokenURI.replace('https://ipfs.io/ipfs/', '')] ||
+                  tokenURI,
                 status: Number(status),
                 metadata,
                 utility: library.web3.utils.toChecksumAddress(utility),
@@ -75,7 +81,7 @@ export default function GiftBox({ state, library, dispatch }) {
         })
         .catch(console.log)
     },
-    [library]
+    [library],
   )
 
   useEffect(() => {
@@ -85,7 +91,9 @@ export default function GiftBox({ state, library, dispatch }) {
   useEffect(() => {
     Promise.all([
       axios.get(links[state.account.network].tokens),
-      axios.get(links[state.account.network].stables),
+      links[state.account.network].stables
+        ? axios.get(links[state.account.network].stables)
+        : Promise.resolve({ data: { tokens: [] } }),
       Promise.resolve(links[state.account.network].nfts),
     ])
       .then(
@@ -128,7 +136,7 @@ export default function GiftBox({ state, library, dispatch }) {
                 image,
               })),
             },
-          })
+          }),
       )
       .catch(console.log)
   }, [state.account, dispatch])
@@ -136,12 +144,18 @@ export default function GiftBox({ state, library, dispatch }) {
   const tokens = state.tokens || { coins: [], nfts: [] }
 
   const handleCoin = (coin) => {
-    const contract = coin.value !== 0 && library.getContract(coin.value, 'ERC20', true)
+    const contract =
+      coin.value !== 0 && library.getContract(coin.value, 'ERC20', true)
     Promise.all([
       contract
         ? library.contractCall(contract, 'balanceOf', [state.account.address])
         : library.web3.eth.getBalance(state.account.address),
-      contract ? library.contractCall(contract, 'allowance', [state.account.address, token.vault]) : INFINITY,
+      contract
+        ? library.contractCall(contract, 'allowance', [
+            state.account.address,
+            token.vault,
+          ])
+        : INFINITY,
     ])
       .then(([balance, allowance]) => {
         setCoin({
@@ -155,7 +169,10 @@ export default function GiftBox({ state, library, dispatch }) {
   }
 
   const handleAddCoin = () => {
-    setFormCoins([...formCoins, { ...coin, timestamp: Date.now(), amount: Number(coin.amount) }])
+    setFormCoins([
+      ...formCoins,
+      { ...coin, timestamp: Date.now(), amount: Number(coin.amount) },
+    ])
     setCoin(null)
   }
 
@@ -185,7 +202,7 @@ export default function GiftBox({ state, library, dispatch }) {
           [...addresses, coin.value],
           [...amounts, library.toWei(coin.amount, coin.decimals)],
         ],
-        [[], []]
+        [[], []],
       ),
       {
         from: state.account.address,
@@ -229,7 +246,10 @@ export default function GiftBox({ state, library, dispatch }) {
       const contract = library.getContract(nft.address, 'ERC721', true)
       Promise.all([
         library.contractCall(contract, 'tokenURI', [nft.tokenId]),
-        library.contractCall(contract, 'isApprovedForAll', [state.account.address, token.vault]),
+        library.contractCall(contract, 'isApprovedForAll', [
+          state.account.address,
+          token.vault,
+        ]),
       ])
         .then(([uri, approved]) => {
           axios
@@ -245,7 +265,7 @@ export default function GiftBox({ state, library, dispatch }) {
                     metadata.image.replace('ipfs://', 'https://ipfs.io/ipfs/'),
                 },
                 approved,
-              })
+              }),
             )
             .catch(() =>
               setNFT({
@@ -254,7 +274,7 @@ export default function GiftBox({ state, library, dispatch }) {
                   image: 'https://via.placeholder.com/150?text=Unknown',
                 },
                 approved,
-              })
+              }),
             )
         })
         .catch(console.log)
@@ -294,7 +314,10 @@ export default function GiftBox({ state, library, dispatch }) {
   const handleWrap = () => {
     const [, tokenId] = id.split('-')
     const contract = library.getContract(token.utility, 'Utility', true)
-    const transaction = library.contractSend(contract, 'wrap', [tokenId, { from: state.account.address }])
+    const transaction = library.contractSend(contract, 'wrap', [
+      tokenId,
+      { from: state.account.address },
+    ])
     handleTransaction(transaction, setTxHash, () => {
       fetchData(id)
       setActive(0)
@@ -319,7 +342,10 @@ export default function GiftBox({ state, library, dispatch }) {
   const handleOpen = () => {
     const [, tokenId] = id.split('-')
     const contract = library.getContract(token.utility, 'Utility', true)
-    const transaction = library.contractSend(contract, 'open', [tokenId, { from: state.account.address }])
+    const transaction = library.contractSend(contract, 'open', [
+      tokenId,
+      { from: state.account.address },
+    ])
     handleTransaction(transaction, setTxHash, () => {
       fetchData(id)
     })
@@ -328,7 +354,10 @@ export default function GiftBox({ state, library, dispatch }) {
   const [gifts, setGifts] = useState(null)
   useEffect(() => {
     if (!token) return
-    if (token.status !== 1 && token.owner === state.account.address.toLowerCase()) {
+    if (
+      token.status !== 1 &&
+      token.owner === state.account.address.toLowerCase()
+    ) {
       const [, tokenId] = id.split('-')
       const contract = library.getContract(token.vault, 'Vault', true)
       Promise.all([
@@ -346,7 +375,10 @@ export default function GiftBox({ state, library, dispatch }) {
                 amount: Number(library.fromWei(amount, token?.decimals)),
               }
             }),
-            nfts: deposits.erc721s.reduce((total, { ids: tokenIds }) => total + tokenIds.length, 0),
+            nfts: deposits.erc721s.reduce(
+              (total, { ids: tokenIds }) => total + tokenIds.length,
+              0,
+            ),
           })
         })
         .catch((err) => {
@@ -361,7 +393,10 @@ export default function GiftBox({ state, library, dispatch }) {
   const handleCollect = () => {
     const [, tokenId] = id.split('-')
     const contract = library.getContract(token.utility, 'Utility', true)
-    const transaction = library.contractSend(contract, 'claimDeposits', [tokenId, { from: state.account.address }])
+    const transaction = library.contractSend(contract, 'claimDeposits', [
+      tokenId,
+      { from: state.account.address },
+    ])
     handleTransaction(transaction, setTxHash, () => {
       fetchData(id)
     })
@@ -385,7 +420,9 @@ export default function GiftBox({ state, library, dispatch }) {
                   {getTabs(token.status).map((tab, index) => (
                     <div
                       key={tab}
-                      className={`${styles.tab} ${active === index ? styles.active : ''}`}
+                      className={`${styles.tab} ${
+                        active === index ? styles.active : ''
+                      }`}
                       onClick={() => setActive(index)}
                     >
                       {tab}
@@ -395,23 +432,33 @@ export default function GiftBox({ state, library, dispatch }) {
                 <div className={styles.inputs}>
                   {token.status !== 1 && (
                     <label className={styles.warning}>
-                      Transaction will fail if box has more than 20 different tokens or NFTs
+                      Transaction will fail if box has more than 20 different
+                      tokens or NFTs
                     </label>
                   )}
                   {gifts && (
                     <div className={styles.formCoins}>
                       {gifts.avax > 0 && (
                         <div className={styles.formCoin}>
-                          {gifts.avax} <Coin network={state?.account?.network} />
+                          {gifts.avax}{' '}
+                          <Coin network={state?.account?.network} />
                         </div>
                       )}
                       {gifts.coins.map((coin, index) => (
                         <div className={styles.formCoin} key={index}>
                           {coin.amount}{' '}
-                          {coin.logoURI ? <img src={coin.logoURI} /> : `(${getEllipsis(coin.address || '')})`}
+                          {coin.logoURI ? (
+                            <img src={coin.logoURI} />
+                          ) : (
+                            `(${getEllipsis(coin.address || '')})`
+                          )}
                         </div>
                       ))}
-                      {gifts.nfts > 0 && <div className={styles.formCoin}>{gifts.nfts} NFT(s)</div>}
+                      {gifts.nfts > 0 && (
+                        <div className={styles.formCoin}>
+                          {gifts.nfts} NFT(s)
+                        </div>
+                      )}
                     </div>
                   )}
                   {active === 0 && token.status === 0 && (
@@ -424,7 +471,10 @@ export default function GiftBox({ state, library, dispatch }) {
                           Control: ({ children, ...rest }) => {
                             const value = rest.getValue()
                             return (
-                              <components.Control className={styles.control} {...rest}>
+                              <components.Control
+                                className={styles.control}
+                                {...rest}
+                              >
                                 {value.length > 0 && (
                                   <img
                                     src={value[0].logoURI}
@@ -445,12 +495,21 @@ export default function GiftBox({ state, library, dispatch }) {
                             return (
                               <div
                                 className="cursor"
-                                style={{ display: 'flex', alignItems: 'center', padding: `3px 6px` }}
+                                style={{
+                                  display: 'flex',
+                                  alignItems: 'center',
+                                  padding: `3px 6px`,
+                                }}
                                 {...innerProps}
                               >
                                 <img
                                   src={data.logoURI}
-                                  style={{ width: 20, borderRadius: 10, overflow: 'hidden', marginRight: 6 }}
+                                  style={{
+                                    width: 20,
+                                    borderRadius: 10,
+                                    overflow: 'hidden',
+                                    marginRight: 6,
+                                  }}
                                 />{' '}
                                 {children}
                               </div>
@@ -463,7 +522,9 @@ export default function GiftBox({ state, library, dispatch }) {
                           <tbody>
                             <tr>
                               <td className={styles.balance}>
-                                {Number(coin.balance).toFixed(Math.min(8, coin.decimals - 4))}
+                                {Number(coin.balance).toFixed(
+                                  Math.min(8, coin.decimals - 4),
+                                )}
                                 &nbsp;
                                 <img src={coin.logoURI} />
                               </td>
@@ -471,7 +532,9 @@ export default function GiftBox({ state, library, dispatch }) {
                                 {!!coin.value && (
                                   <a
                                     className={styles.buy}
-                                    href={`${links[state.account.network].coin}/${coin.value.toLowerCase()}`}
+                                    href={`${
+                                      links[state.account.network].coin
+                                    }/${coin.value.toLowerCase()}`}
                                     target="_blank"
                                     rel="noreferrer"
                                   >
@@ -485,16 +548,24 @@ export default function GiftBox({ state, library, dispatch }) {
                                 <input
                                   value={coin.amount}
                                   type="number"
-                                  onChange={(e) => setCoin({ ...coin, amount: e.target.value })}
+                                  onChange={(e) =>
+                                    setCoin({ ...coin, amount: e.target.value })
+                                  }
                                 />
                               </td>
                               <td className={styles.actions}>
                                 {coin.allowance > coin.amount ? (
-                                  <button disabled={coin.amount <= 0} onClick={handleAddCoin}>
+                                  <button
+                                    disabled={coin.amount <= 0}
+                                    onClick={handleAddCoin}
+                                  >
                                     Put
                                   </button>
                                 ) : (
-                                  <button onClick={handleApproveCoin} disabled={!!txHash}>
+                                  <button
+                                    onClick={handleApproveCoin}
+                                    disabled={!!txHash}
+                                  >
                                     Approve
                                   </button>
                                 )}
@@ -511,7 +582,11 @@ export default function GiftBox({ state, library, dispatch }) {
                             <i
                               className="fa fa-close cursor"
                               onClick={() =>
-                                setFormCoins(formCoins.filter((item) => item.timestamp !== coin.timestamp))
+                                setFormCoins(
+                                  formCoins.filter(
+                                    (item) => item.timestamp !== coin.timestamp,
+                                  ),
+                                )
                               }
                             />
                           </div>
@@ -523,7 +598,10 @@ export default function GiftBox({ state, library, dispatch }) {
                             Put Assets
                           </button>
                         )}
-                        <button onClick={handleWrap} disabled={!!txHash || gifts?.isEmpty}>
+                        <button
+                          onClick={handleWrap}
+                          disabled={!!txHash || gifts?.isEmpty}
+                        >
                           Wrap
                         </button>
                       </div>
@@ -532,13 +610,18 @@ export default function GiftBox({ state, library, dispatch }) {
                   {active === 1 && token.status === 0 && (
                     <>
                       <Select
-                        onChange={(value) => handleNFT({ address: value.value, tokenId: 1 })}
+                        onChange={(value) =>
+                          handleNFT({ address: value.value, tokenId: 1 })
+                        }
                         options={tokens.nfts}
                         components={{
                           Control: ({ children, ...rest }) => {
                             const value = rest.getValue()
                             return (
-                              <components.Control className={styles.control} {...rest}>
+                              <components.Control
+                                className={styles.control}
+                                {...rest}
+                              >
                                 {value.length > 0 && (
                                   <img
                                     src={value[0].image}
@@ -559,12 +642,21 @@ export default function GiftBox({ state, library, dispatch }) {
                             return (
                               <div
                                 className="cursor"
-                                style={{ display: 'flex', alignItems: 'center', padding: `3px 6px` }}
+                                style={{
+                                  display: 'flex',
+                                  alignItems: 'center',
+                                  padding: `3px 6px`,
+                                }}
                                 {...innerProps}
                               >
                                 <img
                                   src={data.image}
-                                  style={{ width: 20, borderRadius: 10, overflow: 'hidden', marginRight: 6 }}
+                                  style={{
+                                    width: 20,
+                                    borderRadius: 10,
+                                    overflow: 'hidden',
+                                    marginRight: 6,
+                                  }}
                                 />{' '}
                                 {children}
                               </div>
@@ -584,7 +676,12 @@ export default function GiftBox({ state, library, dispatch }) {
                         <label className="label">Token Id:</label>
                         <input
                           value={nft.tokenId}
-                          onChange={(e) => handleNFT({ address: nft.address, tokenId: e.target.value })}
+                          onChange={(e) =>
+                            handleNFT({
+                              address: nft.address,
+                              tokenId: e.target.value,
+                            })
+                          }
                           placeholder="Token ID"
                         />
                       </div>
@@ -592,7 +689,9 @@ export default function GiftBox({ state, library, dispatch }) {
                         {nft.valid && nft.metadata && (
                           <div className={styles.nftPreview}>
                             <a
-                              href={`${links[state.account.network].marketplace}/${nft.address}/${nft.tokenId}`}
+                              href={`${
+                                links[state.account.network].marketplace
+                              }/${nft.address}/${nft.tokenId}`}
                               target="_blank"
                               rel="noreferrer"
                             >
@@ -604,7 +703,10 @@ export default function GiftBox({ state, library, dispatch }) {
                       <div className={styles.buttons}>
                         {nft.owner === state.account.address &&
                           (!nft.approved ? (
-                            <button onClick={handleApproveNFT} disabled={!!txHash}>
+                            <button
+                              onClick={handleApproveNFT}
+                              disabled={!!txHash}
+                            >
                               Approve NFT
                             </button>
                           ) : (
@@ -612,7 +714,10 @@ export default function GiftBox({ state, library, dispatch }) {
                               Put Assets
                             </button>
                           ))}
-                        <button onClick={handleWrap} disabled={!!txHash || gifts?.isEmpty}>
+                        <button
+                          onClick={handleWrap}
+                          disabled={!!txHash || gifts?.isEmpty}
+                        >
                           Wrap
                         </button>
                       </div>
@@ -625,13 +730,21 @@ export default function GiftBox({ state, library, dispatch }) {
                           <label className="label">Gifty:</label>
                           <input
                             value={formGift.gifty}
-                            onChange={(e) => setFormGift({ gifty: e.target.value })}
+                            onChange={(e) =>
+                              setFormGift({ gifty: e.target.value })
+                            }
                             placeholder="Address"
                           />
                         </div>
                       </div>
                       <div className={styles.buttons}>
-                        <button onClick={handleSend} disabled={txHash || !library.web3.utils.isAddress(formGift.gifty)}>
+                        <button
+                          onClick={handleSend}
+                          disabled={
+                            txHash ||
+                            !library.web3.utils.isAddress(formGift.gifty)
+                          }
+                        >
                           Send
                         </button>
                       </div>
@@ -665,7 +778,11 @@ export default function GiftBox({ state, library, dispatch }) {
                   )}
                   {txHash && (
                     <div className={styles.txHash}>
-                      <a href={`${links[state.account.network].tx}/${txHash}`} target="_blank" rel="noreferrer">
+                      <a
+                        href={`${links[state.account.network].tx}/${txHash}`}
+                        target="_blank"
+                        rel="noreferrer"
+                      >
                         View on Explorer
                       </a>
                     </div>
